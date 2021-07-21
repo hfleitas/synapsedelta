@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FileServerLocation",
-				"fileName": "*.*",
+				"fileName": "*.csv",
 				"folderPath": "LabFiles/M01L05Lab01/Dataset/Fact"
 			}
 		}
