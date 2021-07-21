@@ -1,0 +1,17 @@
+{
+	"name": "LaptopFact",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "C:/hiram-msft/ws-SynapseSQLPools",
+			"userId": "LAPTOP-RRU3V9OS\\dwloader",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5OTY2OWE2Ni0zMDA1LTRhMjgtOGU5MC1mMjQ5MzU2MzA4YzMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "Laptop",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

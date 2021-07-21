@@ -1,0 +1,19 @@
+{
+	"name": "DestinationDataset_bb2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Fact",
+				"fileSystem": "nyctaxistaging"
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
