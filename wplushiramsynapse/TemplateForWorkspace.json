@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'wplushiramsynapse-WorkspaceDefaultSqlServer'"
 		},
+		"LabFilesZip_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
+		},
 		"LaptopFact_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "C:/hiram-msft/ws-SynapseSQLPools"
@@ -33,13 +37,14 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/UploadFactFiles')]",
+			"name": "[concat(parameters('workspaceName'), '/DownloadLabFiles')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy_bb2",
+						"name": "Download LabFiles",
+						"description": "Download https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip\nto Synapse FS blob",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -63,10 +68,8 @@
 							"source": {
 								"type": "BinarySource",
 								"storeSettings": {
-									"type": "FileServerReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.*",
-									"deleteFilesAfterCompletion": false
+									"type": "HttpReadSettings",
+									"requestMethod": "POST"
 								},
 								"formatSettings": {
 									"type": "BinaryReadSettings"
@@ -79,22 +82,18 @@
 								}
 							},
 							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"skipErrorFile": {
-								"fileMissing": false
-							},
-							"validateDataConsistency": false
+							"enableSkipIncompatibleRow": false
 						},
 						"inputs": [
 							{
-								"referenceName": "SourceDataset_bb2",
+								"referenceName": "LabFilesZip",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DestinationDataset_bb2",
+								"referenceName": "wplushiramsynapsefs",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -105,31 +104,29 @@
 				"lastPublishTime": "2021-07-21T20:09:22Z"
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/SourceDataset_bb2')]",
-				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_bb2')]"
+				"[concat(variables('workspaceId'), '/datasets/LabFilesZip')]",
+				"[concat(variables('workspaceId'), '/datasets/wplushiramsynapsefs')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/DestinationDataset_bb2')]",
+			"name": "[concat(parameters('workspaceName'), '/LabFilesZip')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"referenceName": "LabFilesZip",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "Fact",
-						"fileSystem": "nyctaxistaging"
+						"type": "HttpServerLocation"
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+				"[concat(variables('workspaceId'), '/linkedServices/LabFilesZip')]"
 			]
 		},
 		{
@@ -153,6 +150,49 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/LaptopFact')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/wplushiramsynapsefs')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "wplushiramsynapsefs"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/LabFilesZip')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('LabFilesZip_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
 			]
 		},
 		{
