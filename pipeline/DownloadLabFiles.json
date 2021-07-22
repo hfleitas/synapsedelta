@@ -3,8 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Download LabFiles",
-				"description": "Download https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip\nto Synapse FS blob",
+				"name": "GetHttpZip",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -14,22 +13,14 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [
-					{
-						"name": "Source",
-						"value": "/"
-					},
-					{
-						"name": "Destination",
-						"value": "nyctaxistaging/Fact/"
-					}
-				],
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "BinarySource",
 						"storeSettings": {
 							"type": "HttpReadSettings",
-							"requestMethod": "POST"
+							"requestMethod": "GET",
+							"requestTimeout": ""
 						},
 						"formatSettings": {
 							"type": "BinaryReadSettings"
@@ -41,12 +32,11 @@
 							"type": "AzureBlobFSWriteSettings"
 						}
 					},
-					"enableStaging": false,
-					"enableSkipIncompatibleRow": false
+					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "HTTPLabFilesZip",
+						"referenceName": "httpzip",
 						"type": "DatasetReference"
 					}
 				],
