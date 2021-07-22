@@ -1,6 +1,9 @@
 {
 	"name": "M01L05Lab01-CreateUser",
 	"properties": {
+		"folder": {
+			"name": "M01L05Lab01"
+		},
 		"content": {
 			"query": "--use wplussynapsedw\nCREATE USER DWLoader FOR LOGIN DWLoader;\nCREATE USER dwloaderrc10 FOR LOGIN dwloaderrc10;",
 			"metadata": {
