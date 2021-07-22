@@ -89,6 +89,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "M01L05Lab01"
+				},
 				"annotations": [
 					"Workshop"
 				]
@@ -97,6 +100,38 @@
 				"[concat(variables('workspaceId'), '/datasets/HTTPLabFilesZip')]",
 				"[concat(variables('workspaceId'), '/datasets/blobLabFilesZip')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/MoveUnzippedFiles')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": {
+								"value": "@pipeline().parameters.hiram",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"hiram": {
+						"type": "string",
+						"defaultValue": "select 10 as wait"
+					}
+				},
+				"folder": {
+					"name": "M01L05Lab01"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/UnzipLabFiles')]",
@@ -155,6 +190,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "M01L05Lab01"
+				},
 				"annotations": [
 					"workshop"
 				]
@@ -399,6 +437,26 @@
 					"currentConnection": {
 						"poolName": "wplussynapsedw",
 						"databaseName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ServerlessVersion')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "select @@servername, @@version",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "Built-in",
+						"databaseName": "master"
 					},
 					"resultLimit": 5000
 				},
