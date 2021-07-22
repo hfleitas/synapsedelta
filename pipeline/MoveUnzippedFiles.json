@@ -1,0 +1,49 @@
+{
+	"name": "MoveUnzippedFiles",
+	"properties": {
+		"activities": [
+			{
+				"name": "CopyDimensionFiles",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
+			},
+			{
+				"name": "CopyFactFiles",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
+			}
+		],
+		"parameters": {
+			"hiram": {
+				"type": "string",
+				"defaultValue": "select 'hiram' as hiram"
+			}
+		},
+		"folder": {
+			"name": "M01L05Lab01"
+		},
+		"annotations": []
+	}
+}
