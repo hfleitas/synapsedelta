@@ -46,7 +46,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "LabFilesZip",
+						"referenceName": "HTTPLabFilesZip",
 						"type": "DatasetReference"
 					}
 				],
