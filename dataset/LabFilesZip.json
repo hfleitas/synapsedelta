@@ -1,0 +1,16 @@
+{
+	"name": "LabFilesZip",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LabFilesZip",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		}
+	}
+}

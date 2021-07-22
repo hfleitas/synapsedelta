@@ -3,7 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_bb2",
+				"name": "Download LabFiles",
+				"description": "Download https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip\nto Synapse FS blob",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -27,10 +28,8 @@
 					"source": {
 						"type": "BinarySource",
 						"storeSettings": {
-							"type": "FileServerReadSettings",
-							"recursive": true,
-							"wildcardFileName": "*.*",
-							"deleteFilesAfterCompletion": false
+							"type": "HttpReadSettings",
+							"requestMethod": "POST"
 						},
 						"formatSettings": {
 							"type": "BinaryReadSettings"
@@ -43,21 +42,17 @@
 						}
 					},
 					"enableStaging": false,
-					"enableSkipIncompatibleRow": false,
-					"skipErrorFile": {
-						"fileMissing": false
-					},
-					"validateDataConsistency": false
+					"enableSkipIncompatibleRow": false
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_bb2",
+						"referenceName": "LabFilesZip",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_bb2",
+						"referenceName": "wplushiramsynapsefs",
 						"type": "DatasetReference"
 					}
 				]
