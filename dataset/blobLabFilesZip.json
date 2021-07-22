@@ -12,6 +12,9 @@
 				"type": "AzureBlobFSLocation",
 				"fileName": "LabFiles.zip",
 				"fileSystem": "wplushiramsynapsefs"
+			},
+			"compression": {
+				"type": "ZipDeflate"
 			}
 		}
 	}
