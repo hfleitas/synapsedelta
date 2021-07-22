@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_bb2",
+	"name": "wplushiramsynapsefs",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
@@ -10,8 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "Fact",
-				"fileSystem": "nyctaxistaging"
+				"fileSystem": "wplushiramsynapsefs"
 			}
 		}
 	},
