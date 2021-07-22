@@ -34,6 +34,10 @@
 		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
+		},
+		"Daily_properties_MoveUnzippedFiles_parameters_hiram": {
+			"type": "string",
+			"defaultValue": "select 'ana' as wait"
 		}
 	},
 	"variables": {
@@ -509,6 +513,44 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/credentials/WorkspaceSystemIdentity')]",
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Daily')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "MoveUnzippedFiles",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"hiram": "[parameters('Daily_properties_MoveUnzippedFiles_parameters_hiram')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2021-07-22T19:58:00Z",
+						"endTime": "2021-07-23T19:58:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"hours": [
+								7
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/MoveUnzippedFiles')]"
 			]
 		}
 	]
