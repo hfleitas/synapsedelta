@@ -1,0 +1,18 @@
+{
+	"name": "blobLabFilesZip",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "LabFiles.zip",
+				"fileSystem": "wplushiramsynapsefs"
+			}
+		}
+	}
+}
