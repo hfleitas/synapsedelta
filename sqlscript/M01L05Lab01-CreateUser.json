@@ -1,0 +1,17 @@
+{
+	"name": "M01L05Lab01-CreateUser",
+	"properties": {
+		"content": {
+			"query": "--use wplussynapsedw\nCREATE USER DWLoader FOR LOGIN DWLoader;\nCREATE USER dwloaderrc10 FOR LOGIN dwloaderrc10;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "wplussynapsedw",
+				"databaseName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
