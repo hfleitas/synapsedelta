@@ -1,5 +1,5 @@
 {
-	"name": "LabFilesZip",
+	"name": "HTTPLabFilesZip",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LabFilesZip",
