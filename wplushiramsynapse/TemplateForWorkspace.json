@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'wplushiramsynapse-WorkspaceDefaultSqlServer'"
 		},
+		"hirampool_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'hirampool'"
+		},
 		"LabFilesZip_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
@@ -476,6 +480,36 @@
 			},
 			"dependsOn": [],
 			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/hirampool')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"hiramsqlquery": {
+						"type": "string",
+						"defaultValue": "select 'hiram' as hiramLSparam"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('hirampool_connectionString')]",
+					"credential": {
+						"referenceName": "WorkspaceSystemIdentity",
+						"type": "CredentialReference"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/credentials/WorkspaceSystemIdentity')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
 		}
 	]
 }

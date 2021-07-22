@@ -11,6 +11,9 @@
 		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},
+		"hirampool_connectionString": {
+			"value": ""
+		},
 		"LabFilesZip_properties_typeProperties_url": {
 			"value": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
 		},
