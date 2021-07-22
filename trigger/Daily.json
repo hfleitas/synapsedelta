@@ -1,0 +1,33 @@
+{
+	"name": "Daily",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "MoveUnzippedFiles",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"hiram": "select 'ana' as wait"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2021-07-22T19:58:00Z",
+				"endTime": "2021-07-23T19:58:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"hours": [
+						7
+					]
+				}
+			}
+		}
+	}
+}
