@@ -34,10 +34,6 @@
 		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
-		},
-		"Daily_properties_MoveUnzippedFiles_parameters_hiram": {
-			"type": "string",
-			"defaultValue": "select 'ana' as wait"
 		}
 	},
 	"variables": {
@@ -528,9 +524,7 @@
 							"referenceName": "MoveUnzippedFiles",
 							"type": "PipelineReference"
 						},
-						"parameters": {
-							"hiram": "[parameters('Daily_properties_MoveUnzippedFiles_parameters_hiram')]"
-						}
+						"parameters": {}
 					}
 				],
 				"type": "ScheduleTrigger",
