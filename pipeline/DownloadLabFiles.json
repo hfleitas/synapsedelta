@@ -1,5 +1,5 @@
 {
-	"name": "UploadFactFiles",
+	"name": "DownloadLabFiles",
 	"properties": {
 		"activities": [
 			{
