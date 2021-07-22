@@ -8,9 +8,6 @@
 				"pipelineReference": {
 					"referenceName": "MoveUnzippedFiles",
 					"type": "PipelineReference"
-				},
-				"parameters": {
-					"hiram": "select 'ana' as wait"
 				}
 			}
 		],
