@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "wplushiramsynapse"
+		},
+		"LaptopFact_password": {
+			"value": ""
+		},
+		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"LabFilesZip_properties_typeProperties_url": {
+			"value": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
+		},
+		"LaptopFact_properties_typeProperties_host": {
+			"value": "C:/hiram-msft/ws-SynapseSQLPools"
+		},
+		"LaptopFact_properties_typeProperties_userId": {
+			"value": "LAPTOP-RRU3V9OS\\dwloader"
+		},
+		"httpzip_properties_typeProperties_url": {
+			"value": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
+		},
+		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
+		}
+	}
+}
