@@ -20,9 +20,6 @@
 		"LaptopFact_properties_typeProperties_userId": {
 			"value": "LAPTOP-RRU3V9OS\\dwloader"
 		},
-		"httpzip_properties_typeProperties_url": {
-			"value": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
-		},
 		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
 		}

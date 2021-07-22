@@ -27,10 +27,6 @@
 			"type": "string",
 			"defaultValue": "LAPTOP-RRU3V9OS\\dwloader"
 		},
-		"httpzip_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
-		},
 		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
@@ -83,27 +79,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/Laptop')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/httpzip')]",
-			"type": "Microsoft.Synapse/workspaces/linkedServices",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": [],
-				"type": "HttpServer",
-				"typeProperties": {
-					"url": "[parameters('httpzip_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": true,
-					"authenticationType": "Anonymous"
-				},
-				"connectVia": {
-					"referenceName": "AutoResolveIntegrationRuntime",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
 			]
 		},
 		{
@@ -242,7 +217,7 @@
 			"location": "eastus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Pipeline 1')]",
+			"name": "[concat(parameters('workspaceName'), '/GetLabFilesFromHTTP')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -294,7 +269,9 @@
 						]
 					}
 				],
-				"annotations": []
+				"annotations": [
+					"Workshop"
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/HTTPLabFilesZip')]",
