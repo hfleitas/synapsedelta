@@ -15,7 +15,7 @@
 		"parameters": {
 			"test": {
 				"type": "string",
-				"defaultValue": "select [kind] ,[etag] ,[items_kind] ,[time] ,[uniqueQualifier] , [applicationName] ,[customerId] ,[etags] ,[callerType] ,[GS].[email] , [profileId] ,[key] ,[type] ,[name] ,[parameters_name] ,[intValue] , AdlCreateTime , AdlUpdateTime, STUDENT_ID as osis, SCHOOL_DBN from [gsuite].[meet] GS  left join [DATACORE].[STUDENT] DS   on  substring(GS.email, 0, patindex('%@%', GS.email)) = Replace(DS.[user_id], Char(13),'') where GS.AdlCreateTime >"
+				"defaultValue": "SELECT PATINDEX('%schools%', 'W3Schools.com');"
 			}
 		},
 		"annotations": []
