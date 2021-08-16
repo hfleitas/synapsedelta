@@ -4,14 +4,14 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "wplushiramspark",
+			"referenceName": "threedot0",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
@@ -29,18 +29,18 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/wplushiramspark",
-				"name": "wplushiramspark",
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+				"name": "threedot0",
 				"type": "Spark",
-				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/wplushiramspark",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
+				"sparkVersion": "3.0",
 				"nodeCount": 3,
-				"cores": 8,
-				"memory": 56,
+				"cores": 4,
+				"memory": 28,
 				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
