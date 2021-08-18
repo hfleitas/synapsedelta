@@ -16,7 +16,7 @@
 			"recurrence": {
 				"frequency": "Month",
 				"interval": 15,
-				"startTime": "2021-08-11T18:53:00Z",
+				"startTime": "2021-07-01T18:53:00Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
