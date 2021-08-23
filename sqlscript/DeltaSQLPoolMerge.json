@@ -1,5 +1,5 @@
 {
-	"name": "SQLPoolMerge",
+	"name": "DeltaSQLPoolMerge",
 	"properties": {
 		"content": {
 			"query": "MERGE into target as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\ngo\n\nCreate table target2hash\nwith (\n    distribution = hash([key]),\n    clustered columnstore index\n)\nas\nselect * from target\ngo\n\nMERGE into target2hash as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\n\nselect * from target2hash;\n\n",
