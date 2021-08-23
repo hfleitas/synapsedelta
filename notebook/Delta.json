@@ -148,7 +148,7 @@
 					"%%sql\r\n",
 					"select * from target order by key"
 				],
-				"execution_count": 12
+				"execution_count": 41
 			},
 			{
 				"cell_type": "code",
@@ -171,7 +171,7 @@
 					"%%sql\r\n",
 					"describe extended target"
 				],
-				"execution_count": 13
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -197,11 +197,9 @@
 					"  ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\r\n",
 					"  ChangeData(\"c\", \"20\", deleted = false, time = 4),\r\n",
 					"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
-					").toDF().createOrReplaceTempView(\"changes\")\r\n",
-					"\r\n",
-					"// display(table(\"changes\").orderBy(\"key\"))"
+					").toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"execution_count": 14
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -215,12 +213,11 @@
 							"deleting": false
 						}
 					},
-					"microsoft": {
-						"language": "sparksql"
-					},
 					"collapsed": false
 				},
 				"source": [
+					"-- SQL EXAMPLE\r\n",
+					"\r\n",
 					"%%sql \r\n",
 					"MERGE INTO target t\r\n",
 					"USING (\r\n",
@@ -236,7 +233,7 @@
 					"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 					"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 				],
-				"execution_count": 16
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -253,7 +250,7 @@
 					"collapsed": true
 				},
 				"source": [
-					"// SCALA EXAMPLE\r\n",
+					"// SCALA EXAMPLE - SKIP\r\n",
 					"\r\n",
 					"import io.delta.tables._\r\n",
 					"import org.apache.spark.sql.functions._\r\n",
@@ -283,7 +280,7 @@
 				"source": [
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\" ).groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
 				],
-				"execution_count": 28
+				"execution_count": 46
 			},
 			{
 				"cell_type": "code",
@@ -302,7 +299,7 @@
 				"source": [
 					"latestChangeForEachKey.show() // shows the latest change for each key"
 				],
-				"execution_count": 29
+				"execution_count": 47
 			},
 			{
 				"cell_type": "code",
@@ -322,7 +319,7 @@
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")\r\n",
 					""
 				],
-				"execution_count": 32
+				"execution_count": 48
 			},
 			{
 				"cell_type": "code",
@@ -345,7 +342,7 @@
 					"%%sql\r\n",
 					"select * from lastchanges"
 				],
-				"execution_count": 31
+				"execution_count": 49
 			},
 			{
 				"cell_type": "code",
@@ -364,7 +361,7 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\")"
 				],
-				"execution_count": 33
+				"execution_count": 50
 			},
 			{
 				"cell_type": "code",
@@ -381,6 +378,8 @@
 					"collapsed": true
 				},
 				"source": [
+					"//SCALA EXAMPLE - SKIPPED\r\n",
+					"\r\n",
 					"deltaTable.as(\"t\")\r\n",
 					"  .merge(\r\n",
 					"    latestChangeForEachKey.as(\"s\"),\r\n",
