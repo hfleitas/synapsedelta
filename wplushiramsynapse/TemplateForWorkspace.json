@@ -37,15 +37,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/wplussynapsedw')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/GetLabFilesFromHTTP')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -703,6 +694,540 @@
 			},
 			"dependsOn": [],
 			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Delta')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "threedot0",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_spark",
+						"display_name": "Synapse Spark"
+					},
+					"language_info": {
+						"name": "scala"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+						"name": "threedot0",
+						"type": "Spark",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.0",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Resources\r\n",
+							"* https://docs.databricks.com/_static/notebooks/merge-in-cdc.html\r\n",
+							"* https://techcommunity.microsoft.com/t5/azure-synapse-analytics/query-delta-lake-files-using-t-sql-language-in-azure-synapse/ba-p/2388398\r\n",
+							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/query-delta-lake-format\r\n",
+							"* https://databricks.com/blog/2019/03/19/efficient-upserts-into-data-lakes-databricks-delta.html\r\n",
+							"* https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=azure-sqldw-latest\r\n",
+							"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
+							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"case class Data(key: String, value: String)\r\n",
+							"\r\n",
+							"case class ChangeData(key: String, newValue: String, deleted: Boolean, time: Long) {\r\n",
+							"  assert(newValue != null ^ deleted)\r\n",
+							"}"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val target = Seq(\r\n",
+							"  Data(\"a\", \"0\"),\r\n",
+							"  Data(\"b\", \"1\"),\r\n",
+							"  Data(\"c\", \"2\"),\r\n",
+							"  Data(\"d\", \"3\")\r\n",
+							").toDF()"
+						],
+						"outputs": [],
+						"execution_count": 37
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"sql(\"drop table if exists target\")\r\n",
+							"\r\n",
+							"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
+						],
+						"outputs": [],
+						"execution_count": 38
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+							"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+							"\r\n",
+							"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
+							"\r\n",
+							"targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 40
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"select * from target order by key"
+						],
+						"outputs": [],
+						"execution_count": 41
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"describe extended target"
+						],
+						"outputs": [],
+						"execution_count": 42
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val changeDataSource = Seq(\r\n",
+							"  ChangeData(\"a\", \"10\", deleted = false, time = 0),\r\n",
+							"  ChangeData(\"a\", null, deleted = true, time = 1),   // a was updated and then deleted\r\n",
+							"  ChangeData(\"b\", null, deleted = true, time = 2),   // b was just deleted once\r\n",
+							"  ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\r\n",
+							"  ChangeData(\"c\", \"20\", deleted = false, time = 4),\r\n",
+							"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
+							").toDF().createOrReplaceTempView(\"changes\")"
+						],
+						"outputs": [],
+						"execution_count": 43
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {},
+							"collapsed": false
+						},
+						"source": [
+							"-- SQL EXAMPLE\r\n",
+							"\r\n",
+							"%%sql \r\n",
+							"MERGE INTO target t\r\n",
+							"USING (\r\n",
+							"  -- Find the latest change for each key based on the timestamp\r\n",
+							"  SELECT key, latest.newValue as newValue, latest.deleted as deleted FROM (    \r\n",
+							"    -- Note: For nested structs, max on struct is computed as \r\n",
+							"    -- max on first struct field, if equal fall back to second fields, and so on.\r\n",
+							"    SELECT key, max(struct(time, newValue, deleted)) as latest FROM changes GROUP BY key\r\n",
+							"  )\r\n",
+							") s\r\n",
+							"ON s.key = t.key\r\n",
+							"WHEN MATCHED AND s.deleted = true THEN DELETE\r\n",
+							"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
+							"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
+						],
+						"outputs": [],
+						"execution_count": 45
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"// SCALA EXAMPLE - SKIP\r\n",
+							"\r\n",
+							"import io.delta.tables._\r\n",
+							"import org.apache.spark.sql.functions._\r\n",
+							"\r\n",
+							"val deltaTable = DeltaTable.forName(\"target\")\r\n",
+							"\r\n",
+							"val changesDF = spark.sql(\"select * from changes\")\r\n",
+							"\r\n",
+							"changesDF.head()"
+						],
+						"outputs": [],
+						"execution_count": 22
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\" ).groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
+						],
+						"outputs": [],
+						"execution_count": 46
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"latestChangeForEachKey.show() // shows the latest change for each key"
+						],
+						"outputs": [],
+						"execution_count": 47
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 48
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"select * from lastchanges"
+						],
+						"outputs": [],
+						"execution_count": 49
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"//instead of delta to read as ext table in dedicated pool\r\n",
+							"\r\n",
+							"latestChangeForEachKey.write.format(\"parquet\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
+						],
+						"outputs": [],
+						"execution_count": 52
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"//SCALA EXAMPLE - SKIPPED\r\n",
+							"\r\n",
+							"deltaTable.as(\"t\")\r\n",
+							"  .merge(\r\n",
+							"    latestChangeForEachKey.as(\"s\"),\r\n",
+							"    \"s.key = t.key\")\r\n",
+							"  .whenMatched(\"s.deleted = true\")\r\n",
+							"  .delete()\r\n",
+							"  .whenMatched()\r\n",
+							"  .updateExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+							"  .whenNotMatched(\"s.deleted = false\")\r\n",
+							"  .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+							"  .execute()"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+							"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+							"\r\n",
+							"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
+							"\r\n",
+							"lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 51
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaServerless')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "SELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaMerged')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "SELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows \n\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows ",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "default",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaSQLPoolMerge')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "MERGE into target as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\ngo\n/*Merge statements with a WHEN NOT MATCHED [BY TARGET] clause must target a hash distributed table.*/\n\n\nif object_id('target2hash') is not null drop table target2hash;\n\nCreate table target2hash\nwith (\n    distribution = hash([key]),\n    clustered columnstore index\n)\nas\nselect * from target\ngo\n\nMERGE into target2hash as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\n\nselect * from target2hash;\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
 		}
 	]
 }
