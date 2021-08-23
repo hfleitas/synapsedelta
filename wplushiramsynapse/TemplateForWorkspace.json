@@ -37,6 +37,15 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/wplussynapsedw')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/GetLabFilesFromHTTP')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -391,7 +400,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -427,7 +436,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -525,8 +534,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "wplussynapsedw",
-						"databaseName": "master"
+						"databaseName": "master",
+						"poolName": "wplussynapsedw"
 					},
 					"resultLimit": 5000
 				},
@@ -548,8 +557,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "wplussynapsedw",
-						"databaseName": "wplussynapsedw"
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
 					},
 					"resultLimit": 5000
 				},
@@ -568,8 +577,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "master"
+						"databaseName": "master",
+						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
@@ -591,8 +600,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "wplussynapsedw",
-						"databaseName": "wplussynapsedw"
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
 					},
 					"resultLimit": 5000
 				},
