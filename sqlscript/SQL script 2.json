@@ -2,13 +2,13 @@
 	"name": "SQL script 2",
 	"properties": {
 		"content": {
-			"query": "",
+			"query": "select * from target",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
-				"poolName": "Built-in"
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
 			},
 			"resultLimit": 5000
 		},

@@ -125,7 +125,7 @@
 					"targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)\r\n",
 					""
 				],
-				"execution_count": 39
+				"execution_count": 40
 			},
 			{
 				"cell_type": "code",
