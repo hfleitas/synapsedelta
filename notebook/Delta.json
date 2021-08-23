@@ -47,6 +47,26 @@
 		},
 		"cells": [
 			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Resources\r\n",
+					"* https://docs.databricks.com/_static/notebooks/merge-in-cdc.html\r\n",
+					"* https://techcommunity.microsoft.com/t5/azure-synapse-analytics/query-delta-lake-files-using-t-sql-language-in-azure-synapse/ba-p/2388398\r\n",
+					"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/query-delta-lake-format\r\n",
+					"* https://databricks.com/blog/2019/03/19/efficient-upserts-into-data-lakes-databricks-delta.html\r\n",
+					"* https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=azure-sqldw-latest\r\n",
+					"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
+					"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas"
+				]
+			},
+			{
 				"cell_type": "code",
 				"source": [
 					"case class Data(key: String, value: String)\r\n",
