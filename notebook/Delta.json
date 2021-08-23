@@ -79,7 +79,7 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"execution_count": 9
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -100,7 +100,7 @@
 					"\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"execution_count": null
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -120,13 +120,12 @@
 					"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
 					"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
 					"\r\n",
-					"target.write.synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL) \r\n",
+					"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
 					"\r\n",
-					"df.write.\r\n",
-					"option(Constants.SERVER, \"samplews.database.windows.net\").\r\n",
-					"synapsesql(\"<DBName>.<Schema>.<TableName>\", <TableType>)"
+					"targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)\r\n",
+					""
 				],
-				"execution_count": 36
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
