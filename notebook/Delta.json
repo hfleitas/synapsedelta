@@ -359,9 +359,11 @@
 					"collapsed": true
 				},
 				"source": [
-					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\")"
+					"//instead of delta to read as ext table in dedicated pool\r\n",
+					"\r\n",
+					"latestChangeForEachKey.write.format(\"parquet\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"execution_count": 50
+				"execution_count": 52
 			},
 			{
 				"cell_type": "code",
@@ -393,6 +395,31 @@
 					"  .execute()"
 				],
 				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+					"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+					"\r\n",
+					"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
+					"\r\n",
+					"lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)\r\n",
+					""
+				],
+				"execution_count": 51
 			}
 		]
 	}
