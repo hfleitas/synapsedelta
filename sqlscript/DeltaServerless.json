@@ -1,6 +1,9 @@
 {
 	"name": "DeltaServerless",
 	"properties": {
+		"folder": {
+			"name": "Delta"
+		},
 		"content": {
 			"query": "SELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows",
 			"metadata": {
