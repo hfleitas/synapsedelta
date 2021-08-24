@@ -1,0 +1,20 @@
+{
+	"name": "DeltaDropTarget",
+	"properties": {
+		"folder": {
+			"name": "Delta"
+		},
+		"content": {
+			"query": "if object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\n\ncreate proc DeltaDropTarget\nas \n\n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
