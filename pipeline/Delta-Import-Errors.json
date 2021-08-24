@@ -29,7 +29,7 @@
 					},
 					"sink": {
 						"type": "SqlPoolSink",
-						"allowCopyCommand": true,
+						"sqlWriterUseTableLock": false,
 						"tableOption": "autoCreate"
 					},
 					"enableStaging": true,
