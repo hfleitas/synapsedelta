@@ -4,6 +4,7 @@
 		"activities": [
 			{
 				"name": "Target",
+				"description": "overwrites staging table in SQL Pools from Serverless",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
