@@ -1,0 +1,25 @@
+{
+	"name": "Target",
+	"properties": {
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [
+			{
+				"name": "key",
+				"type": "nvarchar"
+			},
+			{
+				"name": "value",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "target"
+		},
+		"sqlPool": {
+			"referenceName": "wplussynapsedw",
+			"type": "SqlPoolReference"
+		}
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "vDeltaTarget",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OnDemandServerless",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "vDeltaTarget"
+		}
+	}
+}
