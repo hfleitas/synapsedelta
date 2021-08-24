@@ -39,6 +39,31 @@
 							"type": "LinkedServiceReference"
 						},
 						"path": "wplushiramsynapsefs"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "key",
+									"type": "String"
+								},
+								"sink": {
+									"name": "key",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "value",
+									"type": "String"
+								},
+								"sink": {
+									"name": "value",
+									"type": "String"
+								}
+							}
+						]
 					}
 				},
 				"inputs": [
