@@ -41,7 +41,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/Delta-Import-Errors')]",
+			"name": "[concat(parameters('workspaceName'), '/Delta-Import')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -755,7 +755,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "if object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\ngo \n\ncreate proc DeltaDropTarget\nas \n\n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo",
+					"query": "if object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\ngo \n\ncreate proc DeltaDropTarget\nas \n\n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo\n\n--reset table\nselect * from target\ndelete from [target]\ninsert target values('a','0')\ninsert target values('b','1')\ninsert target values('c','2')\ninsert target values('d','3')\nselect * from target\n\ndelete from [target]\ninsert target values('d','3')\ninsert target values('c','200')",
 					"metadata": {
 						"language": "sql"
 					},
@@ -925,8 +925,10 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -951,6 +953,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"case class Data(key: String, value: String)\r\n",
 							"\r\n",
