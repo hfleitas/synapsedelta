@@ -49,14 +49,7 @@
 					{
 						"name": "Target",
 						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "drop if exists",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -73,6 +66,7 @@
 							},
 							"sink": {
 								"type": "SqlPoolSink",
+								"preCopyScript": "exec DeltaDropTarget",
 								"allowPolyBase": true,
 								"polyBaseSettings": {
 									"rejectValue": 0,
@@ -130,29 +124,6 @@
 								"parameters": {}
 							}
 						]
-					},
-					{
-						"name": "drop if exists",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[dbo].[DeltaDropTarget]"
-						},
-						"linkedServiceName": {
-							"referenceName": "wplushiramsynapse-WorkspaceDefaultSqlServer",
-							"type": "LinkedServiceReference",
-							"parameters": {
-								"DBName": "wplussynapsedw"
-							}
-						}
 					}
 				],
 				"annotations": []
@@ -160,7 +131,6 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/vDeltaTarget')]",
 				"[concat(variables('workspaceId'), '/datasets/Target')]",
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultSqlServer')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
 			]
 		},
@@ -925,10 +895,8 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 56
+					}
 				},
 				"cells": [
 					{
@@ -953,7 +921,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"case class Data(key: String, value: String)\r\n",
 							"\r\n",
