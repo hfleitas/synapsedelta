@@ -22,7 +22,10 @@
 					},
 					"sink": {
 						"type": "SqlPoolSink",
-						"preCopyScript": "if object_id('target) is not null drop table target",
+						"preCopyScript": {
+							"value": "@{string('if object_id(\"target\") is not null drop table target')}",
+							"type": "Expression"
+						},
 						"allowCopyCommand": true,
 						"tableOption": "autoCreate"
 					},
