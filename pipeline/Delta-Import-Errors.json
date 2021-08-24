@@ -1,5 +1,5 @@
 {
-	"name": "Delta-Import",
+	"name": "Delta-Import-Errors",
 	"properties": {
 		"activities": [
 			{
@@ -35,12 +35,6 @@
 						"path": "wplushiramsynapsefs"
 					}
 				},
-				"inputs": [
-					{
-						"referenceName": "vDeltaTarget",
-						"type": "DatasetReference"
-					}
-				],
 				"outputs": [
 					{
 						"referenceName": "Target",
