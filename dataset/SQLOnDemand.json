@@ -15,7 +15,8 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"table": "@dataset().table"
+			"schema": "dbo",
+			"table": "vDeltaTarget"
 		}
 	}
 }
