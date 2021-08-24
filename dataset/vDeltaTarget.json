@@ -1,5 +1,5 @@
 {
-	"name": "SQLOnDemand",
+	"name": "vDeltaTarget",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SQLOnDemand",
