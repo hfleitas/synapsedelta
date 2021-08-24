@@ -120,9 +120,7 @@
 							{
 								"referenceName": "vDeltaTarget",
 								"type": "DatasetReference",
-								"parameters": {
-									"table": "select * from hiram.dbo.vDeltaTarget"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
@@ -456,12 +454,6 @@
 				"linkedServiceName": {
 					"referenceName": "SQLOnDemand",
 					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"table": {
-						"type": "string",
-						"defaultValue": "select * from hiram.dbo.vDeltaTarget"
-					}
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
