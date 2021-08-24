@@ -475,7 +475,8 @@
 					"* https://databricks.com/blog/2019/03/19/efficient-upserts-into-data-lakes-databricks-delta.html\r\n",
 					"* https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=azure-sqldw-latest\r\n",
 					"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
-					"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas"
+					"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas\r\n",
+					"* https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example-part-2/"
 				]
 			}
 		]
