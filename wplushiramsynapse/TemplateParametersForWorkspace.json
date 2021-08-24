@@ -8,6 +8,9 @@
 		"LaptopFact_password": {
 			"value": ""
 		},
+		"SQLOnDemand_connectionString": {
+			"value": ""
+		},
 		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},

@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LaptopFact'"
 		},
+		"SQLOnDemand_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SQLOnDemand'"
+		},
 		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'wplushiramsynapse-WorkspaceDefaultSqlServer'"
@@ -36,6 +40,132 @@
 		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/Delta-Import-Errors')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Target",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "drop if exists",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlPoolSink",
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								},
+								"tableOption": "autoCreate",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+									"type": "LinkedServiceReference"
+								},
+								"path": "wplushiramsynapsefs"
+							},
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "key",
+											"type": "String"
+										},
+										"sink": {
+											"name": "key",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "value",
+											"type": "String"
+										},
+										"sink": {
+											"name": "value",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "vDeltaTarget",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": "select * from hiram.dbo.vDeltaTarget"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Target",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "drop if exists",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[dbo].[DeltaDropTarget]"
+						},
+						"linkedServiceName": {
+							"referenceName": "wplushiramsynapse-WorkspaceDefaultSqlServer",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"DBName": "wplussynapsedw"
+							}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/vDeltaTarget')]",
+				"[concat(variables('workspaceId'), '/datasets/Target')]",
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultSqlServer')]",
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/GetLabFilesFromHTTP')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
@@ -250,6 +380,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Target')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "SqlPoolTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Target"
+				},
+				"sqlPool": {
+					"referenceName": "wplussynapsedw",
+					"type": "SqlPoolReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sqlPools/wplussynapsedw')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/blobLabFilesZip')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -298,6 +449,33 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/vDeltaTarget')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SQLOnDemand",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"table": {
+						"type": "string",
+						"defaultValue": "select * from hiram.dbo.vDeltaTarget"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "vDeltaTarget"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/SQLOnDemand')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/LabFilesZip')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -340,6 +518,25 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/Laptop')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQLOnDemand')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('SQLOnDemand_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
 			]
 		},
 		{
@@ -558,6 +755,98 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaDropTarget')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "if object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\ngo \n\ncreate proc DeltaDropTarget\nas \n\n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaMerged')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "SELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows \n\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows ",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "default",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaSQLPoolMerge')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "MERGE into target as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\ngo\n/*Merge statements with a WHEN NOT MATCHED [BY TARGET] clause must target a hash distributed table.*/\n\n\nif object_id('target2hash') is not null drop table target2hash;\n\nCreate table target2hash\nwith (\n    distribution = hash([key]),\n    clustered columnstore index\n)\nas\nselect * from target\ngo\n\nMERGE into target2hash as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\n\nselect * from target2hash;\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaServerless')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "create view vDeltaTarget\nas\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows\ngo\n\ncreate view vDeltaLastChanges\nas\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows \ngo\n\nselect * from vDeltaTarget\n\n/*Pipeline dataset error\nError code 22301\nDetails\nA database operation failed with the following error: \n'Cannot find the CREDENTIAL 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/synapse/workspaces/wplushiramsynapse/warehouse/target', \nbecause it does not exist or you do not have permission. Could not use view or function 'dbo.vDeltaTarget' because of binding errors.' \nCannot find the CREDENTIAL 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/synapse/workspaces/wplushiramsynapse/warehouse/target', \nbecause it does not exist or you do not have permission. Could not use view or function 'dbo.vDeltaTarget' because of binding errors., \nSqlErrorNumber=15151,Class=16,State=1, Activity ID: a95f734b-4902-4380-9976-7b6398d32915\n*/\n\nCREATE CREDENTIAL [https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs]\nWITH IDENTITY='SHARED ACCESS SIGNATURE'\n, SECRET = 'mySASkey';\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "hiram",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/ServerlessVersion')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -599,101 +888,6 @@
 				"type": "SqlQuery"
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/HiSpark')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"bigDataPool": {
-					"referenceName": "threedot0",
-					"type": "BigDataPoolReference"
-				},
-				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
-					"numExecutors": 2,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2"
-					}
-				},
-				"metadata": {
-					"saveOutput": true,
-					"kernelspec": {
-						"name": "synapse_pyspark",
-						"display_name": "Synapse PySpark"
-					},
-					"language_info": {
-						"name": "python"
-					},
-					"a365ComputeOptions": {
-						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
-						"name": "threedot0",
-						"type": "Spark",
-						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
-						"auth": {
-							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
-						},
-						"sparkVersion": "3.0",
-						"nodeCount": 3,
-						"cores": 4,
-						"memory": 28
-					}
-				},
-				"cells": [
-					{
-						"cell_type": "code",
-						"source": [
-							"print('hi spark')"
-						],
-						"outputs": [],
-						"execution_count": 1
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"import pkg_resources\r\n",
-							"for d in pkg_resources.working_set:\r\n",
-							"     print(d)"
-						],
-						"outputs": [],
-						"execution_count": 2
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/wplussynapsedw')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"collation": "SQL_Latin1_General_CP1_CI_AS",
-				"maxSizeBytes": 263882790666240,
-				"restorePointInTime": "0001-01-01T00:00:00",
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "eastus"
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/Delta')]",
@@ -739,10 +933,8 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 56
+					}
 				},
 				"cells": [
 					{
@@ -767,7 +959,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"case class Data(key: String, value: String)\r\n",
 							"\r\n",
@@ -819,7 +1010,6 @@
 						},
 						"source": [
 							"sql(\"drop table if exists target\")\r\n",
-							"\r\n",
 							"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 						],
 						"outputs": [],
@@ -938,7 +1128,6 @@
 									"deleting": false
 								}
 							},
-							"microsoft": {},
 							"collapsed": false
 						},
 						"source": [
@@ -1161,73 +1350,99 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/DeltaServerless')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"name": "[concat(parameters('workspaceName'), '/HiSpark')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"folder": {
-					"name": "Delta"
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "threedot0",
+					"type": "BigDataPoolReference"
 				},
-				"content": {
-					"query": "SELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
 				},
-				"type": "SqlQuery"
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+						"name": "threedot0",
+						"type": "Spark",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.0",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28
+					}
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"source": [
+							"print('hi spark')"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"import pkg_resources\r\n",
+							"for d in pkg_resources.working_set:\r\n",
+							"     print(d)"
+						],
+						"outputs": [],
+						"execution_count": 2
+					}
+				]
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/DeltaMerged')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"name": "[concat(parameters('workspaceName'), '/wplussynapsedw')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"folder": {
-					"name": "Delta"
-				},
-				"content": {
-					"query": "SELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows \n\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows ",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "default",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/DeltaSQLPoolMerge')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Delta"
-				},
-				"content": {
-					"query": "MERGE into target as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\ngo\n/*Merge statements with a WHEN NOT MATCHED [BY TARGET] clause must target a hash distributed table.*/\n\n\nif object_id('target2hash') is not null drop table target2hash;\n\nCreate table target2hash\nwith (\n    distribution = hash([key]),\n    clustered columnstore index\n)\nas\nselect * from target\ngo\n\nMERGE into target2hash as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\n\nselect * from target2hash;\n\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "wplussynapsedw",
-						"poolName": "wplussynapsedw"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
+			"dependsOn": [],
+			"location": "eastus"
 		}
 	]
 }
