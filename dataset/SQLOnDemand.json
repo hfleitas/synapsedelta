@@ -1,0 +1,21 @@
+{
+	"name": "SQLOnDemand",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLOnDemand",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"table": {
+				"type": "string",
+				"defaultValue": "select * from hiram.dbo.vDeltaTarget"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "@dataset().table"
+		}
+	}
+}
