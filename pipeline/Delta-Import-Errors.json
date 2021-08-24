@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlServerSource",
+						"type": "AzureSqlSource",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -35,6 +35,12 @@
 						"path": "wplushiramsynapsefs"
 					}
 				},
+				"inputs": [
+					{
+						"referenceName": "vDeltaTarget",
+						"type": "DatasetReference"
+					}
+				],
 				"outputs": [
 					{
 						"referenceName": "Target",
