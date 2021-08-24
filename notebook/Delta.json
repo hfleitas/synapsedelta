@@ -117,7 +117,6 @@
 				},
 				"source": [
 					"sql(\"drop table if exists target\")\r\n",
-					"\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
 				"execution_count": 38
