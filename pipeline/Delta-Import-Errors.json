@@ -5,7 +5,14 @@
 			{
 				"name": "Target",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "drop if exists",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -22,10 +29,6 @@
 					},
 					"sink": {
 						"type": "SqlPoolSink",
-						"preCopyScript": {
-							"value": "@{string('if object_id(\"target\") is not null drop table target')}",
-							"type": "Expression"
-						},
 						"allowCopyCommand": true,
 						"tableOption": "autoCreate"
 					},
@@ -50,6 +53,29 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "drop if exists",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[DeltaDropTarget]"
+				},
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "wplussynapsedw"
+					}
+				}
 			}
 		],
 		"annotations": []
