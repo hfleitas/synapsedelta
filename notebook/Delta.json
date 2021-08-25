@@ -161,8 +161,7 @@
 					"\r\n",
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
 					"\r\n",
-					"targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)\r\n",
-					""
+					"targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
 				],
 				"execution_count": 40
 			},
@@ -315,7 +314,7 @@
 					"collapsed": true
 				},
 				"source": [
-					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\" ).groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
+					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
 				],
 				"execution_count": 46
 			},
@@ -353,8 +352,7 @@
 					"collapsed": true
 				},
 				"source": [
-					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")\r\n",
-					""
+					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
 				"execution_count": 48
 			},
@@ -453,8 +451,7 @@
 					"\r\n",
 					"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
 					"\r\n",
-					"lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)\r\n",
-					""
+					"lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
 				],
 				"execution_count": 51
 			},
