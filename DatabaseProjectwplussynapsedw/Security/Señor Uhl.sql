@@ -1,0 +1,5 @@
+CREATE USER [Señor Uhl] WITHOUT LOGIN;
+
+
+GO
+

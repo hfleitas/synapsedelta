@@ -1,0 +1,5 @@
+CREATE USER [Mr. Nuñez] WITHOUT LOGIN;
+
+
+GO
+

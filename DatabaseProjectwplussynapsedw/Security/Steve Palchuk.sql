@@ -1,0 +1,5 @@
+CREATE USER [Steve Palchuk] WITHOUT LOGIN;
+
+
+GO
+

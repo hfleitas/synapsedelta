@@ -1,0 +1,5 @@
+CREATE USER [Nana] WITHOUT LOGIN;
+
+
+GO
+

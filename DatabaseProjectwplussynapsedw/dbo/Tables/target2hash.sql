@@ -1,0 +1,13 @@
+CREATE TABLE [dbo].[target2hash] (
+    [key]   NVARCHAR (4000) NULL,
+    [value] NVARCHAR (4000) NULL
+)
+WITH (CLUSTERED COLUMNSTORE INDEX, DISTRIBUTION = HASH([key]));
+
+
+GO
+
+
+
+GO
+

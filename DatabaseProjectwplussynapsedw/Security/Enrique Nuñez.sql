@@ -1,0 +1,5 @@
+CREATE USER [Enrique Nuñez] WITHOUT LOGIN;
+
+
+GO
+

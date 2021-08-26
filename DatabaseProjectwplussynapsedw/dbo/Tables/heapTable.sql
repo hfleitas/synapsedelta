@@ -1,0 +1,8 @@
+CREATE TABLE [dbo].[heapTable] (
+    [col1] INT NOT NULL
+)
+WITH (HEAP, DISTRIBUTION = ROUND_ROBIN);
+
+
+GO
+

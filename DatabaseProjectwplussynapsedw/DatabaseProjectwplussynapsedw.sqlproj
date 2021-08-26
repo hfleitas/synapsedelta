@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>DatabaseProjectwplussynapsedw</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{AF0F407D-6F2D-425F-9506-EEA66E372F42}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>DatabaseProjectwplussynapsedw</RootNamespace>
+    <AssemblyName>DatabaseProjectwplussynapsedw</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(NetCoreBuild)' == 'true'" Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <PackageReference Condition="'$(NetCoreBuild)' == 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Security\" />
+    <Folder Include="Portal\" />
+    <Folder Include="Portal\Functions\" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Views\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\StoredProcedures\" />
+    <Folder Include="dbo\Security\" />
+  </ItemGroup>
+  <Target Name="BeforeBuild">
+    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />
+  </Target>
+  <ItemGroup>
+    <Build Include="Security\wplushiramsynapse.sql" />
+    <Build Include="Security\Waltolemew Strickler.sql" />
+    <Build Include="Security\Tobias Domzalski.sql" />
+    <Build Include="Security\Steve Palchuk.sql" />
+    <Build Include="Security\SqlAnalyticsConnector.sql" />
+    <Build Include="Security\Shannon Longhannon.sql" />
+    <Build Include="Security\Señor Uhl.sql" />
+    <Build Include="Security\Portal.sql" />
+    <Build Include="Security\Nana.sql" />
+    <Build Include="Security\Mrs. Nuñez.sql" />
+    <Build Include="Security\Mr. Nuñez.sql" />
+    <Build Include="Security\Mary J. Wang.sql" />
+    <Build Include="Security\Jim Lake Sr..sql" />
+    <Build Include="Security\Jim Lake Jr..sql" />
+    <Build Include="Security\Enrique Nuñez.sql" />
+    <Build Include="Security\Elijah Leslie Pepperjack.sql" />
+    <Build Include="Security\DWLoader_1.sql" />
+    <Build Include="Security\dwloaderrc10_1.sql" />
+    <Build Include="Security\dwloaderrc10.sql" />
+    <Build Include="Security\DWLoader.sql" />
+    <Build Include="Security\Darci Scott.sql" />
+    <Build Include="Security\Coach Lawrence.sql" />
+    <Build Include="Security\Claire Maria Nuñez.sql" />
+    <Build Include="Security\Barbara Lake.sql" />
+    <Build Include="Portal\Functions\fn_PortalAccess.sql" />
+    <Build Include="dbo\Views\Humans.sql" />
+    <Build Include="dbo\Tables\target2hash.sql" />
+    <Build Include="dbo\Tables\Target.sql" />
+    <Build Include="dbo\Tables\Table.sql" />
+    <Build Include="dbo\Tables\RRTable.sql" />
+    <Build Include="dbo\Tables\replTable.sql" />
+    <Build Include="dbo\Tables\Locations.sql" />
+    <Build Include="dbo\Tables\Letters.sql" />
+    <Build Include="dbo\Tables\lastchanges.sql" />
+    <Build Include="dbo\Tables\heapTable.sql" />
+    <Build Include="dbo\Tables\Episode.sql" />
+    <Build Include="dbo\Tables\Character.sql" />
+    <Build Include="dbo\StoredProcedures\DeltaDropTarget.sql" />
+    <Build Include="dbo\Security\PortalPolicy.sql" />
+  </ItemGroup>
+</Project>

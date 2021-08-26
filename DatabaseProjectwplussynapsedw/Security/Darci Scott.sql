@@ -1,0 +1,5 @@
+CREATE USER [Darci Scott] WITHOUT LOGIN;
+
+
+GO
+

@@ -1,0 +1,5 @@
+CREATE USER [Jim Lake Jr.] WITHOUT LOGIN;
+
+
+GO
+
