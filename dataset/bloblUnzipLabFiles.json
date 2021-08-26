@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_bb2",
+	"name": "bloblUnzipLabFiles",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
@@ -10,10 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "Fact",
 				"fileSystem": "nyctaxistaging"
 			}
 		}
-	},
-	"type": "Microsoft.Synapse/workspaces/datasets"
+	}
 }

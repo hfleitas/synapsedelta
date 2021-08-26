@@ -1,0 +1,35 @@
+{
+	"name": "Last Day of Month",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "wait",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Month",
+				"interval": 15,
+				"startTime": "2021-07-01T18:53:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						58
+					],
+					"hours": [
+						8
+					],
+					"monthDays": [
+						-1
+					]
+				}
+			}
+		}
+	}
+}

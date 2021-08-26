@@ -1,0 +1,29 @@
+{
+	"name": "MoveUnzippedFiles",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": {
+						"value": "@pipeline().parameters.hiram",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"hiram": {
+				"type": "string",
+				"defaultValue": "select 10 as wait"
+			}
+		},
+		"folder": {
+			"name": "M01L05Lab01"
+		},
+		"annotations": []
+	}
+}

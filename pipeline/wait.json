@@ -1,0 +1,23 @@
+{
+	"name": "wait",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			}
+		],
+		"parameters": {
+			"test": {
+				"type": "string",
+				"defaultValue": "SELECT PATINDEX('%schools%', 'W3Schools.com');"
+			}
+		},
+		"annotations": []
+	}
+}

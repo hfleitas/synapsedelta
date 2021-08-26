@@ -1,0 +1,29 @@
+# Starter pipeline
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'wplushiramsynapse'
+    Contents: '*.json'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- workspace_publish
+
+pool:
+  vmImage: vs2017-win2016
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'Drop'
+    publishLocation: 'pipeline'
