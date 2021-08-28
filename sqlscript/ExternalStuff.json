@@ -1,0 +1,17 @@
+{
+	"name": "ExternalStuff",
+	"properties": {
+		"content": {
+			"query": "drop external data source ExternalDataSource\ngo\nCREATE EXTERNAL DATA SOURCE [fs] WITH\n(\n\tTYPE = HADOOP,\n\tLOCATION = 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/devs.csv'\n)\n-- url https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs\n-- endpoint https://wplushiramsynapseadlsv2.dfs.core.windows.net/\ngo \n\nCREATE EXTERNAL FILE FORMAT skipHeader_CSV\nWITH (FORMAT_TYPE = DELIMITEDTEXT,\n      FORMAT_OPTIONS(\n          FIELD_TERMINATOR = ',',\n          STRING_DELIMITER = '\"',\n          FIRST_ROW = 2, \n          USE_TYPE_DEFAULT = True)\n)\n\nCREATE EXTERNAL TABLE cetasDevs\n(\n    [first] varchar(50),\n    [last] varchar(50)\n)  \nWITH (\n    LOCATION = 'devs.csv',\n    DATA_SOURCE = ExternalDataSource,  \n    FILE_FORMAT = skipHeader_CSV\n)\nGO\n\nSELECT TOP 1 * FROM cetasDevs",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
