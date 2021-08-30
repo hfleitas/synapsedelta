@@ -1,0 +1,17 @@
+{
+	"name": "ExternalStuff",
+	"properties": {
+		"content": {
+			"query": "create database scoped credential wplushiramsynapsefs_cred\nwith \n     identity = 'wplushiramsynapseadlsv2', \n     secret = '' --my storage key, sas not needed\ngo \n\n-- if behind private endpoint, in order to auth FW need to use Service Idendity. Using the key wont work.\n\ncreate database scoped credential msi_cred\nwith \n     identity = 'Managed Identity' -- same as 'Managed Service Identity'\ngo \n\ndrop external data source wplushiramsynapsefs\ngo \n\ncreate external data source wplushiramsynapsefs\nwith (    \n    location = 'abfs://wplushiramsynapsefs@wplushiramsynapseadlsv2.blob.core.windows.net/',\n    credential = msi_cred,\n    type = HADOOP\n)\n\n-- Ref: abfs recommened for big data workloads & adls gen2.\n-- https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction#key-features-of-data-lake-storage-gen2\n\ndrop external file format skipHeader_CSV\ngo \n\ncreate external file format skipHeader_CSV\nwith (FORMAT_TYPE = DELIMITEDTEXT,\n      FORMAT_OPTIONS(\n          FIELD_TERMINATOR = ',',\n          STRING_DELIMITER = '\"',\n          FIRST_ROW = 2, \n          USE_TYPE_DEFAULT = True)\n)\n\nif object_id('extDevs') is not null drop external table extDevs\ngo \n\nCREATE EXTERNAL TABLE extDevs (\n    [first] varchar(50),\n    [last] varchar(50)\n)  \nWITH (\n    LOCATION = 'devs.csv',\n    DATA_SOURCE = wplushiramsynapsefs,  \n    FILE_FORMAT = skipHeader_CSV\n)\nGO\n\nSELECT TOP 10 * FROM extDevs",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
