@@ -238,6 +238,19 @@
 				"execution_count": 43
 			},
 			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### SQL Example"
+				]
+			},
+			{
 				"cell_type": "code",
 				"metadata": {
 					"jupyter": {
@@ -249,11 +262,12 @@
 							"deleting": false
 						}
 					},
+					"microsoft": {
+						"language": "sparksql"
+					},
 					"collapsed": false
 				},
 				"source": [
-					"-- SQL EXAMPLE\r\n",
-					"\r\n",
 					"%%sql \r\n",
 					"MERGE INTO target t\r\n",
 					"USING (\r\n",
@@ -272,6 +286,19 @@
 				"execution_count": 45
 			},
 			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### SCALA EXAMPLE (Skip)"
+				]
+			},
+			{
 				"cell_type": "code",
 				"metadata": {
 					"jupyter": {
@@ -286,16 +313,14 @@
 					"collapsed": true
 				},
 				"source": [
-					"// SCALA EXAMPLE - SKIP\r\n",
+					"// import io.delta.tables._\r\n",
+					"// import org.apache.spark.sql.functions._\r\n",
 					"\r\n",
-					"import io.delta.tables._\r\n",
-					"import org.apache.spark.sql.functions._\r\n",
+					"// val deltaTable = DeltaTable.forName(\"target\")\r\n",
 					"\r\n",
-					"val deltaTable = DeltaTable.forName(\"target\")\r\n",
+					"// val changesDF = spark.sql(\"select * from changes\")\r\n",
 					"\r\n",
-					"val changesDF = spark.sql(\"select * from changes\")\r\n",
-					"\r\n",
-					"changesDF.head()"
+					"// changesDF.head()"
 				],
 				"execution_count": 22
 			},
@@ -396,9 +421,22 @@
 				"source": [
 					"//instead of delta to read as ext table in dedicated pool\r\n",
 					"\r\n",
-					"latestChangeForEachKey.write.format(\"parquet\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
+					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
 				"execution_count": 52
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### SCALA EXAMPLE (Skipped)"
+				]
 			},
 			{
 				"cell_type": "code",
@@ -415,19 +453,17 @@
 					"collapsed": true
 				},
 				"source": [
-					"//SCALA EXAMPLE - SKIPPED\r\n",
-					"\r\n",
-					"deltaTable.as(\"t\")\r\n",
-					"  .merge(\r\n",
-					"    latestChangeForEachKey.as(\"s\"),\r\n",
-					"    \"s.key = t.key\")\r\n",
-					"  .whenMatched(\"s.deleted = true\")\r\n",
-					"  .delete()\r\n",
-					"  .whenMatched()\r\n",
-					"  .updateExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
-					"  .whenNotMatched(\"s.deleted = false\")\r\n",
-					"  .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
-					"  .execute()"
+					"// deltaTable.as(\"t\")\r\n",
+					"//   .merge(\r\n",
+					"//     latestChangeForEachKey.as(\"s\"),\r\n",
+					"//     \"s.key = t.key\")\r\n",
+					"//   .whenMatched(\"s.deleted = true\")\r\n",
+					"//   .delete()\r\n",
+					"//   .whenMatched()\r\n",
+					"//   .updateExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+					"//   .whenNotMatched(\"s.deleted = false\")\r\n",
+					"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+					"//   .execute()"
 				],
 				"execution_count": null
 			},
