@@ -40,7 +40,7 @@
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.0",
+				"sparkVersion": "3.1",
 				"nodeCount": 3,
 				"cores": 8,
 				"memory": 56,
@@ -161,7 +161,7 @@
 					"\r\n",
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
 					"\r\n",
-					"targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
+					"// targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
 				],
 				"execution_count": 40
 			},
