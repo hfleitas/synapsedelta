@@ -5,7 +5,7 @@
 			"name": "Delta"
 		},
 		"content": {
-			"query": "--reset table\nselect * from [target]\ngo \n\ndelete from [target];\ngo \n\ninsert [target] values('a','0')\ninsert [target] values('b','1')\ninsert [target] values('c','2')\ninsert [target] values('d','3')\ngo \n\n\nselect * from [target];\n\ndelete from [target]; \ngo \n\ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo\n\n--reset lastchanges\ndelete from [lastchanges];\ninsert [lastchanges] values ('a','1',NULL,1)\ninsert [lastchanges] values ('c','5','200',0)\ninsert [lastchanges] values ('b','2',NULL,1)",
+			"query": "--reset table\nselect * from [target]\ngo \n\ndelete from [target]; \ngo \n\ninsert [target] values('a','0')\ninsert [target] values('b','1')\ninsert [target] values('c','2')\ninsert [target] values('d','3')\ngo \n\n\nselect * from [target];\n\ndelete from [target]; \ngo \n\ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo\n\n--reset lastchanges\ndelete from [lastchanges];\ninsert [lastchanges] values ('a','1',NULL,1)\ninsert [lastchanges] values ('c','5','200',0)\ninsert [lastchanges] values ('b','2',NULL,1)",
 			"metadata": {
 				"language": "sql"
 			},
