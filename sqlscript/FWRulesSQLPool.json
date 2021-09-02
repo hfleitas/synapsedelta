@@ -2,7 +2,7 @@
 	"name": "FWRulesSQLPool",
 	"properties": {
 		"content": {
-			"query": "-- DW / Dedicated SQL Pool\n-- use master\n\nSELECT name AS [Firewall Rule Name]\n    ,start_ip_address AS [Start Address]\n    ,end_ip_address AS [End Address]\nFROM master.sys.firewall_rules",
+			"query": "-- DW / Dedicated SQL Pool\n-- use master\n\nselect * from master.sys.firewall_rules;\n\nexec sp_delete_firewall_rule 'AllowAllWindowsAzureIps'",
 			"metadata": {
 				"language": "sql"
 			},
