@@ -1,0 +1,16 @@
+{
+	"name": "LastChanges",
+	"properties": {
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Target"
+		},
+		"sqlPool": {
+			"referenceName": "wplussynapsedw",
+			"type": "SqlPoolReference"
+		}
+	}
+}
