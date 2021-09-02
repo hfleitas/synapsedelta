@@ -41,101 +41,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/Delta-Import')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Target",
-						"description": "overwrites staging table in SQL Pools from Serverless",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "SqlPoolSink",
-								"preCopyScript": "exec DeltaDropTarget",
-								"allowPolyBase": true,
-								"polyBaseSettings": {
-									"rejectValue": 0,
-									"rejectType": "value",
-									"useTypeDefault": true
-								},
-								"tableOption": "autoCreate",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": true,
-							"stagingSettings": {
-								"linkedServiceName": {
-									"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
-									"type": "LinkedServiceReference"
-								},
-								"path": "wplushiramsynapsefs"
-							},
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "key",
-											"type": "String"
-										},
-										"sink": {
-											"name": "key",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "value",
-											"type": "String"
-										},
-										"sink": {
-											"name": "value",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "vDeltaTarget",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Target",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/vDeltaTarget')]",
-				"[concat(variables('workspaceId'), '/datasets/Target')]",
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/GetLabFilesFromHTTP')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -746,7 +651,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "if object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\ngo \n\ncreate proc DeltaDropTarget\nas \n\n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo\n\n--reset table\nselect * from target\ndelete from [target]\ninsert target values('a','0')\ninsert target values('b','1')\ninsert target values('c','2')\ninsert target values('d','3')\nselect * from target\n\ndelete from [target]\ninsert target values('d','3')\ninsert target values('c','200')",
+					"query": "--  1. DeltaDropTarget\nif object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\ngo \ncreate proc DeltaDropTarget\nas \n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo\n\n-- 2. DeltaDropLastChanges\nif object_id('DeltaDropLastChanges') is not null drop proc DeltaDropLastChanges\ngo \ncreate proc DeltaDropLastChanges\nas \n    if object_id('LastChanges') is not null\n    begin\n        drop table LastChanges\n    end \ngo\n\n--3. ShakeNBake\nif object_id('ShakeNBake') is not null drop proc ShakeNBake\ngo \ncreate proc ShakeNBake\nas \n    -- rename object target2hash TO ReportTarget;\n    \n    --ctas to merge\n    if object_id('target2hash') is not null drop table [target2hash];\n    create table [target2hash]\n    with (\n        distribution = hash([key]),\n        clustered columnstore index\n    ) as select * from [target];\n\n    --merge\n    merge into [target2hash] as t\n    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])\n    on lc.[key] = t.[key]\n    when matched and lc.[deleted] = 1 \n        then delete\n    when matched\n        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]\n    when not matched and lc.[deleted] = 0 \n        then insert ([key], [value]) values(lc.[key], lc.[newValue]);\n\n    --rename\n    if object_id('ReportTarget') is not null drop table [ReportTarget];\n    rename object target2hash TO ReportTarget;\ngo",
 					"metadata": {
 						"language": "sql"
 					},
@@ -769,7 +674,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "MERGE into target as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\ngo\n/*Merge statements with a WHEN NOT MATCHED [BY TARGET] clause must target a hash distributed table.*/\n\n\nif object_id('target2hash') is not null drop table target2hash;\n\nCreate table target2hash\nwith (\n    distribution = hash([key]),\n    clustered columnstore index\n)\nas\nselect * from target\ngo\n\nMERGE into target2hash as t\nUSING (\n    SELECT * FROM lastchanges \n  ) as lc ([key], time, newvalue, deleted)\nON lc.[key] = t.[key]\nWHEN MATCHED AND lc.deleted = 1 \n    THEN DELETE\nWHEN MATCHED \n    THEN UPDATE SET t.[key] = lc.[key], t.[value] = lc.newValue\nWHEN NOT MATCHED AND lc.deleted = 0 \n    then INSERT ([key], [value]) VALUES(lc.[key], lc.newValue);\n\nselect * from target2hash;\n\n",
+					"query": "-- Merge statements with a WHEN NOT MATCHED [BY TARGET] clause must target a hash distributed table.\n\nif object_id('target2hash') is not null drop table [target2hash];\n\ncreate table [target2hash]\nwith (\n    distribution = hash([key]),\n    clustered columnstore index\n)\nas\nselect * from [target]\ngo \n\nmerge into [target2hash] as t\nusing (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])\non lc.[key] = t.[key]\nwhen matched and lc.[deleted] = 1 \n    then delete\nwhen matched\n    then update set t.[key] = lc.[key], t.[value] = lc.[newValue]\nwhen not matched and lc.[deleted] = 0 \n    then insert ([key], [value]) values(lc.[key], lc.[newValue]);\n\nselect * from target2hash;\n\n-- remarks: https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=azure-sqldw-latest#remarks",
 					"metadata": {
 						"language": "sql"
 					},
@@ -784,7 +689,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/DeltaServerless')]",
+			"name": "[concat(parameters('workspaceName'), '/DeltaSrvlessViews')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -792,7 +697,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "create view vDeltaTarget\nas\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows\ngo\n\ncreate view vDeltaLastChanges\nas\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows \ngo\n\nselect * from vDeltaTarget\n\n/*Pipeline dataset error\nError code 22301\nDetails\nA database operation failed with the following error: \n'Cannot find the CREDENTIAL 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/synapse/workspaces/wplushiramsynapse/warehouse/target', \nbecause it does not exist or you do not have permission. Could not use view or function 'dbo.vDeltaTarget' because of binding errors.' \nCannot find the CREDENTIAL 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/synapse/workspaces/wplushiramsynapse/warehouse/target', \nbecause it does not exist or you do not have permission. Could not use view or function 'dbo.vDeltaTarget' because of binding errors., \nSqlErrorNumber=15151,Class=16,State=1, Activity ID: a95f734b-4902-4380-9976-7b6398d32915\n*/\n\nCREATE CREDENTIAL [https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs]\nWITH IDENTITY='SHARED ACCESS SIGNATURE'\n, SECRET = 'mySASkey';\nGO",
+					"query": "create credential [https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs] \nwith \n    identity = 'SHARED ACCESS SIGNATURE', \n    secret = 'mySASkey';\ngo \n\nselect * from sys.credentials;\ngo\n\ncreate view vDeltaTarget\nas\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows\ngo\n\ncreate view vDeltaLastChanges\nas\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows \ngo\n\nselect * from vDeltaTarget\nselect * from vDeltaLastChanges",
 					"metadata": {
 						"language": "sql"
 					},
@@ -933,11 +838,13 @@
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "3.0",
+						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -980,6 +887,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"case class Data(key: String, value: String)\r\n",
 							"\r\n",
@@ -988,7 +896,7 @@
 							"}"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -1013,7 +921,7 @@
 							").toDF()"
 						],
 						"outputs": [],
-						"execution_count": 37
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -1034,7 +942,7 @@
 							"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 						],
 						"outputs": [],
-						"execution_count": 38
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -1056,10 +964,10 @@
 							"\r\n",
 							"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
 							"\r\n",
-							"targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
+							"// targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
 						],
 						"outputs": [],
-						"execution_count": 40
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -1083,7 +991,7 @@
 							"select * from target order by key"
 						],
 						"outputs": [],
-						"execution_count": 41
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -1107,7 +1015,7 @@
 							"describe extended target"
 						],
 						"outputs": [],
-						"execution_count": 42
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -1134,7 +1042,20 @@
 							").toDF().createOrReplaceTempView(\"changes\")"
 						],
 						"outputs": [],
-						"execution_count": 43
+						"execution_count": 8
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### SQL Example"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -1148,11 +1069,12 @@
 									"deleting": false
 								}
 							},
+							"microsoft": {
+								"language": "sparksql"
+							},
 							"collapsed": false
 						},
 						"source": [
-							"-- SQL EXAMPLE\r\n",
-							"\r\n",
 							"%%sql \r\n",
 							"MERGE INTO target t\r\n",
 							"USING (\r\n",
@@ -1169,7 +1091,7 @@
 							"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 						],
 						"outputs": [],
-						"execution_count": 45
+						"execution_count": 9
 					},
 					{
 						"cell_type": "code",
@@ -1186,19 +1108,15 @@
 							"collapsed": true
 						},
 						"source": [
-							"// SCALA EXAMPLE - SKIP\r\n",
+							"// import io.delta.tables._\r\n",
+							"// import org.apache.spark.sql.functions._\r\n",
 							"\r\n",
-							"import io.delta.tables._\r\n",
-							"import org.apache.spark.sql.functions._\r\n",
-							"\r\n",
-							"val deltaTable = DeltaTable.forName(\"target\")\r\n",
-							"\r\n",
+							"// val deltaTable = DeltaTable.forName(\"target\")\r\n",
 							"val changesDF = spark.sql(\"select * from changes\")\r\n",
-							"\r\n",
 							"changesDF.head()"
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -1218,7 +1136,7 @@
 							"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
 						],
 						"outputs": [],
-						"execution_count": 46
+						"execution_count": 11
 					},
 					{
 						"cell_type": "code",
@@ -1238,7 +1156,7 @@
 							"latestChangeForEachKey.show() // shows the latest change for each key"
 						],
 						"outputs": [],
-						"execution_count": 47
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -1258,7 +1176,7 @@
 							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 						],
 						"outputs": [],
-						"execution_count": 48
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -1282,7 +1200,7 @@
 							"select * from lastchanges"
 						],
 						"outputs": [],
-						"execution_count": 49
+						"execution_count": 14
 					},
 					{
 						"cell_type": "code",
@@ -1301,10 +1219,23 @@
 						"source": [
 							"//instead of delta to read as ext table in dedicated pool\r\n",
 							"\r\n",
-							"latestChangeForEachKey.write.format(\"parquet\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
+							"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 						],
 						"outputs": [],
-						"execution_count": 52
+						"execution_count": 15
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### SCALA Merge example (Skipped)"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -1321,22 +1252,20 @@
 							"collapsed": true
 						},
 						"source": [
-							"//SCALA EXAMPLE - SKIPPED\r\n",
-							"\r\n",
-							"deltaTable.as(\"t\")\r\n",
-							"  .merge(\r\n",
-							"    latestChangeForEachKey.as(\"s\"),\r\n",
-							"    \"s.key = t.key\")\r\n",
-							"  .whenMatched(\"s.deleted = true\")\r\n",
-							"  .delete()\r\n",
-							"  .whenMatched()\r\n",
-							"  .updateExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
-							"  .whenNotMatched(\"s.deleted = false\")\r\n",
-							"  .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
-							"  .execute()"
+							"// deltaTable.as(\"t\")\r\n",
+							"//   .merge(\r\n",
+							"//     latestChangeForEachKey.as(\"s\"),\r\n",
+							"//     \"s.key = t.key\")\r\n",
+							"//   .whenMatched(\"s.deleted = true\")\r\n",
+							"//   .delete()\r\n",
+							"//   .whenMatched()\r\n",
+							"//   .updateExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+							"//   .whenNotMatched(\"s.deleted = false\")\r\n",
+							"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+							"//   .execute()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 16
 					},
 					{
 						"cell_type": "code",
@@ -1358,10 +1287,10 @@
 							"\r\n",
 							"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
 							"\r\n",
-							"lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
+							"// lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
 						],
 						"outputs": [],
-						"execution_count": 51
+						"execution_count": 17
 					},
 					{
 						"cell_type": "markdown",
@@ -1953,6 +1882,91 @@
 			},
 			"dependsOn": [],
 			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/FWRulesSQLPools')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- DW / Dedicated SQL Pool\n-- use master\n\nselect * from master.sys.firewall_rules;\n\nexec sp_delete_firewall_rule 'AllowAllWindowsAzureIps';",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Reset')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "--reset table\nselect * from [target]\ngo \n\ndelete from [target];\ngo \n\ninsert [target] values('a','0')\ninsert [target] values('b','1')\ninsert [target] values('c','2')\ninsert [target] values('d','3')\ngo \n\n\nselect * from [target];\n\ndelete from [target]; \ngo \n\ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo\n\n--reset lastchanges\ndelete from [lastchanges];\ninsert [lastchanges] values ('a','1',NULL,1)\ninsert [lastchanges] values ('c','5','200',0)\ninsert [lastchanges] values ('b','2',NULL,1)",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/vDeltaLastChanges')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SQLOnDemand",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "vDeltaLastChanges"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/SQLOnDemand')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/LastChanges')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "SqlPoolTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "lastchanges"
+				},
+				"sqlPool": {
+					"referenceName": "wplussynapsedw",
+					"type": "SqlPoolReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sqlPools/wplussynapsedw')]"
+			]
 		}
 	]
 }
