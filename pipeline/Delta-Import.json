@@ -194,8 +194,8 @@
 				]
 			},
 			{
-				"name": "shake n bake",
-				"description": "merge n rename",
+				"name": "ShakeNBake",
+				"description": "Merge and Rename",
 				"type": "SqlPoolStoredProcedure",
 				"dependsOn": [
 					{
