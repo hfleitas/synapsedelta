@@ -1,0 +1,20 @@
+{
+	"name": "Reset",
+	"properties": {
+		"folder": {
+			"name": "Delta"
+		},
+		"content": {
+			"query": "--reset table\nselect * from [target]\ngo \n\ndelete from [target];\ngo \n\ninsert [target] values('a','0')\ninsert [target] values('b','1')\ninsert [target] values('c','2')\ninsert [target] values('d','3')\ngo \n\nselect * from [target];\n\ndelete from [target]; \ngo \n\ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
