@@ -6,7 +6,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "Target"
+			"table": "lastchanges"
 		},
 		"sqlPool": {
 			"referenceName": "wplussynapsedw",
