@@ -697,7 +697,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "create credential [https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs] \nwith \n    identity = 'SHARED ACCESS SIGNATURE', \n    secret = 'mySASkey';\ngo \n\nselect * from sys.credentials;\ngo\n\ncreate view vDeltaTarget\nas\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows\ngo\n\ncreate view vDeltaLastChanges\nas\nSELECT *\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows \ngo\n\nselect * from vDeltaTarget\nselect * from vDeltaLastChanges",
+					"query": "create credential [https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs] \nwith \n    identity = 'SHARED ACCESS SIGNATURE', \n    secret = 'mySASkey';\ngo \n\nselect * from sys.credentials;\ngo\n\ndrop view if exists vDeltaTarget;\ngo\ncreate view vDeltaTarget\nas\nSELECT [key], [value]\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows\ngo\n\ndrop view if exists vDeltaLastChanges;\ngo\ncreate view vDeltaLastChanges\nas\nSELECT [key], [time], [newvalue], [deleted]\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows \ngo\n\nselect * from vDeltaTarget\nselect * from vDeltaLastChanges\n\n{\n    \"errorCode\": \"2200\",\n    \"message\": \"Failure happened on 'Source' side. ErrorCode=SqlOperationFailed,\n    'Type=Microsoft.DataTransfer.Common.Shared.HybridDeliveryException,\n    Message=A database operation failed with the following error: 'Invalid column name 'value'.',\n    Source=,''Type=System.Data.SqlClient.SqlException,Message=Invalid column name 'value'.,\n    Source=.Net SqlClient Data Provider,SqlErrorNumber=207,Class=16,ErrorCode=-2146232060,State=1,Errors=[{Class=16,Number=207,State=1,Message=Invalid column name 'value'.,},],'\",\n    \"failureType\": \"UserError\",\n    \"target\": \"LastChanges\",\n    \"details\": []\n}\n\n{\n    \"errorCode\": \"2200\",\n    \"message\": \"Failure happened on 'Source' side. ErrorCode=SqlOperationFailed,\n    'Type=Microsoft.DataTransfer.Common.Shared.HybridDeliveryException,\n    Message=A database operation failed with the following error: 'Invalid column name 'value'.',\n    Source=,''Type=System.Data.SqlClient.SqlException,Message=Invalid column name 'value'.,\n    Source=.Net SqlClient Data Provider,SqlErrorNumber=207,Class=16,ErrorCode=-2146232060,State=1,\n    Errors=[{Class=16,Number=207,State=1,Message=Invalid column name 'value'.,},],'\",\n    \"failureType\": \"UserError\",\n    \"target\": \"LastChanges\",\n    \"details\": []\n}",
 					"metadata": {
 						"language": "sql"
 					},
@@ -1889,7 +1889,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- DW / Dedicated SQL Pool\n-- use master\n\nselect * from master.sys.firewall_rules;\n\nexec sp_delete_firewall_rule 'AllowAllWindowsAzureIps';",
+					"query": "-- DW / Dedicated SQL Pool\n-- use master\n\nselect * from master.sys.firewall_rules;\n\nexec sp_delete_firewall_rule 'AllowAllWindowsAzureIps'; ",
 					"metadata": {
 						"language": "sql"
 					},
@@ -1912,7 +1912,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "--reset table\nselect * from [target]\ngo \n\ndelete from [target];\ngo \n\ninsert [target] values('a','0')\ninsert [target] values('b','1')\ninsert [target] values('c','2')\ninsert [target] values('d','3')\ngo \n\n\nselect * from [target];\n\ndelete from [target]; \ngo \n\ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo\n\n--reset lastchanges\ndelete from [lastchanges];\ninsert [lastchanges] values ('a','1',NULL,1)\ninsert [lastchanges] values ('c','5','200',0)\ninsert [lastchanges] values ('b','2',NULL,1)",
+					"query": "--reset table\nselect * from [target]\ngo \n\ndelete from [target]; \ngo \n\ninsert [target] values('a','0')\ninsert [target] values('b','1')\ninsert [target] values('c','2')\ninsert [target] values('d','3')\ngo \n\n\nselect * from [target];\n\ndelete from [target]; \ngo \n\ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo\n\n--reset lastchanges\ndelete from [lastchanges];\ninsert [lastchanges] values ('a','1',NULL,1)\ninsert [lastchanges] values ('c','5','200',0)\ninsert [lastchanges] values ('b','2',NULL,1)",
 					"metadata": {
 						"language": "sql"
 					},
@@ -2143,12 +2143,32 @@
 									},
 									{
 										"source": {
-											"name": "value",
+											"name": "time",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "time",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "newValue",
 											"type": "String"
 										},
 										"sink": {
-											"name": "value",
+											"name": "newValue",
 											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "deleted",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "deleted",
+											"type": "Boolean"
 										}
 									}
 								]
@@ -2214,6 +2234,56 @@
 				"[concat(variables('workspaceId'), '/datasets/LastChanges')]",
 				"[concat(variables('workspaceId'), '/sqlPools/wplussynapsedw')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AlterDW')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- use master\n\nalter database wplussynapsedw set READ_COMMITTED_SNAPSHOT on with NO_WAIT\nalter database wplussynapsedw set RESULT_SET_CACHING on with NO_WAIT ",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Hourly')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Delta-Import",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2021-09-02T17:07:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/Delta-Import')]"
 			]
 		}
 	]
