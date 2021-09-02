@@ -5,7 +5,7 @@
 			"name": "Delta"
 		},
 		"content": {
-			"query": "--  1. DeltaDropTarget\n\nif object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\ngo \n\ncreate proc DeltaDropTarget\nas \n\n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo\n\n-- 2. DeltaDropLastChanges\n\nif object_id('DeltaDropLastChanges') is not null drop proc DeltaDropLastChanges\ngo \n\ncreate proc DeltaDropLastChanges\nas \n\n    if object_id('LastChanges') is not null\n    begin\n        drop table LastChanges\n    end \ngo\n\n",
+			"query": "--  1. DeltaDropTarget\nif object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\ngo \ncreate proc DeltaDropTarget\nas \n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo\n\n-- 2. DeltaDropLastChanges\nif object_id('DeltaDropLastChanges') is not null drop proc DeltaDropLastChanges\ngo \ncreate proc DeltaDropLastChanges\nas \n    if object_id('LastChanges') is not null\n    begin\n        drop table LastChanges\n    end \ngo",
 			"metadata": {
 				"language": "sql"
 			},
