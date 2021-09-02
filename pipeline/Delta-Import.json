@@ -153,6 +153,51 @@
 							"type": "LinkedServiceReference"
 						},
 						"path": "wplushiramsynapsefs"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "key",
+									"type": "String"
+								},
+								"sink": {
+									"name": "key",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "time",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "time",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "newValue",
+									"type": "String"
+								},
+								"sink": {
+									"name": "newValue",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "deleted",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "deleted",
+									"type": "Boolean"
+								}
+							}
+						]
 					}
 				},
 				"inputs": [
