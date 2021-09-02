@@ -8,9 +8,9 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LastChanges",
+						"activity": "Delta",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
@@ -91,14 +91,7 @@
 				"name": "Delta",
 				"description": "Includes CDC",
 				"type": "SynapseNotebook",
-				"dependsOn": [
-					{
-						"activity": "LastChanges",
-						"dependencyConditions": [
-							"Skipped"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -119,7 +112,14 @@
 				"name": "LastChanges",
 				"description": "overwrites staging table in SQL Pools from Serverless",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Delta",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -221,7 +221,13 @@
 					{
 						"activity": "LastChanges",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Target",
+						"dependencyConditions": [
+							"Succeeded"
 						]
 					}
 				],
