@@ -5,7 +5,7 @@
 			"name": "Delta"
 		},
 		"content": {
-			"query": "--  1. DeltaDropTarget\nif object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\ngo \ncreate proc DeltaDropTarget\nas \n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo\n\n-- 2. DeltaDropLastChanges\nif object_id('DeltaDropLastChanges') is not null drop proc DeltaDropLastChanges\ngo \ncreate proc DeltaDropLastChanges\nas \n    if object_id('LastChanges') is not null\n    begin\n        drop table LastChanges\n    end \ngo",
+			"query": "--  1. DeltaDropTarget\nif object_id('DeltaDropTarget') is not null drop proc DeltaDropTarget\ngo \ncreate proc DeltaDropTarget\nas \n    if object_id('target') is not null\n    begin\n        drop table target\n    end \ngo\n\n-- 2. DeltaDropLastChanges\nif object_id('DeltaDropLastChanges') is not null drop proc DeltaDropLastChanges\ngo \ncreate proc DeltaDropLastChanges\nas \n    if object_id('LastChanges') is not null\n    begin\n        drop table LastChanges\n    end \ngo\n\n--3. ShakeNBake\nif object_id('ShakeNBake') is not null drop proc ShakeNBake\ngo \ncreate proc ShakeNBake\nas \n    --ctas to merge\n    if object_id('target2hash') is not null drop table [target2hash];\n    create table [target2hash]\n    with (\n        distribution = hash([key]),\n        clustered columnstore index\n    )\n    as\n    select * from [target]\n\ngo",
 			"metadata": {
 				"language": "sql"
 			},
