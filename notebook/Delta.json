@@ -95,7 +95,7 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"execution_count": 5
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -119,7 +119,7 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"execution_count": 37
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -139,7 +139,7 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"execution_count": 38
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -163,7 +163,7 @@
 					"\r\n",
 					"// targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
 				],
-				"execution_count": 40
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -186,7 +186,7 @@
 					"%%sql\r\n",
 					"select * from target order by key"
 				],
-				"execution_count": 41
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -209,7 +209,7 @@
 					"%%sql\r\n",
 					"describe extended target"
 				],
-				"execution_count": 42
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -235,7 +235,7 @@
 					"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
 					").toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"execution_count": 43
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -283,7 +283,7 @@
 					"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 					"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 				],
-				"execution_count": 45
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -322,7 +322,7 @@
 					"\r\n",
 					"// changesDF.head()"
 				],
-				"execution_count": 22
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -341,7 +341,7 @@
 				"source": [
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
 				],
-				"execution_count": 46
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -360,7 +360,7 @@
 				"source": [
 					"latestChangeForEachKey.show() // shows the latest change for each key"
 				],
-				"execution_count": 47
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -379,7 +379,7 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
-				"execution_count": 48
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -402,7 +402,7 @@
 					"%%sql\r\n",
 					"select * from lastchanges"
 				],
-				"execution_count": 49
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -423,7 +423,7 @@
 					"\r\n",
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"execution_count": 52
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -489,7 +489,7 @@
 					"\r\n",
 					"lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
 				],
-				"execution_count": 51
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
