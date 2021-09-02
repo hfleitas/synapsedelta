@@ -2,7 +2,7 @@
 	"name": "Hourly",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
@@ -16,8 +16,8 @@
 			"recurrence": {
 				"frequency": "Hour",
 				"interval": 1,
-				"startTime": "2021-09-02T17:07:00Z",
-				"timeZone": "UTC"
+				"startTime": "2021-09-02T15:00:00",
+				"timeZone": "Eastern Standard Time"
 			}
 		}
 	}
