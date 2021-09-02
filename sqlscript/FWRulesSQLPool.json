@@ -1,0 +1,17 @@
+{
+	"name": "FWRulesSQLPool",
+	"properties": {
+		"content": {
+			"query": "-- DW / Dedicated SQL Pool\n-- use master\n\nSELECT name AS [Firewall Rule Name]\n    ,start_ip_address AS [Start Address]\n    ,end_ip_address AS [End Address]\nFROM master.sys.firewall_rules",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
