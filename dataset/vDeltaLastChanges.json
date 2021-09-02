@@ -1,0 +1,16 @@
+{
+	"name": "vDeltaLastChanges",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLOnDemand",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "vDeltaLastChanges"
+		}
+	}
+}
