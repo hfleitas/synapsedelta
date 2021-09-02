@@ -1,0 +1,17 @@
+{
+	"name": "AlterDW",
+	"properties": {
+		"content": {
+			"query": "-- use master\n\nalter database wplussynapsedw set READ_COMMITTED_SNAPSHOT on with NO_WAIT\nalter database wplussynapsedw set RESULT_SET_CACHING on with NO_WAIT",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
