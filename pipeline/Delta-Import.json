@@ -6,14 +6,7 @@
 				"name": "Target",
 				"description": "overwrites staging table in SQL Pools from Serverless",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Delta",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -116,7 +109,19 @@
 					{
 						"activity": "Delta",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
+						]
+					},
+					{
+						"activity": "Target",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					},
+					{
+						"activity": "ShakeNBake",
+						"dependencyConditions": [
+							"Skipped"
 						]
 					}
 				],
@@ -217,20 +222,7 @@
 				"name": "ShakeNBake",
 				"description": "Merge and Rename",
 				"type": "SqlPoolStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "LastChanges",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Target",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
