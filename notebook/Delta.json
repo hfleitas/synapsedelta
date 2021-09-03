@@ -69,25 +69,6 @@
 			},
 			{
 				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"collapsed": true
-				},
-				"source": [
-					"spark.version"
-				],
-				"execution_count": 1
-			},
-			{
-				"cell_type": "code",
 				"source": [
 					"case class Data(key: String, value: String)\r\n",
 					"\r\n",
@@ -159,57 +140,9 @@
 					"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
 					"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
 					"\r\n",
-					"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
-					"\r\n",
-					"// targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
+					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
 				"execution_count": 5
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%sql\r\n",
-					"select * from target order by key"
-				],
-				"execution_count": 6
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%sql\r\n",
-					"describe extended target"
-				],
-				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -236,19 +169,6 @@
 					").toDF().createOrReplaceTempView(\"changes\")"
 				],
 				"execution_count": 8
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"### SQL Example"
-				]
 			},
 			{
 				"cell_type": "code",
@@ -300,12 +220,7 @@
 					"collapsed": true
 				},
 				"source": [
-					"// import io.delta.tables._\r\n",
-					"// import org.apache.spark.sql.functions._\r\n",
-					"\r\n",
-					"// val deltaTable = DeltaTable.forName(\"target\")\r\n",
-					"val changesDF = spark.sql(\"select * from changes\")\r\n",
-					"changesDF.head()"
+					"val changesDF = spark.sql(\"select * from changes\")"
 				],
 				"execution_count": 10
 			},
@@ -343,25 +258,6 @@
 					"collapsed": true
 				},
 				"source": [
-					"latestChangeForEachKey.show() // shows the latest change for each key"
-				],
-				"execution_count": 12
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"collapsed": true
-				},
-				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
 				"execution_count": 13
@@ -378,103 +274,12 @@
 							"deleting": false
 						}
 					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%sql\r\n",
-					"select * from lastchanges"
-				],
-				"execution_count": 14
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
 					"collapsed": true
 				},
 				"source": [
-					"//instead of delta to read as ext table in dedicated pool\r\n",
-					"\r\n",
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
 				"execution_count": 15
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"### SCALA Merge example (Skipped)"
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"collapsed": true
-				},
-				"source": [
-					"// deltaTable.as(\"t\")\r\n",
-					"//   .merge(\r\n",
-					"//     latestChangeForEachKey.as(\"s\"),\r\n",
-					"//     \"s.key = t.key\")\r\n",
-					"//   .whenMatched(\"s.deleted = true\")\r\n",
-					"//   .delete()\r\n",
-					"//   .whenMatched()\r\n",
-					"//   .updateExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
-					"//   .whenNotMatched(\"s.deleted = false\")\r\n",
-					"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
-					"//   .execute()"
-				],
-				"execution_count": 16
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"collapsed": true
-				},
-				"source": [
-					"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
-					"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
-					"\r\n",
-					"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
-					"\r\n",
-					"// lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
-				],
-				"execution_count": 17
 			},
 			{
 				"cell_type": "markdown",
