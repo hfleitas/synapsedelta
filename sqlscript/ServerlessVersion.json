@@ -1,14 +1,17 @@
 {
 	"name": "ServerlessVersion",
 	"properties": {
+		"folder": {
+			"name": "Tools"
+		},
 		"content": {
 			"query": "select @@servername, @@version",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"poolName": "Built-in",
-				"databaseName": "master"
+				"databaseName": "master",
+				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
 		},

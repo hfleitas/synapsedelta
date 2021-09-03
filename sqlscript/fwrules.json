@@ -1,6 +1,9 @@
 {
 	"name": "fwrules",
 	"properties": {
+		"folder": {
+			"name": "Tools"
+		},
 		"content": {
 			"query": "-- DW / Dedicated SQL Pool\n-- use master\n\nselect * from master.sys.firewall_rules;\n\nexec sp_delete_firewall_rule 'AllowAllWindowsAzureIps';  ",
 			"metadata": {
