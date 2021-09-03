@@ -6,14 +6,7 @@
 				"name": "Target",
 				"description": "overwrites staging table in SQL Pools from Serverless",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "ShakeNBake",
-						"dependencyConditions": [
-							"Skipped"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -30,7 +23,10 @@
 					},
 					"sink": {
 						"type": "SqlDWSink",
+						"preCopyScript": "exec DeltaDropTarget",
 						"allowCopyCommand": true,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false,
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": true,
@@ -112,14 +108,7 @@
 				"name": "LastChanges",
 				"description": "overwrites staging table in SQL Pools from Serverless",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "ShakeNBake",
-						"dependencyConditions": [
-							"Skipped"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -136,7 +125,10 @@
 					},
 					"sink": {
 						"type": "SqlDWSink",
+						"preCopyScript": "exec DeltaDropLastChanges",
 						"allowCopyCommand": true,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false,
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": true,
@@ -210,7 +202,20 @@
 				"name": "ShakeNBake",
 				"description": "merge and rename",
 				"type": "SqlServerStoredProcedure",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Target",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LastChanges",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
