@@ -1,6 +1,7 @@
 {
 	"name": "sp_spaceused_all",
 	"properties": {
+		"description": "dw not supported",
 		"folder": {
 			"name": "Tools"
 		},
