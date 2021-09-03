@@ -3084,15 +3084,22 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"name": "[concat(parameters('workspaceName'), '/WhoConnected')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
+					"query": "if object_id('WhoConnected') is not null drop proc WhoConnected;\ngo\ncreate proc WhoConnected \nas\n    select \n        min(cast(login_time as date)) as MinLoginDate, \n        max(cast(login_time as date)) as MaxLoginDate\n    from sys.dm_pdw_exec_sessions \n    where session_id <> session_id()\n\n    select \n        cast(login_time as date) as LoginDate, \n        login_name, \n        client_id, \n        app_name, \n        status\n    from sys.dm_pdw_exec_sessions \n    where session_id <> session_id()\n    group by \n        cast(login_time as date),\n        login_name, \n        client_id, \n        app_name, \n        status\n    order by LoginDate desc\ngo\n\nexec WhoConnected",
 					"metadata": {
 						"language": "sql"
-					}
-				}
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
 			},
 			"dependsOn": []
 		}
