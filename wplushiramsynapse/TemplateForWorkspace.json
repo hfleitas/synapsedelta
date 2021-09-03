@@ -86,8 +86,7 @@
 									"useTypeDefault": true
 								},
 								"tableOption": "autoCreate",
-								"disableMetricsCollection": false,
-								"sqlWriterUseTableLock": false
+								"disableMetricsCollection": false
 							},
 							"enableStaging": true,
 							"stagingSettings": {
@@ -195,8 +194,7 @@
 									"useTypeDefault": true
 								},
 								"tableOption": "autoCreate",
-								"disableMetricsCollection": false,
-								"sqlWriterUseTableLock": false
+								"disableMetricsCollection": false
 							},
 							"enableStaging": true,
 							"stagingSettings": {
@@ -412,6 +410,394 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Primer')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "IfPausedThenOnline",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "GetStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@not(equals('Online',string(activity('GetStatus').output.properties.status)))",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Resume",
+									"description": "Start",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'/resume?api-version=2018-06-01-preview')",
+											"type": "Expression"
+										},
+										"method": "POST",
+										"headers": {},
+										"body": {
+											"value": "@string('')",
+											"type": "Expression"
+										},
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://management.core.windows.net/"
+										}
+									}
+								},
+								{
+									"name": "ScaleAPI",
+									"type": "WebActivity",
+									"dependsOn": [
+										{
+											"activity": "Resume",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2018-06-01-preview')",
+											"type": "Expression"
+										},
+										"method": "PUT",
+										"headers": {
+											"Content-Type": "application/json"
+										},
+										"body": {
+											"value": "@concat('{\"location\":\"eastus2\",\"sku\":{\"name\": \"',pipeline().parameters.SLO,'\"}}')",
+											"type": "Expression"
+										},
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://management.core.windows.net/"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "GetStatus",
+						"description": "Start",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2018-06-01-preview')",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"body": {
+								"value": "@string('')",
+								"type": "Expression"
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://management.core.windows.net/"
+							}
+						}
+					},
+					{
+						"name": "UntilOnline",
+						"type": "Until",
+						"dependsOn": [
+							{
+								"activity": "IfPausedThenOnline",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals('Online',string(activity('GetStatusOnline').output.properties.status))\n",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "GetStatusOnline",
+									"description": "Start",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2018-06-01-preview')",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"headers": {},
+										"body": {
+											"value": "@string('')",
+											"type": "Expression"
+										},
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://management.core.windows.net/"
+										}
+									}
+								}
+							],
+							"timeout": "7.00:00:00"
+						}
+					},
+					{
+						"name": "execTrollhunters",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UntilOnline",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Delta-Import",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "IfOnlinePause",
+						"description": "Sacle down and Pause",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "GetStatusEnd",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals('Online',string(activity('GetStatusEnd').output.properties.status))",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ScaleWebhook",
+									"description": "",
+									"type": "WebHook",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"url": "https://s1events.azure-automation.net/webhooks?token=EnUcmPAqjmhXx7uKcLIj%2bN%2fNkzod6WPU6CaGc%2bhaPQI%3d",
+										"method": "POST",
+										"headers": {},
+										"body": {
+											"WebhookName": "scaledw"
+										},
+										"timeout": "00:10:00"
+									}
+								},
+								{
+									"name": "Pause",
+									"description": "Pause",
+									"type": "WebActivity",
+									"dependsOn": [
+										{
+											"activity": "ScaleWebhook",
+											"dependencyConditions": [
+												"Completed"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'/pause?api-version=2018-06-01-preview')",
+											"type": "Expression"
+										},
+										"connectVia": {
+											"referenceName": "AutoResolveIntegrationRuntime",
+											"type": "IntegrationRuntimeReference"
+										},
+										"method": "POST",
+										"headers": {},
+										"body": {
+											"value": "@string('')",
+											"type": "Expression"
+										},
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://management.core.windows.net/"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "GetStatusEnd",
+						"description": "Start",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "execTrollhunters",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2018-06-01-preview')",
+								"type": "Expression"
+							},
+							"method": "GET",
+							"headers": {},
+							"body": {
+								"value": "@string('')",
+								"type": "Expression"
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://management.core.windows.net/"
+							}
+						}
+					},
+					{
+						"name": "Notify",
+						"description": "",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "execTrollhunters",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-23.eastus2.logic.azure.com:443/workflows/a3b71278fcd74578912de49da8f0cc41/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hDohhaBVFqS07vlHEOhum2ZLvhUnvyi1u9oqKBO5fRc",
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "POST",
+							"headers": {
+								"Content-type": "application/json"
+							},
+							"body": {
+								"value": "@concat('{\n   \"DataFactoryName\": \"',pipeline().DataFactory,'\",\n   \"PipelineName\": \"',pipeline().Pipeline,'\",\n   \"Subject\": \"An error has occurred!\",\n   \"ErrorMessage\": \"The ADF pipeline failed. Please check the activity log.\",\n   \"EmailTo\": \"',pipeline().parameters.Notify,'\"\n}')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"SubscriptionID": {
+						"type": "string",
+						"defaultValue": "eaab21d5-8ecd-4ef0-a0c4-92fac2e22875"
+					},
+					"ResourceGroup": {
+						"type": "string",
+						"defaultValue": "dw"
+					},
+					"Server": {
+						"type": "string",
+						"defaultValue": "hiramdw"
+					},
+					"DW": {
+						"type": "string",
+						"defaultValue": "dw"
+					},
+					"SLO": {
+						"type": "string",
+						"defaultValue": "DW1000c"
+					},
+					"Notify": {
+						"type": "string",
+						"defaultValue": "hiramfleitas@microsoft.com"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/pipelines/Delta-Import')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/UnzipLabFiles')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -546,6 +932,75 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/sqlPools/wplussynapsedw')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/LoaderXLLastChanges')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapseLoaderXL",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "key",
+						"type": "varchar"
+					},
+					{
+						"name": "time",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "newValue",
+						"type": "varchar"
+					},
+					{
+						"name": "deleted",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "lastchanges"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/LoaderXLTarget')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapseLoaderXL",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "key",
+						"type": "varchar"
+					},
+					{
+						"name": "value",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Target"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
 			]
 		},
 		{
@@ -756,6 +1211,25 @@
 				"type": "AzureBlobFS",
 				"typeProperties": {
 					"url": "[parameters('wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/wplushiramsynapseLoaderXL')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('wplushiramsynapseLoaderXL_connectionString')]"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -1078,6 +1552,76 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/GetRowCounts')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "dw not supported",
+				"folder": {
+					"name": "Tools"
+				},
+				"content": {
+					"query": "if object_id('GetRowCounts') is not null drop proc GetRowCounts;\ngo \n\ncreate proc GetRowCounts --'SRUSSegmentedPolicyRecords_Final2017Revised, HLRSegmentedPolicyRecords_Final2017Revised, BrockSegmentedPolicyRecords_Final2017Revised'\n    @tables nvarchar(max)\nas \nset nocount on;\n    \n    declare @sql nvarchar(max), @cnt int, @cnt2 int, @name nvarchar(128);\n\n    if object_id('tempdb.dbo.#t') is not null drop table #t\n    create table #t (\n        name        nvarchar(128),\n        rows        char(20),\n        reserved    varchar(18),\n        data        varchar(18),\n        index_size  varchar(18),\n        unused      varchar(18)\n    );\n\n    if object_id('tempdb.dbo.#tables') is not null drop table #tables\n    create table #tables (\n        name        nvarchar(128)\n    );\n    insert into #tables (name) select trim(value) from string_split(@tables,',');\n    \n    select @cnt = count(*) from information_schema.tables where table_name in (select name from #tables);\n    select @cnt2 = count(*) from #t;\n   \n    while @cnt>@cnt2\n    begin\n        select  top 1 @sql='insert into #t exec sp_spaceused '''+table_name+'''', @name=table_name\n        from    information_schema.tables \n        where   table_name in (select top 1 name from #tables);\n        \n        exec sp_executesql @sql; --print @sql;\n        \n        delete from #tables where name = @name;\n        select  @cnt2 = count(*) from #t;\n    end\n    select * from #t\ngo\n\nexec GetRowCounts 'reporttarget'",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/LoaderXL')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Tools"
+				},
+				"content": {
+					"query": "--dw master\n\nif exists (select 1 from sys.sql_logins where name='LoaderXL') drop login LoaderXL;\ncreate login LoaderXL with password = 'XL!sqlPools2021'\nalter login LoaderXL enable\ngo \ndrop user LoaderXL;\ngo\ncreate user LoaderXL for login LoaderXL\nalter role dbmanager add member LoaderXL\n\n-- use hiramdw\ndrop user LoaderXL;\ncreate user LoaderXL for login LoaderXL\ngo\nexec sp_addrolemember db_owner, LoaderXL;\nEXEC sp_addrolemember 'xlargerc', 'LoaderXL'\n\ngrant view definition to public;\ngrant showplan to LoaderXL;\ngrant connect to LoaderXL\ngo ",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/QueryActivity')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Tools"
+				},
+				"content": {
+					"query": "if object_id('QueryActivity') is not null drop proc QueryActivity;\ngo\ncreate proc [dbo].[QueryActivity] AS \n-- + -------------- +\n-- | Query Activity |\n-- + -------------- +\nwith cte as (\n    select      top 100\n                request_id, \n                status, \n                total_elapsed_time/60000 as TotalElapsedMinutes, \n                resource_class, \n                importance\n    from        sys.dm_pdw_exec_requests \n    where       status not in ('Completed','Failed','Cancelled','Suspended')\n                -- and request_id in ('QID3187802','QID3188080')\n    and         session_id <> session_id()\n    order by    submit_time desc\n)\nselect      es.app_name,\n            rs.request_id, \n            rs.step_index, \n            rs.operation_type, \n            rs.distribution_type, \n            rs.location_type, \n            rs.status, \n            rs.error_id, \n            rs.start_time, \n            rs.end_time, \n            case when rs.end_time is not null then cast(rs.end_time - rs.start_time as time) end as duration, \n            rs.total_elapsed_time/60000 as TotalElapsedMinutes, \n            rs.total_elapsed_time/3600000 as TotalElapsedHours, \n            rs.row_count, \n            rs.command, \n            cte.*\nfrom        sys.dm_pdw_request_steps rs\ninner join  cte \n    on rs.request_id = cte.request_id\nleft join  sys.dm_pdw_exec_sessions es \n    on rs.request_id = es.request_id\nwhere       rs.status<>'complete'\norder by    step_index;\n\n--request_id\tstep_index\toperation_type\tdistribution_type\tlocation_type\tstatus\terror_id\tstart_time\tend_time\tduration\tTotalElapsedMinutes\tTotalElapsedHours\trow_count\tcommand\trequest_id\tstatus\tTotalElapsedMinutes\tresource_class\timportance\n--QID827319\t3\tOnOperation\tAllDistributions\tCompute\tRunning\tNULL\t2019-09-05 21:30:07.010\tNULL\tNULL\t199\t3\t-1\tINSERT INTO [sql-eastus2-int-dev-reboot-analytics_wh].[dbo].[Inforce12New] WITH (TABLOCK) ([JOIN_KEY_ACTUALS], [SourceTableName], [BLOCK], [Date_Incurred], [Date_Reported], [Date_Posted], [YRMO], [InforceQuarter], [TLID], [TLID_SecondInsd], [Treaty_Sage_ID], [Treaty_TRS_ID], [Policy_Number], [Policy_Record_Number], [Policy_Rider_Number], [Coverage_Sage_CCID], [ConversionFlag], [OriginalCCID], [OriginalCCID_2], [OriginalPolicy], [OriginalPolicy_2], [FACE], [ReinsuredFace], [NAR], [sourceTableNameInput], [sourceTableNameInputTS], [sourceFileName], [IssueAgeL1], [SmokerL1], [BusinessBlockShort], [mosesBand], [mosesSeries], [mosesClassL1], [GenderL1], [mosesPlan], [IssueDate], [FalloutType1], [Treaty_Model_ID], [Treaty_PeopleSoft_ID], [BusinessBlock], [JOIN_KEY_MODEL], [JOIN_KEY_NO_DATE], [BenefitType])SELECT [T1_1].[JOIN_KEY_ACTUALS], [T1_1].[SourceTableName], [T1_1].[BLOCK], [T1_1].[Date_Incurred], [T1_1].[Date_Reported], [T1_1].[Date_Posted], [T1_1].[YRMO], [T1_1].[InforceQuarter], [T1_1].[TLID], [T1_1].[TLID_SecondInsd], [T1_1].[Treaty_Sage_ID], [T1_1].[Treaty_TRS_ID], [T1_1].[Policy_Number], [T1_1].[Policy_Record_Number], [T1_1].[Policy_Rider_Number], [T1_1].[Coverage_Sage_CCID], [T1_1].[ConversionFlag], [T1_1].[OriginalCCID], [T1_1].[OriginalCCID_2], [T1_1].[OriginalPolicy], [T1_1].[OriginalPolicy_2], [T1_1].[FACE], [T1_1].[ReinsuredFace], [T1_1].[NAR], [T1_1].[sourceTableNameInput], [T1_1].[sourceTableNameInputTS], [T1_1].[sourceFileName], [T1_1].[IssueAgeL1], [T1_1].[SmokerL1], [T1_1].[BusinessBlockShort], [T1_1].[mosesBand], [T1_1].[mosesSeries], [T1_1].[mosesClassL1], [T1_1].[GenderL1], [T1_1].[mosesPlan], [T1_1].[IssueDate], [T1_1].[FalloutType1], [T1_1].[Treaty_Model_ID], [T1_1].[col], [T1_1].[BusinessBlock], [T1_1].[JOIN_KEY_MODEL], [T1_1].[JOIN_KEY_NO_DATE], [T1_1].[BenefitType] FROM (SELECT CASE WHEN ([T2_1].[Treaty_PeopleSoft_ID] LIKE CAST (N'HA%' COLLATE SQL_Latin1_General_CP1_CI_AS AS VARCHAR (3)) COLLATE SQL_Latin1_General_CP1_CI_AS) THEN concat([T2_1].[Treaty_PeopleSoft_ID], CAST (N'-001' COLLATE SQL_Latin1_General_CP1_CI_AS AS VARCHAR (4)) COLLATE SQL_Latin1_General_CP1_CI_AS) ELSE [T2_1].[Treaty_PeopleSoft_ID]END AS [col], [T2_1].[JOIN_KEY_ACTUALS] AS [JOIN_KEY_ACTUALS], [T2_1].[SourceTableName] AS [SourceTableName], [T2_1].[BLOCK] AS [BLOCK], [T2_1].[Date_Incurred] AS [Date_Incurred], [T2_1].[Date_Reported] AS [Date_Reported], [T2_1].[Date_Posted] AS [Date_Posted], [T2_1].[YRMO] AS [YRMO], [T2_1].[InforceQuarter] AS [InforceQuarter], [T2_1].[TLID] AS [TLID], [T2_1].[TLID_SecondInsd] AS [TLID_SecondInsd], [T2_1].[Treaty_Sage_ID] AS [Treaty_Sage_ID], [T2_1].[Treaty_TRS_ID] AS [Treaty_TRS_ID], [T2_1].[Policy_Number] AS [Policy_Number], [T2_1].[Policy_Record_Number] AS [Policy_Record_Number], [T2_1].[Policy_Rider_Number] AS [Policy_Rider_Number], [T2_1].[Coverage_Sage_CCID] AS [Coverage_Sage_CCID], [T2_1].[ConversionFlag] AS [ConversionFlag], [T2_1].[OriginalCCID] AS [OriginalCCID], [T2_1].[OriginalCCID_2] AS [OriginalCCID_2], [T2_1].[OriginalPolicy] AS [OriginalPolicy], [T2_1].[OriginalPolicy_2] AS [OriginalPolicy_2], [T2_1].[FACE] AS [FACE], [T2_1].[ReinsuredFace] AS [ReinsuredFace], [T2_1].[NAR] AS [NAR], [T2_1].[sourceTableNameInput] AS [sourceTableNameInput], [T2_1].[sourceTableNameInputTS] AS [sourceTableNameInputTS], [T2_1].[sourceFileName] AS [sourceFileName], [T2_1].[IssueAgeL1] AS [IssueAgeL1], [T2_1].[SmokerL1] AS [SmokerL1], [T2_1].[BusinessBlockShort] AS [BusinessBlockShort], [T2_1].[mosesBand] AS [mosesBand], [T2_1].[mosesSeries] AS [mosesSeries], [T2_1].[mosesClassL1] AS [mosesClassL1], [T2_1].[GenderL1] AS [GenderL1], [T2_1].[mosesPlan] AS [mosesPlan], [T2_1].[IssueDate] AS [IssueDate], [T2_1].[FalloutType1] AS [FalloutType1], [T2_1].[Treaty_Model_ID] AS [Treaty_Model_ID], [T2_1].[BusinessBlock] AS [BusinessBlock], [T2_1].[JOIN_KEY_MODEL] AS [JOIN_KEY_MODEL], [T2_1].[JOIN_KEY_NO_DATE] AS [JOIN_KEY_NO_DATE], [T2_1].[BenefitType] AS [BenefitType] FROM [sql-eastus2-int-dev-reboot-analytics_w\tQID827319\tRunning\t199\txlargerc\tnormal\n/*\nSELECT * FROM sys.dm_pdw_sql_requests WHERE request_id = 'QID891260' AND status <>'Complete' -- and step_index = 3;\nDBCC PDW_SHOWEXECUTIONPLAN(57, 192);\nSELECT 'DBCC PDW_SHOWEXECUTIONPLAN(',distribution_id,',',spid,')' FROM sys.dm_pdw_sql_requests WHERE request_id = 'QID891260' AND step_index = 3;\n\ndbcc pdw_showspaceused(ctasSuperTableSum)\ndbcc pdw_showspaceused(mapTreatyTermsReplicate)\n*/\nGO\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Reboot')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1167,6 +1711,52 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/WhoConnected')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Tools"
+				},
+				"content": {
+					"query": "if object_id('WhoConnected') is not null drop proc WhoConnected;\ngo\ncreate proc WhoConnected \nas\n    select \n        min(cast(login_time as date)) as MinLoginDate, \n        max(cast(login_time as date)) as MaxLoginDate\n    from sys.dm_pdw_exec_sessions \n    where session_id <> session_id()\n\n    select \n        cast(login_time as date) as LoginDate, \n        login_name, \n        client_id, \n        app_name, \n        status\n    from sys.dm_pdw_exec_sessions \n    where session_id <> session_id()\n    group by \n        cast(login_time as date),\n        login_name, \n        client_id, \n        app_name, \n        status\n    order by LoginDate desc\ngo\n\nexec WhoConnected",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkloadMgmt')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Tools"
+				},
+				"content": {
+					"query": "--https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-how-to-convert-resource-classes-workload-groups\n\nSELECT Request_min_resource_grant_percent = Effective_request_min_resource_grant_percent\n  FROM sys.dm_workload_management_workload_groups_stats\n  WHERE name = 'staticrc40'\n\n\nCREATE WORKLOAD GROUP wgDataLoads WITH  \n( REQUEST_MIN_RESOURCE_GRANT_PERCENT = 10\n ,MIN_PERCENTAGE_RESOURCE = 10\n ,CAP_PERCENTAGE_RESOURCE = 40\n ,QUERY_EXECUTION_TIMEOUT_SEC = 3600)\n\n\nCREATE WORKLOAD CLASSIFIER wcDataLoads WITH  \n( WORKLOAD_GROUP = 'wgDataLoads'\n ,MEMBERNAME = 'AdfLogin'\n ,WLM_LABEL = 'factloads')\n\n\n--Test as sql login\nSELECT SUSER_SNAME() --should be 'AdfLogin'\n\n--change to a valid table AdfLogin has access to\nSELECT TOP 10 *\n  FROM nation\n  OPTION (label='factloads')\n\nSELECT request_id, [label], classifier_name, group_name, command\n  FROM sys.dm_pdw_exec_requests\n  WHERE [label] = 'factloads'\n  ORDER BY submit_time DESC",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/alterdw')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1204,6 +1794,53 @@
 					},
 					"currentConnection": {
 						"databaseName": "master",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/sp_spaceused_all')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "dw not supported",
+				"folder": {
+					"name": "Tools"
+				},
+				"content": {
+					"query": "if object_id('sp_spaceused_all') is not null drop proc sp_spaceused_all;\ngo\n\ncreate procedure sp_spaceused_all\n    @SourceDB nvarchar(max)\nas\nset nocount on\n\ndeclare @sql nvarchar(max)\n    create table #tables(name varchar(128))\n    \n    select @sql = 'insert #tables select TABLE_NAME from ' + @SourceDB + '.INFORMATION_SCHEMA.TABLES where TABLE_TYPE = ''BASE TABLE'''\n    exec (@sql)\n    \n    create table #SpaceUsed (name varchar(128), rows varchar(11), reserved varchar(18), data varchar(18), index_size varchar(18), unused varchar(18))\n    declare @name varchar(128)\n    select @name = ''\n    while exists (select * from #tables where name > @name)\n    begin\n        select @name = min(name) from #tables where name > @name\n        select @sql = N'exec ' + @SourceDB + N'..sp_executesql N''insert #SpaceUsed exec sp_spaceused ' + @name + ''''\n        exec (@sql)\n    end\n    select * from #SpaceUsed\n    drop table #tables\n    drop table #SpaceUsed\ngo\n\nexec sp_spaceused_all 'wplussynapsedw'",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/vTableSizes')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Tools"
+				},
+				"content": {
+					"query": "if object_id('vTableSizes') is not null drop view vTableSizes;\ngo\nCREATE VIEW dbo.vTableSizes\nAS\nWITH base AS (\n    --https://docs.microsoft.com/en-us/azure/sql-data-warehouse/sql-data-warehouse-tables-overview\n    SELECT \n    GETDATE()                                                             AS  [execution_time]\n    , DB_NAME()                                                            AS  [database_name]\n    , s.name                                                               AS  [schema_name]\n    , t.name                                                               AS  [table_name]\n    , QUOTENAME(s.name)+'.'+QUOTENAME(t.name)                              AS  [two_part_name]\n    , nt.[name]                                                            AS  [node_table_name]\n    , ROW_NUMBER() OVER(PARTITION BY nt.[name] ORDER BY (SELECT NULL))     AS  [node_table_name_seq]\n    , tp.[distribution_policy_desc]                                        AS  [distribution_policy_name]\n    , c.[name]                                                             AS  [distribution_column]\n    , nt.[distribution_id]                                                 AS  [distribution_id]\n    , i.[type]                                                             AS  [index_type]\n    , i.[type_desc]                                                        AS  [index_type_desc]\n    , nt.[pdw_node_id]                                                     AS  [pdw_node_id]\n    , pn.[type]                                                            AS  [pdw_node_type]\n    , pn.[name]                                                            AS  [pdw_node_name]\n    , di.name                                                              AS  [dist_name]\n    , di.position                                                          AS  [dist_position]\n    , nps.[partition_number]                                               AS  [partition_nmbr]\n    , nps.[reserved_page_count]                                            AS  [reserved_space_page_count]\n    , nps.[reserved_page_count] - nps.[used_page_count]                    AS  [unused_space_page_count]\n    , nps.[in_row_data_page_count] \n        + nps.[row_overflow_used_page_count] \n        + nps.[lob_used_page_count]                                        AS  [data_space_page_count]\n    , nps.[reserved_page_count] \n    - (nps.[reserved_page_count] - nps.[used_page_count]) \n    - ([in_row_data_page_count] \n            + [row_overflow_used_page_count]+[lob_used_page_count])       AS  [index_space_page_count]\n    , nps.[row_count]                                                      AS  [row_count]\n    from sys.schemas s\n    INNER JOIN sys.tables t\n        ON s.[schema_id] = t.[schema_id]\n    INNER JOIN sys.indexes i\n        ON  t.[object_id] = i.[object_id]\n        AND i.[index_id] <= 1\n    INNER JOIN sys.pdw_table_distribution_properties tp\n        ON t.[object_id] = tp.[object_id]\n    INNER JOIN sys.pdw_table_mappings tm\n        ON t.[object_id] = tm.[object_id]\n    INNER JOIN sys.pdw_nodes_tables nt\n        ON tm.[physical_name] = nt.[name]\n    INNER JOIN sys.dm_pdw_nodes pn\n        ON  nt.[pdw_node_id] = pn.[pdw_node_id]\n    INNER JOIN sys.pdw_distributions di\n        ON  nt.[distribution_id] = di.[distribution_id]\n    INNER JOIN sys.dm_pdw_nodes_db_partition_stats nps\n        ON nt.[object_id] = nps.[object_id]\n        AND nt.[pdw_node_id] = nps.[pdw_node_id]\n        AND nt.[distribution_id] = nps.[distribution_id]\n    LEFT OUTER JOIN (select * from sys.pdw_column_distribution_properties where distribution_ordinal = 1) cdp\n        ON t.[object_id] = cdp.[object_id]\n    LEFT OUTER JOIN sys.columns c\n        ON cdp.[object_id] = c.[object_id]\n        AND cdp.[column_id] = c.[column_id]\n), size AS (\n    SELECT\n    [execution_time]\n    ,  [database_name]\n    ,  [schema_name]\n    ,  [table_name]\n    ,  [two_part_name]\n    ,  [node_table_name]\n    ,  [node_table_name_seq]\n    ,  [distribution_policy_name]\n    ,  [distribution_column]\n    ,  [distribution_id]\n    ,  [index_type]\n    ,  [index_type_desc]\n    ,  [pdw_node_id]\n    ,  [pdw_node_type]\n    ,  [pdw_node_name]\n    ,  [dist_name]\n    ,  [dist_position]\n    ,  [partition_nmbr]\n    ,  [reserved_space_page_count]\n    ,  [unused_space_page_count]\n    ,  [data_space_page_count]\n    ,  [index_space_page_count]\n    ,  [row_count]\n    ,  ([reserved_space_page_count] * 8.0)                                 AS [reserved_space_KB]\n    ,  ([reserved_space_page_count] * 8.0)/1000                            AS [reserved_space_MB]\n    ,  ([reserved_space_page_count] * 8.0)/1000000                         AS [reserved_space_GB]\n    ,  ([reserved_space_page_count] * 8.0)/1000000000                      AS [reserved_space_TB]\n    ,  ([unused_space_page_count]   * 8.0)                                 AS [unused_space_KB]\n    ,  ([unused_space_page_count]   * 8.0)/1000                            AS [unused_space_MB]\n    ,  ([unused_space_page_count]   * 8.0)/1000000                         AS [unused_space_GB]\n    ,  ([unused_space_page_count]   * 8.0)/1000000000                      AS [unused_space_TB]\n    ,  ([data_space_page_count]     * 8.0)                                 AS [data_space_KB]\n    ,  ([data_space_page_count]     * 8.0)/1000                            AS [data_space_MB]\n    ,  ([data_space_page_count]     * 8.0)/1000000                         AS [data_space_GB]\n    ,  ([data_space_page_count]     * 8.0)/1000000000                      AS [data_space_TB]\n    ,  ([index_space_page_count]  * 8.0)                                   AS [index_space_KB]\n    ,  ([index_space_page_count]  * 8.0)/1000                              AS [index_space_MB]\n    ,  ([index_space_page_count]  * 8.0)/1000000                           AS [index_space_GB]\n    ,  ([index_space_page_count]  * 8.0)/1000000000                        AS [index_space_TB]\n    FROM base \n)\nSELECT * FROM size;\ngo \n\nSELECT \n     distribution_policy_name, table_name\n,    SUM(row_count)                as table_type_row_count\n,    SUM(reserved_space_GB)        as table_type_reserved_space_GB\n,    SUM(data_space_GB)            as table_type_data_space_GB\n,    SUM(index_space_GB)           as table_type_index_space_GB\n,    SUM(unused_space_GB)          as table_type_unused_space_GB\nFROM dbo.vTableSizes\nGROUP BY distribution_policy_name, table_name\norder by table_type_data_space_GB desc ;\n\ngo \nselect * from dbo.vTableSizes\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
 						"poolName": "wplussynapsedw"
 					},
 					"resultLimit": 5000
@@ -1259,15 +1896,12 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 56
+					}
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"case class Data(key: String, value: String)\r\n",
 							"\r\n",
@@ -1502,6 +2136,526 @@
 						],
 						"outputs": [],
 						"execution_count": 15
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Delta2')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "threedot0",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_spark",
+						"display_name": "Synapse Spark"
+					},
+					"language_info": {
+						"name": "scala"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+						"name": "threedot0",
+						"type": "Spark",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56
+					}
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Delta Demo\r\n",
+							"\r\n",
+							"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/Delta.json))\r\n",
+							"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
+							"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
+							"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"spark.version"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"case class Data(key: String, value: String)\r\n",
+							"\r\n",
+							"case class ChangeData(key: String, newValue: String, deleted: Boolean, time: Long) {\r\n",
+							"  assert(newValue != null ^ deleted)\r\n",
+							"}"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val target = Seq(\r\n",
+							"  Data(\"a\", \"0\"),\r\n",
+							"  Data(\"b\", \"1\"),\r\n",
+							"  Data(\"c\", \"2\"),\r\n",
+							"  Data(\"d\", \"3\")\r\n",
+							").toDF()"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"sql(\"drop table if exists target\")\r\n",
+							"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+							"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+							"\r\n",
+							"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
+							"\r\n",
+							"// targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"select * from target order by key"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"describe extended target"
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val changeDataSource = Seq(\r\n",
+							"  ChangeData(\"a\", \"10\", deleted = false, time = 0),\r\n",
+							"  ChangeData(\"a\", null, deleted = true, time = 1),   // a was updated and then deleted\r\n",
+							"  ChangeData(\"b\", null, deleted = true, time = 2),   // b was just deleted once\r\n",
+							"  ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\r\n",
+							"  ChangeData(\"c\", \"20\", deleted = false, time = 4),\r\n",
+							"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
+							").toDF().createOrReplaceTempView(\"changes\")"
+						],
+						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### SQL Example"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql \r\n",
+							"MERGE INTO target t\r\n",
+							"USING (\r\n",
+							"  -- Find the latest change for each key based on the timestamp\r\n",
+							"  SELECT key, latest.newValue as newValue, latest.deleted as deleted FROM (    \r\n",
+							"    -- Note: For nested structs, max on struct is computed as \r\n",
+							"    -- max on first struct field, if equal fall back to second fields, and so on.\r\n",
+							"    SELECT key, max(struct(time, newValue, deleted)) as latest FROM changes GROUP BY key\r\n",
+							"  )\r\n",
+							") s\r\n",
+							"ON s.key = t.key\r\n",
+							"WHEN MATCHED AND s.deleted = true THEN DELETE\r\n",
+							"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
+							"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"// import io.delta.tables._\r\n",
+							"// import org.apache.spark.sql.functions._\r\n",
+							"\r\n",
+							"// val deltaTable = DeltaTable.forName(\"target\")\r\n",
+							"val changesDF = spark.sql(\"select * from changes\")\r\n",
+							"changesDF.head()"
+						],
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
+						],
+						"outputs": [],
+						"execution_count": 11
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"latestChangeForEachKey.show() // shows the latest change for each key"
+						],
+						"outputs": [],
+						"execution_count": 12
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
+						],
+						"outputs": [],
+						"execution_count": 13
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"select * from lastchanges"
+						],
+						"outputs": [],
+						"execution_count": 14
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"//instead of delta to read as ext table in dedicated pool\r\n",
+							"\r\n",
+							"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
+						],
+						"outputs": [],
+						"execution_count": 15
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### SCALA Merge example (Skipped)"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"// deltaTable.as(\"t\")\r\n",
+							"//   .merge(\r\n",
+							"//     latestChangeForEachKey.as(\"s\"),\r\n",
+							"//     \"s.key = t.key\")\r\n",
+							"//   .whenMatched(\"s.deleted = true\")\r\n",
+							"//   .delete()\r\n",
+							"//   .whenMatched()\r\n",
+							"//   .updateExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+							"//   .whenNotMatched(\"s.deleted = false\")\r\n",
+							"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+							"//   .execute()"
+						],
+						"outputs": [],
+						"execution_count": 16
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+							"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+							"\r\n",
+							"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
+							"\r\n",
+							"// lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
+						],
+						"outputs": [],
+						"execution_count": 17
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Resources\r\n",
+							"* https://docs.databricks.com/_static/notebooks/merge-in-cdc.html\r\n",
+							"* https://techcommunity.microsoft.com/t5/azure-synapse-analytics/query-delta-lake-files-using-t-sql-language-in-azure-synapse/ba-p/2388398\r\n",
+							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/query-delta-lake-format\r\n",
+							"* https://databricks.com/blog/2019/03/19/efficient-upserts-into-data-lakes-databricks-delta.html\r\n",
+							"* https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=azure-sqldw-latest\r\n",
+							"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
+							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas\r\n",
+							"* https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example-part-2/"
+						]
 					}
 				]
 			},
@@ -2072,1137 +3226,6 @@
 			},
 			"dependsOn": [],
 			"location": "eastus"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Delta2')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Delta"
-				},
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"bigDataPool": {
-					"referenceName": "threedot0",
-					"type": "BigDataPoolReference"
-				},
-				"sessionProperties": {
-					"driverMemory": "56g",
-					"driverCores": 8,
-					"executorMemory": "56g",
-					"executorCores": 8,
-					"numExecutors": 2,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2"
-					}
-				},
-				"metadata": {
-					"saveOutput": true,
-					"kernelspec": {
-						"name": "synapse_spark",
-						"display_name": "Synapse Spark"
-					},
-					"language_info": {
-						"name": "scala"
-					},
-					"a365ComputeOptions": {
-						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
-						"name": "threedot0",
-						"type": "Spark",
-						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
-						"auth": {
-							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
-						},
-						"sparkVersion": "3.1",
-						"nodeCount": 3,
-						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
-				},
-				"cells": [
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# Delta Demo\r\n",
-							"\r\n",
-							"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/Delta.json))\r\n",
-							"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
-							"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
-							"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
-						]
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"spark.version"
-						],
-						"outputs": [],
-						"execution_count": 1
-					},
-					{
-						"cell_type": "code",
-						"metadata": {},
-						"source": [
-							"case class Data(key: String, value: String)\r\n",
-							"\r\n",
-							"case class ChangeData(key: String, newValue: String, deleted: Boolean, time: Long) {\r\n",
-							"  assert(newValue != null ^ deleted)\r\n",
-							"}"
-						],
-						"outputs": [],
-						"execution_count": 2
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"val target = Seq(\r\n",
-							"  Data(\"a\", \"0\"),\r\n",
-							"  Data(\"b\", \"1\"),\r\n",
-							"  Data(\"c\", \"2\"),\r\n",
-							"  Data(\"d\", \"3\")\r\n",
-							").toDF()"
-						],
-						"outputs": [],
-						"execution_count": 3
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"sql(\"drop table if exists target\")\r\n",
-							"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
-						],
-						"outputs": [],
-						"execution_count": 4
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
-							"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
-							"\r\n",
-							"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
-							"\r\n",
-							"// targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
-						],
-						"outputs": [],
-						"execution_count": 5
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"microsoft": {
-								"language": "sparksql"
-							},
-							"collapsed": false
-						},
-						"source": [
-							"%%sql\r\n",
-							"select * from target order by key"
-						],
-						"outputs": [],
-						"execution_count": 6
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"microsoft": {
-								"language": "sparksql"
-							},
-							"collapsed": false
-						},
-						"source": [
-							"%%sql\r\n",
-							"describe extended target"
-						],
-						"outputs": [],
-						"execution_count": 7
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"val changeDataSource = Seq(\r\n",
-							"  ChangeData(\"a\", \"10\", deleted = false, time = 0),\r\n",
-							"  ChangeData(\"a\", null, deleted = true, time = 1),   // a was updated and then deleted\r\n",
-							"  ChangeData(\"b\", null, deleted = true, time = 2),   // b was just deleted once\r\n",
-							"  ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\r\n",
-							"  ChangeData(\"c\", \"20\", deleted = false, time = 4),\r\n",
-							"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
-							").toDF().createOrReplaceTempView(\"changes\")"
-						],
-						"outputs": [],
-						"execution_count": 8
-					},
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"### SQL Example"
-						]
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"microsoft": {
-								"language": "sparksql"
-							},
-							"collapsed": false
-						},
-						"source": [
-							"%%sql \r\n",
-							"MERGE INTO target t\r\n",
-							"USING (\r\n",
-							"  -- Find the latest change for each key based on the timestamp\r\n",
-							"  SELECT key, latest.newValue as newValue, latest.deleted as deleted FROM (    \r\n",
-							"    -- Note: For nested structs, max on struct is computed as \r\n",
-							"    -- max on first struct field, if equal fall back to second fields, and so on.\r\n",
-							"    SELECT key, max(struct(time, newValue, deleted)) as latest FROM changes GROUP BY key\r\n",
-							"  )\r\n",
-							") s\r\n",
-							"ON s.key = t.key\r\n",
-							"WHEN MATCHED AND s.deleted = true THEN DELETE\r\n",
-							"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
-							"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
-						],
-						"outputs": [],
-						"execution_count": 9
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"// import io.delta.tables._\r\n",
-							"// import org.apache.spark.sql.functions._\r\n",
-							"\r\n",
-							"// val deltaTable = DeltaTable.forName(\"target\")\r\n",
-							"val changesDF = spark.sql(\"select * from changes\")\r\n",
-							"changesDF.head()"
-						],
-						"outputs": [],
-						"execution_count": 10
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
-						],
-						"outputs": [],
-						"execution_count": 11
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"latestChangeForEachKey.show() // shows the latest change for each key"
-						],
-						"outputs": [],
-						"execution_count": 12
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
-						],
-						"outputs": [],
-						"execution_count": 13
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"microsoft": {
-								"language": "sparksql"
-							},
-							"collapsed": false
-						},
-						"source": [
-							"%%sql\r\n",
-							"select * from lastchanges"
-						],
-						"outputs": [],
-						"execution_count": 14
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"//instead of delta to read as ext table in dedicated pool\r\n",
-							"\r\n",
-							"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
-						],
-						"outputs": [],
-						"execution_count": 15
-					},
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"### SCALA Merge example (Skipped)"
-						]
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"// deltaTable.as(\"t\")\r\n",
-							"//   .merge(\r\n",
-							"//     latestChangeForEachKey.as(\"s\"),\r\n",
-							"//     \"s.key = t.key\")\r\n",
-							"//   .whenMatched(\"s.deleted = true\")\r\n",
-							"//   .delete()\r\n",
-							"//   .whenMatched()\r\n",
-							"//   .updateExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
-							"//   .whenNotMatched(\"s.deleted = false\")\r\n",
-							"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
-							"//   .execute()"
-						],
-						"outputs": [],
-						"execution_count": 16
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"collapsed": true
-						},
-						"source": [
-							"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
-							"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
-							"\r\n",
-							"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
-							"\r\n",
-							"// lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
-						],
-						"outputs": [],
-						"execution_count": 17
-					},
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"## Resources\r\n",
-							"* https://docs.databricks.com/_static/notebooks/merge-in-cdc.html\r\n",
-							"* https://techcommunity.microsoft.com/t5/azure-synapse-analytics/query-delta-lake-files-using-t-sql-language-in-azure-synapse/ba-p/2388398\r\n",
-							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/query-delta-lake-format\r\n",
-							"* https://databricks.com/blog/2019/03/19/efficient-upserts-into-data-lakes-databricks-delta.html\r\n",
-							"* https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=azure-sqldw-latest\r\n",
-							"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
-							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas\r\n",
-							"* https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example-part-2/"
-						]
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Primer')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "IfPausedThenOnline",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "GetStatus",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@not(equals('Online',string(activity('GetStatus').output.properties.status)))",
-								"type": "Expression"
-							},
-							"ifTrueActivities": [
-								{
-									"name": "Resume",
-									"description": "Start",
-									"type": "WebActivity",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"url": {
-											"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'/resume?api-version=2018-06-01-preview')",
-											"type": "Expression"
-										},
-										"method": "POST",
-										"headers": {},
-										"body": {
-											"value": "@string('')",
-											"type": "Expression"
-										},
-										"authentication": {
-											"type": "MSI",
-											"resource": "https://management.core.windows.net/"
-										}
-									}
-								},
-								{
-									"name": "ScaleAPI",
-									"type": "WebActivity",
-									"dependsOn": [
-										{
-											"activity": "Resume",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"url": {
-											"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2018-06-01-preview')",
-											"type": "Expression"
-										},
-										"method": "PUT",
-										"headers": {
-											"Content-Type": "application/json"
-										},
-										"body": {
-											"value": "@concat('{\"location\":\"eastus2\",\"sku\":{\"name\": \"',pipeline().parameters.SLO,'\"}}')",
-											"type": "Expression"
-										},
-										"authentication": {
-											"type": "MSI",
-											"resource": "https://management.core.windows.net/"
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "GetStatus",
-						"description": "Start",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2018-06-01-preview')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"body": {
-								"value": "@string('')",
-								"type": "Expression"
-							},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://management.core.windows.net/"
-							}
-						}
-					},
-					{
-						"name": "UntilOnline",
-						"type": "Until",
-						"dependsOn": [
-							{
-								"activity": "IfPausedThenOnline",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals('Online',string(activity('GetStatusOnline').output.properties.status))\n",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "GetStatusOnline",
-									"description": "Start",
-									"type": "WebActivity",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"url": {
-											"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2018-06-01-preview')",
-											"type": "Expression"
-										},
-										"method": "GET",
-										"headers": {},
-										"body": {
-											"value": "@string('')",
-											"type": "Expression"
-										},
-										"authentication": {
-											"type": "MSI",
-											"resource": "https://management.core.windows.net/"
-										}
-									}
-								}
-							],
-							"timeout": "7.00:00:00"
-						}
-					},
-					{
-						"name": "execTrollhunters",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "UntilOnline",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Delta-Import",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "IfOnlinePause",
-						"description": "Sacle down and Pause",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "GetStatusEnd",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals('Online',string(activity('GetStatusEnd').output.properties.status))",
-								"type": "Expression"
-							},
-							"ifTrueActivities": [
-								{
-									"name": "ScaleWebhook",
-									"description": "",
-									"type": "WebHook",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"url": "https://s1events.azure-automation.net/webhooks?token=EnUcmPAqjmhXx7uKcLIj%2bN%2fNkzod6WPU6CaGc%2bhaPQI%3d",
-										"method": "POST",
-										"headers": {},
-										"body": {
-											"WebhookName": "scaledw"
-										},
-										"timeout": "00:10:00"
-									}
-								},
-								{
-									"name": "Pause",
-									"description": "Pause",
-									"type": "WebActivity",
-									"dependsOn": [
-										{
-											"activity": "ScaleWebhook",
-											"dependencyConditions": [
-												"Completed"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"url": {
-											"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'/pause?api-version=2018-06-01-preview')",
-											"type": "Expression"
-										},
-										"connectVia": {
-											"referenceName": "AutoResolveIntegrationRuntime",
-											"type": "IntegrationRuntimeReference"
-										},
-										"method": "POST",
-										"headers": {},
-										"body": {
-											"value": "@string('')",
-											"type": "Expression"
-										},
-										"authentication": {
-											"type": "MSI",
-											"resource": "https://management.core.windows.net/"
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "GetStatusEnd",
-						"description": "Start",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "execTrollhunters",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2018-06-01-preview')",
-								"type": "Expression"
-							},
-							"method": "GET",
-							"headers": {},
-							"body": {
-								"value": "@string('')",
-								"type": "Expression"
-							},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://management.core.windows.net/"
-							}
-						}
-					},
-					{
-						"name": "Notify",
-						"description": "",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "execTrollhunters",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-23.eastus2.logic.azure.com:443/workflows/a3b71278fcd74578912de49da8f0cc41/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hDohhaBVFqS07vlHEOhum2ZLvhUnvyi1u9oqKBO5fRc",
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "POST",
-							"headers": {
-								"Content-type": "application/json"
-							},
-							"body": {
-								"value": "@concat('{\n   \"DataFactoryName\": \"',pipeline().DataFactory,'\",\n   \"PipelineName\": \"',pipeline().Pipeline,'\",\n   \"Subject\": \"An error has occurred!\",\n   \"ErrorMessage\": \"The ADF pipeline failed. Please check the activity log.\",\n   \"EmailTo\": \"',pipeline().parameters.Notify,'\"\n}')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"SubscriptionID": {
-						"type": "string",
-						"defaultValue": "eaab21d5-8ecd-4ef0-a0c4-92fac2e22875"
-					},
-					"ResourceGroup": {
-						"type": "string",
-						"defaultValue": "dw"
-					},
-					"Server": {
-						"type": "string",
-						"defaultValue": "hiramdw"
-					},
-					"DW": {
-						"type": "string",
-						"defaultValue": "dw"
-					},
-					"SLO": {
-						"type": "string",
-						"defaultValue": "DW1000c"
-					},
-					"Notify": {
-						"type": "string",
-						"defaultValue": "hiramfleitas@microsoft.com"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/pipelines/Delta-Import')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/wplushiramsynapseLoaderXL')]",
-			"type": "Microsoft.Synapse/workspaces/linkedServices",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDW",
-				"typeProperties": {
-					"connectionString": "[parameters('wplushiramsynapseLoaderXL_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "AutoResolveIntegrationRuntime",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/LoaderXLTarget')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "wplushiramsynapseLoaderXL",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "key",
-						"type": "varchar"
-					},
-					{
-						"name": "value",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Target"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/LoaderXLLastChanges')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "wplushiramsynapseLoaderXL",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "key",
-						"type": "varchar"
-					},
-					{
-						"name": "time",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "newValue",
-						"type": "varchar"
-					},
-					{
-						"name": "deleted",
-						"type": "bit"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "lastchanges"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/WorkloadMgmt')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Tools"
-				},
-				"content": {
-					"query": "--https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-how-to-convert-resource-classes-workload-groups\n\nSELECT Request_min_resource_grant_percent = Effective_request_min_resource_grant_percent\n  FROM sys.dm_workload_management_workload_groups_stats\n  WHERE name = 'staticrc40'\n\n\nCREATE WORKLOAD GROUP wgDataLoads WITH  \n( REQUEST_MIN_RESOURCE_GRANT_PERCENT = 10\n ,MIN_PERCENTAGE_RESOURCE = 10\n ,CAP_PERCENTAGE_RESOURCE = 40\n ,QUERY_EXECUTION_TIMEOUT_SEC = 3600)\n\n\nCREATE WORKLOAD CLASSIFIER wcDataLoads WITH  \n( WORKLOAD_GROUP = 'wgDataLoads'\n ,MEMBERNAME = 'AdfLogin'\n ,WLM_LABEL = 'factloads')\n\n\n--Test as sql login\nSELECT SUSER_SNAME() --should be 'AdfLogin'\n\n--change to a valid table AdfLogin has access to\nSELECT TOP 10 *\n  FROM nation\n  OPTION (label='factloads')\n\nSELECT request_id, [label], classifier_name, group_name, command\n  FROM sys.dm_pdw_exec_requests\n  WHERE [label] = 'factloads'\n  ORDER BY submit_time DESC",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/WhoConnected')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Tools"
-				},
-				"content": {
-					"query": "if object_id('WhoConnected') is not null drop proc WhoConnected;\ngo\ncreate proc WhoConnected \nas\n    select \n        min(cast(login_time as date)) as MinLoginDate, \n        max(cast(login_time as date)) as MaxLoginDate\n    from sys.dm_pdw_exec_sessions \n    where session_id <> session_id()\n\n    select \n        cast(login_time as date) as LoginDate, \n        login_name, \n        client_id, \n        app_name, \n        status\n    from sys.dm_pdw_exec_sessions \n    where session_id <> session_id()\n    group by \n        cast(login_time as date),\n        login_name, \n        client_id, \n        app_name, \n        status\n    order by LoginDate desc\ngo\n\nexec WhoConnected",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/QueryActivity')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Tools"
-				},
-				"content": {
-					"query": "if object_id('QueryActivity') is not null drop proc QueryActivity;\ngo\ncreate proc [dbo].[QueryActivity] AS \n-- + -------------- +\n-- | Query Activity |\n-- + -------------- +\nwith cte as (\n    select      top 100\n                request_id, \n                status, \n                total_elapsed_time/60000 as TotalElapsedMinutes, \n                resource_class, \n                importance\n    from        sys.dm_pdw_exec_requests \n    where       status not in ('Completed','Failed','Cancelled','Suspended')\n                -- and request_id in ('QID3187802','QID3188080')\n    and         session_id <> session_id()\n    order by    submit_time desc\n)\nselect      es.app_name,\n            rs.request_id, \n            rs.step_index, \n            rs.operation_type, \n            rs.distribution_type, \n            rs.location_type, \n            rs.status, \n            rs.error_id, \n            rs.start_time, \n            rs.end_time, \n            case when rs.end_time is not null then cast(rs.end_time - rs.start_time as time) end as duration, \n            rs.total_elapsed_time/60000 as TotalElapsedMinutes, \n            rs.total_elapsed_time/3600000 as TotalElapsedHours, \n            rs.row_count, \n            rs.command, \n            cte.*\nfrom        sys.dm_pdw_request_steps rs\ninner join  cte \n    on rs.request_id = cte.request_id\nleft join  sys.dm_pdw_exec_sessions es \n    on rs.request_id = es.request_id\nwhere       rs.status<>'complete'\norder by    step_index;\n\n--request_id\tstep_index\toperation_type\tdistribution_type\tlocation_type\tstatus\terror_id\tstart_time\tend_time\tduration\tTotalElapsedMinutes\tTotalElapsedHours\trow_count\tcommand\trequest_id\tstatus\tTotalElapsedMinutes\tresource_class\timportance\n--QID827319\t3\tOnOperation\tAllDistributions\tCompute\tRunning\tNULL\t2019-09-05 21:30:07.010\tNULL\tNULL\t199\t3\t-1\tINSERT INTO [sql-eastus2-int-dev-reboot-analytics_wh].[dbo].[Inforce12New] WITH (TABLOCK) ([JOIN_KEY_ACTUALS], [SourceTableName], [BLOCK], [Date_Incurred], [Date_Reported], [Date_Posted], [YRMO], [InforceQuarter], [TLID], [TLID_SecondInsd], [Treaty_Sage_ID], [Treaty_TRS_ID], [Policy_Number], [Policy_Record_Number], [Policy_Rider_Number], [Coverage_Sage_CCID], [ConversionFlag], [OriginalCCID], [OriginalCCID_2], [OriginalPolicy], [OriginalPolicy_2], [FACE], [ReinsuredFace], [NAR], [sourceTableNameInput], [sourceTableNameInputTS], [sourceFileName], [IssueAgeL1], [SmokerL1], [BusinessBlockShort], [mosesBand], [mosesSeries], [mosesClassL1], [GenderL1], [mosesPlan], [IssueDate], [FalloutType1], [Treaty_Model_ID], [Treaty_PeopleSoft_ID], [BusinessBlock], [JOIN_KEY_MODEL], [JOIN_KEY_NO_DATE], [BenefitType])SELECT [T1_1].[JOIN_KEY_ACTUALS], [T1_1].[SourceTableName], [T1_1].[BLOCK], [T1_1].[Date_Incurred], [T1_1].[Date_Reported], [T1_1].[Date_Posted], [T1_1].[YRMO], [T1_1].[InforceQuarter], [T1_1].[TLID], [T1_1].[TLID_SecondInsd], [T1_1].[Treaty_Sage_ID], [T1_1].[Treaty_TRS_ID], [T1_1].[Policy_Number], [T1_1].[Policy_Record_Number], [T1_1].[Policy_Rider_Number], [T1_1].[Coverage_Sage_CCID], [T1_1].[ConversionFlag], [T1_1].[OriginalCCID], [T1_1].[OriginalCCID_2], [T1_1].[OriginalPolicy], [T1_1].[OriginalPolicy_2], [T1_1].[FACE], [T1_1].[ReinsuredFace], [T1_1].[NAR], [T1_1].[sourceTableNameInput], [T1_1].[sourceTableNameInputTS], [T1_1].[sourceFileName], [T1_1].[IssueAgeL1], [T1_1].[SmokerL1], [T1_1].[BusinessBlockShort], [T1_1].[mosesBand], [T1_1].[mosesSeries], [T1_1].[mosesClassL1], [T1_1].[GenderL1], [T1_1].[mosesPlan], [T1_1].[IssueDate], [T1_1].[FalloutType1], [T1_1].[Treaty_Model_ID], [T1_1].[col], [T1_1].[BusinessBlock], [T1_1].[JOIN_KEY_MODEL], [T1_1].[JOIN_KEY_NO_DATE], [T1_1].[BenefitType] FROM (SELECT CASE WHEN ([T2_1].[Treaty_PeopleSoft_ID] LIKE CAST (N'HA%' COLLATE SQL_Latin1_General_CP1_CI_AS AS VARCHAR (3)) COLLATE SQL_Latin1_General_CP1_CI_AS) THEN concat([T2_1].[Treaty_PeopleSoft_ID], CAST (N'-001' COLLATE SQL_Latin1_General_CP1_CI_AS AS VARCHAR (4)) COLLATE SQL_Latin1_General_CP1_CI_AS) ELSE [T2_1].[Treaty_PeopleSoft_ID]END AS [col], [T2_1].[JOIN_KEY_ACTUALS] AS [JOIN_KEY_ACTUALS], [T2_1].[SourceTableName] AS [SourceTableName], [T2_1].[BLOCK] AS [BLOCK], [T2_1].[Date_Incurred] AS [Date_Incurred], [T2_1].[Date_Reported] AS [Date_Reported], [T2_1].[Date_Posted] AS [Date_Posted], [T2_1].[YRMO] AS [YRMO], [T2_1].[InforceQuarter] AS [InforceQuarter], [T2_1].[TLID] AS [TLID], [T2_1].[TLID_SecondInsd] AS [TLID_SecondInsd], [T2_1].[Treaty_Sage_ID] AS [Treaty_Sage_ID], [T2_1].[Treaty_TRS_ID] AS [Treaty_TRS_ID], [T2_1].[Policy_Number] AS [Policy_Number], [T2_1].[Policy_Record_Number] AS [Policy_Record_Number], [T2_1].[Policy_Rider_Number] AS [Policy_Rider_Number], [T2_1].[Coverage_Sage_CCID] AS [Coverage_Sage_CCID], [T2_1].[ConversionFlag] AS [ConversionFlag], [T2_1].[OriginalCCID] AS [OriginalCCID], [T2_1].[OriginalCCID_2] AS [OriginalCCID_2], [T2_1].[OriginalPolicy] AS [OriginalPolicy], [T2_1].[OriginalPolicy_2] AS [OriginalPolicy_2], [T2_1].[FACE] AS [FACE], [T2_1].[ReinsuredFace] AS [ReinsuredFace], [T2_1].[NAR] AS [NAR], [T2_1].[sourceTableNameInput] AS [sourceTableNameInput], [T2_1].[sourceTableNameInputTS] AS [sourceTableNameInputTS], [T2_1].[sourceFileName] AS [sourceFileName], [T2_1].[IssueAgeL1] AS [IssueAgeL1], [T2_1].[SmokerL1] AS [SmokerL1], [T2_1].[BusinessBlockShort] AS [BusinessBlockShort], [T2_1].[mosesBand] AS [mosesBand], [T2_1].[mosesSeries] AS [mosesSeries], [T2_1].[mosesClassL1] AS [mosesClassL1], [T2_1].[GenderL1] AS [GenderL1], [T2_1].[mosesPlan] AS [mosesPlan], [T2_1].[IssueDate] AS [IssueDate], [T2_1].[FalloutType1] AS [FalloutType1], [T2_1].[Treaty_Model_ID] AS [Treaty_Model_ID], [T2_1].[BusinessBlock] AS [BusinessBlock], [T2_1].[JOIN_KEY_MODEL] AS [JOIN_KEY_MODEL], [T2_1].[JOIN_KEY_NO_DATE] AS [JOIN_KEY_NO_DATE], [T2_1].[BenefitType] AS [BenefitType] FROM [sql-eastus2-int-dev-reboot-analytics_w\tQID827319\tRunning\t199\txlargerc\tnormal\n/*\nSELECT * FROM sys.dm_pdw_sql_requests WHERE request_id = 'QID891260' AND status <>'Complete' -- and step_index = 3;\nDBCC PDW_SHOWEXECUTIONPLAN(57, 192);\nSELECT 'DBCC PDW_SHOWEXECUTIONPLAN(',distribution_id,',',spid,')' FROM sys.dm_pdw_sql_requests WHERE request_id = 'QID891260' AND step_index = 3;\n\ndbcc pdw_showspaceused(ctasSuperTableSum)\ndbcc pdw_showspaceused(mapTreatyTermsReplicate)\n*/\nGO\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "wplussynapsedw",
-						"poolName": "wplussynapsedw"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/vTableSizes')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Tools"
-				},
-				"content": {
-					"query": "if object_id('vTableSizes') is not null drop view vTableSizes;\ngo\nCREATE VIEW dbo.vTableSizes\nAS\nWITH base AS (\n    --https://docs.microsoft.com/en-us/azure/sql-data-warehouse/sql-data-warehouse-tables-overview\n    SELECT \n    GETDATE()                                                             AS  [execution_time]\n    , DB_NAME()                                                            AS  [database_name]\n    , s.name                                                               AS  [schema_name]\n    , t.name                                                               AS  [table_name]\n    , QUOTENAME(s.name)+'.'+QUOTENAME(t.name)                              AS  [two_part_name]\n    , nt.[name]                                                            AS  [node_table_name]\n    , ROW_NUMBER() OVER(PARTITION BY nt.[name] ORDER BY (SELECT NULL))     AS  [node_table_name_seq]\n    , tp.[distribution_policy_desc]                                        AS  [distribution_policy_name]\n    , c.[name]                                                             AS  [distribution_column]\n    , nt.[distribution_id]                                                 AS  [distribution_id]\n    , i.[type]                                                             AS  [index_type]\n    , i.[type_desc]                                                        AS  [index_type_desc]\n    , nt.[pdw_node_id]                                                     AS  [pdw_node_id]\n    , pn.[type]                                                            AS  [pdw_node_type]\n    , pn.[name]                                                            AS  [pdw_node_name]\n    , di.name                                                              AS  [dist_name]\n    , di.position                                                          AS  [dist_position]\n    , nps.[partition_number]                                               AS  [partition_nmbr]\n    , nps.[reserved_page_count]                                            AS  [reserved_space_page_count]\n    , nps.[reserved_page_count] - nps.[used_page_count]                    AS  [unused_space_page_count]\n    , nps.[in_row_data_page_count] \n        + nps.[row_overflow_used_page_count] \n        + nps.[lob_used_page_count]                                        AS  [data_space_page_count]\n    , nps.[reserved_page_count] \n    - (nps.[reserved_page_count] - nps.[used_page_count]) \n    - ([in_row_data_page_count] \n            + [row_overflow_used_page_count]+[lob_used_page_count])       AS  [index_space_page_count]\n    , nps.[row_count]                                                      AS  [row_count]\n    from sys.schemas s\n    INNER JOIN sys.tables t\n        ON s.[schema_id] = t.[schema_id]\n    INNER JOIN sys.indexes i\n        ON  t.[object_id] = i.[object_id]\n        AND i.[index_id] <= 1\n    INNER JOIN sys.pdw_table_distribution_properties tp\n        ON t.[object_id] = tp.[object_id]\n    INNER JOIN sys.pdw_table_mappings tm\n        ON t.[object_id] = tm.[object_id]\n    INNER JOIN sys.pdw_nodes_tables nt\n        ON tm.[physical_name] = nt.[name]\n    INNER JOIN sys.dm_pdw_nodes pn\n        ON  nt.[pdw_node_id] = pn.[pdw_node_id]\n    INNER JOIN sys.pdw_distributions di\n        ON  nt.[distribution_id] = di.[distribution_id]\n    INNER JOIN sys.dm_pdw_nodes_db_partition_stats nps\n        ON nt.[object_id] = nps.[object_id]\n        AND nt.[pdw_node_id] = nps.[pdw_node_id]\n        AND nt.[distribution_id] = nps.[distribution_id]\n    LEFT OUTER JOIN (select * from sys.pdw_column_distribution_properties where distribution_ordinal = 1) cdp\n        ON t.[object_id] = cdp.[object_id]\n    LEFT OUTER JOIN sys.columns c\n        ON cdp.[object_id] = c.[object_id]\n        AND cdp.[column_id] = c.[column_id]\n), size AS (\n    SELECT\n    [execution_time]\n    ,  [database_name]\n    ,  [schema_name]\n    ,  [table_name]\n    ,  [two_part_name]\n    ,  [node_table_name]\n    ,  [node_table_name_seq]\n    ,  [distribution_policy_name]\n    ,  [distribution_column]\n    ,  [distribution_id]\n    ,  [index_type]\n    ,  [index_type_desc]\n    ,  [pdw_node_id]\n    ,  [pdw_node_type]\n    ,  [pdw_node_name]\n    ,  [dist_name]\n    ,  [dist_position]\n    ,  [partition_nmbr]\n    ,  [reserved_space_page_count]\n    ,  [unused_space_page_count]\n    ,  [data_space_page_count]\n    ,  [index_space_page_count]\n    ,  [row_count]\n    ,  ([reserved_space_page_count] * 8.0)                                 AS [reserved_space_KB]\n    ,  ([reserved_space_page_count] * 8.0)/1000                            AS [reserved_space_MB]\n    ,  ([reserved_space_page_count] * 8.0)/1000000                         AS [reserved_space_GB]\n    ,  ([reserved_space_page_count] * 8.0)/1000000000                      AS [reserved_space_TB]\n    ,  ([unused_space_page_count]   * 8.0)                                 AS [unused_space_KB]\n    ,  ([unused_space_page_count]   * 8.0)/1000                            AS [unused_space_MB]\n    ,  ([unused_space_page_count]   * 8.0)/1000000                         AS [unused_space_GB]\n    ,  ([unused_space_page_count]   * 8.0)/1000000000                      AS [unused_space_TB]\n    ,  ([data_space_page_count]     * 8.0)                                 AS [data_space_KB]\n    ,  ([data_space_page_count]     * 8.0)/1000                            AS [data_space_MB]\n    ,  ([data_space_page_count]     * 8.0)/1000000                         AS [data_space_GB]\n    ,  ([data_space_page_count]     * 8.0)/1000000000                      AS [data_space_TB]\n    ,  ([index_space_page_count]  * 8.0)                                   AS [index_space_KB]\n    ,  ([index_space_page_count]  * 8.0)/1000                              AS [index_space_MB]\n    ,  ([index_space_page_count]  * 8.0)/1000000                           AS [index_space_GB]\n    ,  ([index_space_page_count]  * 8.0)/1000000000                        AS [index_space_TB]\n    FROM base \n)\nSELECT * FROM size;\ngo \n\nSELECT \n     distribution_policy_name\n,    SUM(row_count)                as table_type_row_count\n,    SUM(reserved_space_GB)        as table_type_reserved_space_GB\n,    SUM(data_space_GB)            as table_type_data_space_GB\n,    SUM(index_space_GB)           as table_type_index_space_GB\n,    SUM(unused_space_GB)          as table_type_unused_space_GB\nFROM dbo.vTableSizes\n-- where table_name in(\n--     'Center9',\n--     'Inforce9',\n--     'Claim9',\n--     'Premium9',\n--     'Model9',\n--     'TreatyMap',\n--     'MapCCIDModelFeatures',\n--     'PolicyShare'\n-- )\nGROUP BY distribution_policy_name\norder by table_type_data_space_GB desc ;\n\ngo \nselect * from dbo.vTableSizes\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "wplussynapsedw",
-						"poolName": "wplussynapsedw"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/LoaderXL')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Tools"
-				},
-				"content": {
-					"query": "--dw master\n\nif exists (select 1 from sys.sql_logins where name='LoaderXL') drop login LoaderXL;\ncreate login LoaderXL with password = 'XL!sqlPools2021'\nalter login LoaderXL enable\ngo \ndrop user LoaderXL;\ngo\ncreate user LoaderXL for login LoaderXL\nalter role dbmanager add member LoaderXL\n\n-- use hiramdw\ndrop user LoaderXL;\ncreate user LoaderXL for login LoaderXL\ngo\nexec sp_addrolemember db_owner, LoaderXL;\nEXEC sp_addrolemember 'xlargerc', 'LoaderXL'\n\ngrant view definition to public;\ngrant showplan to LoaderXL;\ngrant connect to LoaderXL\ngo ",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "wplussynapsedw",
-						"poolName": "wplussynapsedw"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Tools"
-				},
-				"content": {
-					"metadata": {
-						"language": "sql"
-					}
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
 		}
 	]
 }
