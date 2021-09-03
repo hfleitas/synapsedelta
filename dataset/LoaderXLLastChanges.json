@@ -1,0 +1,34 @@
+{
+	"name": "LoaderXLLastChanges",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wplushiramsynapseLoaderXL",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "key",
+				"type": "varchar"
+			},
+			{
+				"name": "time",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "newValue",
+				"type": "varchar"
+			},
+			{
+				"name": "deleted",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "lastchanges"
+		}
+	}
+}

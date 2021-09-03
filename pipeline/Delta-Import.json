@@ -29,15 +29,8 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "SqlPoolSink",
-						"preCopyScript": "exec DeltaDropTarget",
-						"allowPolyBase": true,
-						"polyBaseSettings": {
-							"rejectValue": 0,
-							"rejectType": "value",
-							"useTypeDefault": true
-						},
-						"tableOption": "autoCreate",
+						"type": "SqlDWSink",
+						"allowCopyCommand": true,
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": true,
@@ -82,7 +75,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Target",
+						"referenceName": "LoaderXLTarget",
 						"type": "DatasetReference"
 					}
 				]
@@ -135,15 +128,8 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "SqlPoolSink",
-						"preCopyScript": "exec DeltaDropLastChanges",
-						"allowPolyBase": true,
-						"polyBaseSettings": {
-							"rejectValue": 0,
-							"rejectType": "value",
-							"useTypeDefault": true
-						},
-						"tableOption": "autoCreate",
+						"type": "SqlDWSink",
+						"allowCopyCommand": true,
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": true,
@@ -208,7 +194,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "LastChanges",
+						"referenceName": "LoaderXLLastChanges",
 						"type": "DatasetReference"
 					}
 				]

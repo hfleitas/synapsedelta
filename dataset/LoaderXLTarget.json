@@ -1,0 +1,25 @@
+{
+	"name": "LoaderXLTarget",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wplushiramsynapseLoaderXL",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "key",
+				"type": "varchar"
+			},
+			{
+				"name": "value",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Target"
+		}
+	}
+}
