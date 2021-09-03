@@ -8,9 +8,9 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Delta",
+						"activity": "ShakeNBake",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
 						]
 					}
 				],
@@ -84,7 +84,14 @@
 				"name": "Delta",
 				"description": "Includes CDC",
 				"type": "SynapseNotebook",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "ShakeNBake",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -107,9 +114,9 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Delta",
+						"activity": "ShakeNBake",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
 						]
 					}
 				],
@@ -203,20 +210,7 @@
 				"name": "ShakeNBake",
 				"description": "merge and rename",
 				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "Target",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "LastChanges",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
