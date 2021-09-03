@@ -1354,7 +1354,20 @@
 							"  ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\r\n",
 							"  ChangeData(\"c\", \"20\", deleted = false, time = 4),\r\n",
 							"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
-							").toDF().createOrReplaceTempView(\"changes\")"
+							").toDF().createOrReplaceTempView(\"changes\")\r\n",
+							"\r\n",
+							"// val changeDataSource = Seq(\r\n",
+							"//   ChangeData(\"a\", \"10\", deleted = false, time = 0),\r\n",
+							"//   ChangeData(\"a\", null, deleted = true, time = 1),   // a was updated and then deleted\r\n",
+							"//   ChangeData(\"b\", null, deleted = true, time = 2),   // b was just deleted once\r\n",
+							"//   ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\r\n",
+							"//   ChangeData(\"c\", \"20\", deleted = false, time = 4),\r\n",
+							"//   ChangeData(\"d\", \"82\", deleted = false, time = 5)\r\n",
+							"//   ChangeData(\"e\", \"19\", deleted = false, time = 6)\r\n",
+							"//   ChangeData(\"f\", \"12\", deleted = false, time = 7)\r\n",
+							"//   ChangeData(\"g\", null, deleted = false, time = 8)\r\n",
+							"//   ChangeData(\"d\", \"21\", deleted = false, time = 9)\r\n",
+							"// ).toDF().createOrReplaceTempView(\"changes\")"
 						],
 						"outputs": [],
 						"execution_count": 8
