@@ -1251,24 +1251,6 @@
 				},
 				"cells": [
 					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# Delta Demo\r\n",
-							"\r\n",
-							"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/Delta.json))\r\n",
-							"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
-							"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
-							"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
-						]
-					},
-					{
 						"cell_type": "code",
 						"metadata": {},
 						"source": [
@@ -1492,27 +1474,6 @@
 						],
 						"outputs": [],
 						"execution_count": 15
-					},
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"## Resources\r\n",
-							"* https://docs.databricks.com/_static/notebooks/merge-in-cdc.html\r\n",
-							"* https://techcommunity.microsoft.com/t5/azure-synapse-analytics/query-delta-lake-files-using-t-sql-language-in-azure-synapse/ba-p/2388398\r\n",
-							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/query-delta-lake-format\r\n",
-							"* https://databricks.com/blog/2019/03/19/efficient-upserts-into-data-lakes-databricks-delta.html\r\n",
-							"* https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=azure-sqldw-latest\r\n",
-							"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
-							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas\r\n",
-							"* https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example-part-2/"
-						]
 					}
 				]
 			},
