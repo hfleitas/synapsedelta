@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'wplushiramsynapse-WorkspaceDefaultSqlServer'"
 		},
+		"wplushiramsynapseLoaderXL_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'wplushiramsynapseLoaderXL'"
+		},
 		"LabFilesZip_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
@@ -73,15 +77,9 @@
 								"partitionOption": "None"
 							},
 							"sink": {
-								"type": "SqlPoolSink",
-								"preCopyScript": "exec DeltaDropTarget",
-								"allowPolyBase": true,
-								"polyBaseSettings": {
-									"rejectValue": 0,
-									"rejectType": "value",
-									"useTypeDefault": true
-								},
-								"tableOption": "autoCreate",
+								"type": "SqlDWSink",
+								"allowCopyCommand": true,
+								"copyCommandSettings": {},
 								"sqlWriterUseTableLock": false
 							},
 							"enableStaging": true,
@@ -127,7 +125,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "Target",
+								"referenceName": "LoaderXLTarget",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -181,15 +179,9 @@
 								"partitionOption": "None"
 							},
 							"sink": {
-								"type": "SqlPoolSink",
-								"preCopyScript": "exec DeltaDropLastChanges",
-								"allowPolyBase": true,
-								"polyBaseSettings": {
-									"rejectValue": 0,
-									"rejectType": "value",
-									"useTypeDefault": true
-								},
-								"tableOption": "autoCreate",
+								"type": "SqlDWSink",
+								"allowCopyCommand": true,
+								"copyCommandSettings": {},
 								"sqlWriterUseTableLock": false
 							},
 							"enableStaging": true,
@@ -255,7 +247,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "LastChanges",
+								"referenceName": "LoaderXLLastChanges",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -300,10 +292,10 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/vDeltaTarget')]",
-				"[concat(variables('workspaceId'), '/datasets/Target')]",
+				"[concat(variables('workspaceId'), '/datasets/LoaderXLTarget')]",
 				"[concat(variables('workspaceId'), '/notebooks/Delta')]",
 				"[concat(variables('workspaceId'), '/datasets/vDeltaLastChanges')]",
-				"[concat(variables('workspaceId'), '/datasets/LastChanges')]",
+				"[concat(variables('workspaceId'), '/datasets/LoaderXLLastChanges')]",
 				"[concat(variables('workspaceId'), '/sqlPools/wplussynapsedw')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
 			]
@@ -2967,6 +2959,94 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
 				"[concat(variables('workspaceId'), '/pipelines/Delta-Import')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/wplushiramsynapseLoaderXL')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('wplushiramsynapseLoaderXL_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/LoaderXLTarget')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapseLoaderXL",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "key",
+						"type": "varchar"
+					},
+					{
+						"name": "value",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Target"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/LoaderXLLastChanges')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapseLoaderXL",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "key",
+						"type": "varchar"
+					},
+					{
+						"name": "time",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "newValue",
+						"type": "varchar"
+					},
+					{
+						"name": "deleted",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "lastchanges"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
 			]
 		}
 	]
