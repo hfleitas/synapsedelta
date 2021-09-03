@@ -1,0 +1,20 @@
+{
+	"name": "LoaderXL",
+	"properties": {
+		"folder": {
+			"name": "Tools"
+		},
+		"content": {
+			"query": "--dw master\n\nif exists (select 1 from sys.sql_logins where name='LoaderXL') drop login LoaderXL;\ncreate login LoaderXL with password = 'XL!sqlPools2021'\nalter login LoaderXL enable\ngo \ndrop user LoaderXL;\ngo\ncreate user LoaderXL for login LoaderXL\nalter role dbmanager add member LoaderXL\n\n-- use hiramdw\ndrop user LoaderXL;\ncreate user LoaderXL for login LoaderXL\ngo\nexec sp_addrolemember db_owner, LoaderXL;\nEXEC sp_addrolemember 'xlargerc', 'LoaderXL'\n\ngrant view definition to public;\ngrant showplan to LoaderXL;\ngrant connect to LoaderXL\ngo ",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
