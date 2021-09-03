@@ -367,7 +367,7 @@
 			},
 			"Notify": {
 				"type": "string",
-				"defaultValue": "azure@fleitasarts.com"
+				"defaultValue": "hiramfleitas@microsoft.com"
 			}
 		},
 		"annotations": []
