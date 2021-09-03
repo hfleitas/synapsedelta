@@ -1,0 +1,21 @@
+{
+	"name": "GetRowCounts",
+	"properties": {
+		"description": "dw not supported",
+		"folder": {
+			"name": "Tools"
+		},
+		"content": {
+			"query": "if object_id('GetRowCounts') is not null drop proc GetRowCounts;\ngo \n\ncreate proc GetRowCounts --'SRUSSegmentedPolicyRecords_Final2017Revised, HLRSegmentedPolicyRecords_Final2017Revised, BrockSegmentedPolicyRecords_Final2017Revised'\n    @tables nvarchar(max)\nas \nset nocount on;\n    \n    declare @sql nvarchar(max), @cnt int, @cnt2 int, @name nvarchar(128);\n\n    if object_id('tempdb.dbo.#t') is not null drop table #t\n    create table #t (\n        name        nvarchar(128),\n        rows        char(20),\n        reserved    varchar(18),\n        data        varchar(18),\n        index_size  varchar(18),\n        unused      varchar(18)\n    );\n\n    if object_id('tempdb.dbo.#tables') is not null drop table #tables\n    create table #tables (\n        name        nvarchar(128)\n    );\n    insert into #tables (name) select trim(value) from string_split(@tables,',');\n    \n    select @cnt = count(*) from information_schema.tables where table_name in (select name from #tables);\n    select @cnt2 = count(*) from #t;\n   \n    while @cnt>@cnt2\n    begin\n        select  top 1 @sql='insert into #t exec sp_spaceused '''+table_name+'''', @name=table_name\n        from    information_schema.tables \n        where   table_name in (select top 1 name from #tables);\n        \n        exec sp_executesql @sql; --print @sql;\n        \n        delete from #tables where name = @name;\n        select  @cnt2 = count(*) from #t;\n    end\n    select * from #t\ngo\n\nexec GetRowCounts 'reporttarget'",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
