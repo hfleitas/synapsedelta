@@ -201,17 +201,17 @@
 			},
 			{
 				"name": "ShakeNBake",
-				"description": "Merge and Rename",
-				"type": "SqlPoolStoredProcedure",
+				"description": "merge and rename",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "LastChanges",
+						"activity": "Target",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "Target",
+						"activity": "LastChanges",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -225,12 +225,12 @@
 					"secureInput": false
 				},
 				"userProperties": [],
-				"sqlPool": {
-					"referenceName": "wplussynapsedw",
-					"type": "SqlPoolReference"
-				},
 				"typeProperties": {
 					"storedProcedureName": "[dbo].[ShakeNBake]"
+				},
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapseLoaderXL",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
