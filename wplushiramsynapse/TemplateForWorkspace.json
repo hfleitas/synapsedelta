@@ -78,8 +78,15 @@
 							},
 							"sink": {
 								"type": "SqlDWSink",
-								"allowCopyCommand": true,
-								"copyCommandSettings": {},
+								"preCopyScript": "exec DeltaDropTarget",
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								},
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false,
 								"sqlWriterUseTableLock": false
 							},
 							"enableStaging": true,
@@ -180,8 +187,15 @@
 							},
 							"sink": {
 								"type": "SqlDWSink",
-								"allowCopyCommand": true,
-								"copyCommandSettings": {},
+								"preCopyScript": "exec DeltaDropLastChanges",
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								},
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false,
 								"sqlWriterUseTableLock": false
 							},
 							"enableStaging": true,
@@ -255,17 +269,17 @@
 					},
 					{
 						"name": "ShakeNBake",
-						"description": "Merge and Rename",
-						"type": "SqlPoolStoredProcedure",
+						"description": "merge and rename",
+						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "LastChanges",
+								"activity": "Target",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							},
 							{
-								"activity": "Target",
+								"activity": "LastChanges",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -279,12 +293,12 @@
 							"secureInput": false
 						},
 						"userProperties": [],
-						"sqlPool": {
-							"referenceName": "wplussynapsedw",
-							"type": "SqlPoolReference"
-						},
 						"typeProperties": {
 							"storedProcedureName": "[dbo].[ShakeNBake]"
+						},
+						"linkedServiceName": {
+							"referenceName": "wplushiramsynapseLoaderXL",
+							"type": "LinkedServiceReference"
 						}
 					}
 				],
@@ -296,7 +310,7 @@
 				"[concat(variables('workspaceId'), '/notebooks/Delta')]",
 				"[concat(variables('workspaceId'), '/datasets/vDeltaLastChanges')]",
 				"[concat(variables('workspaceId'), '/datasets/LoaderXLLastChanges')]",
-				"[concat(variables('workspaceId'), '/sqlPools/wplussynapsedw')]",
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
 			]
 		},
