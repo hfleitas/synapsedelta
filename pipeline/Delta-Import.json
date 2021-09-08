@@ -10,7 +10,7 @@
 					{
 						"activity": "Delta",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
 						]
 					}
 				],
@@ -38,8 +38,7 @@
 							"useTypeDefault": true
 						},
 						"tableOption": "autoCreate",
-						"disableMetricsCollection": false,
-						"sqlWriterUseTableLock": false
+						"disableMetricsCollection": false
 					},
 					"enableStaging": true,
 					"stagingSettings": {
@@ -145,8 +144,7 @@
 							"useTypeDefault": true
 						},
 						"tableOption": "autoCreate",
-						"disableMetricsCollection": false,
-						"sqlWriterUseTableLock": false
+						"disableMetricsCollection": false
 					},
 					"enableStaging": true,
 					"stagingSettings": {
@@ -216,16 +214,10 @@
 				]
 			},
 			{
-				"name": "ShakeNBake",
-				"description": "merge and rename",
+				"name": "MergeLatest",
+				"description": "",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
-					{
-						"activity": "Target",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
 					{
 						"activity": "LastChanges",
 						"dependencyConditions": [
