@@ -1463,6 +1463,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Dateformats')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- string to date\nif object_id('dateformats') is not null drop table dateformats \ngo\n\ncreate table dateformats (\n    id int,\n    createdate varchar(120)\n) with \n(\n    distribution = round_robin,\n    clustered columnstore index\n)\ngo \n\ninsert into dateformats\nselect 1, getutcdate() --implicit \n\nselect * from dateformats\n\nselect convert(datetime,createdate,126) from dateformats\n\n-- back to string\nif object_id('dateformats2') is not null drop table dateformats2 \n\ncreate table dateformats2 with \n(\n    distribution = round_robin,\n    clustered columnstore index\n) as \nselect 1 as id , getutcdate() as createdate\n\nselect convert(varchar(120),createdate,126) from dateformats2\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/DeltaDropTarget')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1680,6 +1700,49 @@
 					"currentConnection": {
 						"databaseName": "master",
 						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ShakeNBakev1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "if object_id('ShakeNBake') is not null DROP PROCEDURE [dbo].[ShakeNBake]\nGO\n\nCREATE PROC [dbo].[ShakeNBake] AS \n    -- rename object target2hash TO ReportTarget;\n    \n    --ctas to merge\n    if object_id('target2hash') is not null drop table [target2hash];\n    create table [target2hash]\n    with (\n        distribution = hash([key]),\n        clustered columnstore index\n    ) as select * from [target];\n\n    --merge\n    merge into [target2hash] as t\n    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])\n    on lc.[key] = t.[key]\n    when matched and lc.[deleted] = 1 \n        then delete\n    when matched\n        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]\n    when not matched and lc.[deleted] = 0 \n        then insert ([key], [value]) values(lc.[key], lc.[newValue]);\n\n    --rename\n    if object_id('ReportTarget') is not null drop table [ReportTarget];\n    rename object target2hash TO ReportTarget;\n    \n\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ShakeNBakev2')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "DROP PROCEDURE [dbo].[ShakeNBake]\nGO\n\nCREATE PROC [dbo].[ShakeNBake] AS \n\n    --merge\n    merge into [ReportTarget] as t\n    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])\n    on lc.[key] = t.[key]\n    when matched and lc.[deleted] = 1 \n        then delete\n    when matched\n        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]\n    when not matched and lc.[deleted] = 0 \n        then insert ([key], [value]) values(lc.[key], lc.[newValue]);\n\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
 					},
 					"resultLimit": 5000
 				},
