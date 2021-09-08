@@ -1,0 +1,17 @@
+{
+	"name": "ShakeNBakev2",
+	"properties": {
+		"content": {
+			"query": "DROP PROCEDURE [dbo].[ShakeNBake]\nGO\n\nCREATE PROC [dbo].[ShakeNBake] AS \n\n    --merge\n    merge into [ReportTarget] as t\n    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])\n    on lc.[key] = t.[key]\n    when matched and lc.[deleted] = 1 \n        then delete\n    when matched\n        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]\n    when not matched and lc.[deleted] = 0 \n        then insert ([key], [value]) values(lc.[key], lc.[newValue]);\n\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
