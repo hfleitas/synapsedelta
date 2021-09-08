@@ -1,0 +1,17 @@
+{
+	"name": "Dateformats",
+	"properties": {
+		"content": {
+			"query": "-- string to date\nif object_id('dateformats') is not null drop table dateformats \ngo\n\ncreate table dateformats (\n    id int,\n    createdate varchar(120)\n) with \n(\n    distribution = round_robin,\n    clustered columnstore index\n)\ngo \n\ninsert into dateformats\nselect 1, getutcdate() --implicit \n\nselect * from dateformats\n\nselect convert(datetime,createdate,126) from dateformats\n\n-- back to string\nif object_id('dateformats2') is not null drop table dateformats2 \n\ncreate table dateformats2 with \n(\n    distribution = round_robin,\n    clustered columnstore index\n) as \nselect 1 as id , getutcdate() as createdate\n\nselect convert(varchar(120),createdate,126) from dateformats2\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
