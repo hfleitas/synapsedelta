@@ -1,0 +1,45 @@
+{
+  "format": 1,
+  "restore": {
+    "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\wplussynapsedw.sqlproj": {}
+  },
+  "projects": {
+    "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\wplussynapsedw.sqlproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\wplussynapsedw.sqlproj",
+        "projectName": "wplussynapsedw",
+        "projectPath": "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\wplussynapsedw.sqlproj",
+        "packagesPath": "C:\\Users\\hiramfleitas\\.nuget\\packages\\",
+        "outputPath": "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "configFilePaths": [
+          "C:\\Users\\hiramfleitas\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net46"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net46": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net46": {
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.0, )"
+            }
+          }
+        }
+      }
+    }
+  }
+}

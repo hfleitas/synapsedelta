@@ -11,16 +11,16 @@
 			<Metadata Name="CompatibilityMode" Value="130" />
 		</CustomData>
 		<CustomData Category="Reference" Type="Assembly">
-			<Metadata Name="LogicalName" Value="DatabaseProjectwplussynapsedw.dll" />
-			<Metadata Name="FileName" Value="c:\hiram-msft\synapsedelta\DatabaseProjectwplussynapsedw\obj\Debug\DatabaseProjectwplussynapsedw.dll" />
-			<Metadata Name="AssemblyName" Value="DatabaseProjectwplussynapsedw" />
+			<Metadata Name="LogicalName" Value="wplussynapsedw.dll" />
+			<Metadata Name="FileName" Value="c:\hiram-msft\synapsedelta\wplussynapsedw\obj\Debug\wplussynapsedw.dll" />
+			<Metadata Name="AssemblyName" Value="wplussynapsedw" />
 			<Metadata Name="PermissionSet" Value="SAFE" />
 			<Metadata Name="Owner" Value="" />
 			<Metadata Name="GenerateSqlClrDdl" Value="True" />
 			<Metadata Name="IsVisible" Value="True" />
 			<Metadata Name="IsModelAware" Value="True" />
 			<Metadata Name="SkipCreationIfEmpty" Value="True" />
-			<Metadata Name="AssemblySymbolsName" Value="c:\hiram-msft\synapsedelta\DatabaseProjectwplussynapsedw\obj\Debug\DatabaseProjectwplussynapsedw.pdb" />
+			<Metadata Name="AssemblySymbolsName" Value="c:\hiram-msft\synapsedelta\wplussynapsedw\obj\Debug\wplussynapsedw.pdb" />
 		</CustomData>
 		<CustomData Category="SqlCmdVariables" Type="SqlCmdVariable" />
 	</Header>

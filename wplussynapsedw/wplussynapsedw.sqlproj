@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>DatabaseProjectwplussynapsedw</Name>
+    <Name>wplussynapsedw</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{AF0F407D-6F2D-425F-9506-EEA66E372F42}</ProjectGuid>
@@ -11,8 +11,8 @@
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>DatabaseProjectwplussynapsedw</RootNamespace>
-    <AssemblyName>DatabaseProjectwplussynapsedw</AssemblyName>
+    <RootNamespace>wplussynapsedw</RootNamespace>
+    <AssemblyName>wplussynapsedw</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>

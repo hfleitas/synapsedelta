@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\hiram-msft\\synapsedelta\\DatabaseProjectwplussynapsedw\\DatabaseProjectwplussynapsedw.sqlproj": {}
+    "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\wplussynapsedw.sqlproj": {}
   },
   "projects": {
-    "c:\\hiram-msft\\synapsedelta\\DatabaseProjectwplussynapsedw\\DatabaseProjectwplussynapsedw.sqlproj": {
+    "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\wplussynapsedw.sqlproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\hiram-msft\\synapsedelta\\DatabaseProjectwplussynapsedw\\DatabaseProjectwplussynapsedw.sqlproj",
-        "projectName": "DatabaseProjectwplussynapsedw",
-        "projectPath": "c:\\hiram-msft\\synapsedelta\\DatabaseProjectwplussynapsedw\\DatabaseProjectwplussynapsedw.sqlproj",
+        "projectUniqueName": "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\wplussynapsedw.sqlproj",
+        "projectName": "wplussynapsedw",
+        "projectPath": "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\wplussynapsedw.sqlproj",
         "packagesPath": "C:\\Users\\hiramfleitas\\.nuget\\packages\\",
-        "outputPath": "c:\\hiram-msft\\synapsedelta\\DatabaseProjectwplussynapsedw\\obj\\",
+        "outputPath": "c:\\hiram-msft\\synapsedelta\\wplussynapsedw\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "configFilePaths": [
