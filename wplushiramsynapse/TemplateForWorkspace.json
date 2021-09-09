@@ -56,7 +56,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "CreateDeltaTables",
+								"activity": "Delta",
 								"dependencyConditions": [
 									"Skipped"
 								]
@@ -138,7 +138,7 @@
 						]
 					},
 					{
-						"name": "CreateDeltaTables",
+						"name": "Delta",
 						"description": "Includes CDC",
 						"type": "SynapseNotebook",
 						"dependsOn": [],
@@ -164,7 +164,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "CreateDeltaTables",
+								"activity": "Delta",
 								"dependencyConditions": [
 									"Succeeded"
 								]
