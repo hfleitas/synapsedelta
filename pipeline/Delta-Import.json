@@ -8,7 +8,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Delta",
+						"activity": "DeltaChanges",
 						"dependencyConditions": [
 							"Skipped"
 						]
@@ -88,7 +88,7 @@
 				]
 			},
 			{
-				"name": "Delta",
+				"name": "DeltaChanges",
 				"description": "Includes CDC",
 				"type": "SynapseNotebook",
 				"dependsOn": [],
@@ -102,7 +102,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "Delta",
+						"referenceName": "DeltaChanges",
 						"type": "NotebookReference"
 					},
 					"snapshot": true
@@ -114,7 +114,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Delta",
+						"activity": "DeltaChanges",
 						"dependencyConditions": [
 							"Succeeded"
 						]
