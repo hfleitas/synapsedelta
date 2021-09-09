@@ -234,7 +234,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[ShakeNBake]"
+					"storedProcedureName": "[dbo].[MegreLatest]"
 				},
 				"linkedServiceName": {
 					"referenceName": "wplushiramsynapseLoaderXL",
