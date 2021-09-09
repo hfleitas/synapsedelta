@@ -56,7 +56,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Delta",
+								"activity": "DeltaChanges",
 								"dependencyConditions": [
 									"Skipped"
 								]
@@ -138,7 +138,7 @@
 						]
 					},
 					{
-						"name": "Delta",
+						"name": "DeltaChanges",
 						"description": "Includes CDC",
 						"type": "SynapseNotebook",
 						"dependsOn": [],
@@ -152,7 +152,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"notebook": {
-								"referenceName": "Delta",
+								"referenceName": "DeltaChanges",
 								"type": "NotebookReference"
 							},
 							"snapshot": true
@@ -164,7 +164,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Delta",
+								"activity": "DeltaChanges",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -299,7 +299,7 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/vDeltaTarget')]",
 				"[concat(variables('workspaceId'), '/datasets/LoaderXLTarget')]",
-				"[concat(variables('workspaceId'), '/notebooks/Delta')]",
+				"[concat(variables('workspaceId'), '/notebooks/DeltaChanges')]",
 				"[concat(variables('workspaceId'), '/datasets/vDeltaLastChanges')]",
 				"[concat(variables('workspaceId'), '/datasets/LoaderXLLastChanges')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]",
@@ -3286,6 +3286,196 @@
 			},
 			"dependsOn": [],
 			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaChanges')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "threedot0",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "112g",
+					"driverCores": 16,
+					"executorMemory": "112g",
+					"executorCores": 16,
+					"numExecutors": 1,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "1",
+						"spark.dynamicAllocation.maxExecutors": "1"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_spark",
+						"display_name": "Synapse Spark"
+					},
+					"language_info": {
+						"name": "scala"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+						"name": "threedot0",
+						"type": "Spark",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 16,
+						"memory": 112,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"case class Data(key: String, value: String)\r\n",
+							"\r\n",
+							"case class ChangeData(key: String, newValue: String, deleted: Boolean, time: Long) {\r\n",
+							"  assert(newValue != null ^ deleted)\r\n",
+							"}"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val changeDataSource = Seq(\r\n",
+							"  ChangeData(\"a\", \"10\", deleted = false, time = 0),\r\n",
+							"  ChangeData(\"a\", null, deleted = true, time = 1),   // a was updated and then deleted\r\n",
+							"  ChangeData(\"b\", null, deleted = true, time = 2),   // b was just deleted once\r\n",
+							"  ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\r\n",
+							"  ChangeData(\"c\", \"20\", deleted = false, time = 4),\r\n",
+							"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
+							").toDF().createOrReplaceTempView(\"changes\")\r\n",
+							"\r\n",
+							"// val changeDataSource = Seq(\r\n",
+							"//   ChangeData(\"a\", \"10\", deleted = false, time = 0),\r\n",
+							"//   ChangeData(\"a\", null, deleted = true, time = 1),   // a was updated and then deleted\r\n",
+							"//   ChangeData(\"b\", null, deleted = true, time = 2),   // b was just deleted once\r\n",
+							"//   ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\r\n",
+							"//   ChangeData(\"c\", \"20\", deleted = false, time = 4),\r\n",
+							"//   ChangeData(\"d\", \"82\", deleted = false, time = 5)\r\n",
+							"//   ChangeData(\"e\", \"19\", deleted = false, time = 6)\r\n",
+							"//   ChangeData(\"f\", \"12\", deleted = false, time = 7)\r\n",
+							"//   ChangeData(\"g\", null, deleted = false, time = 8)\r\n",
+							"//   ChangeData(\"d\", \"21\", deleted = false, time = 9)\r\n",
+							"// ).toDF().createOrReplaceTempView(\"changes\")"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val changesDF = spark.sql(\"select * from changes\")"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
+						],
+						"outputs": [],
+						"execution_count": 6
+					}
+				]
+			},
+			"dependsOn": []
 		}
 	]
 }
