@@ -87,19 +87,14 @@
 					"// read from last checkpoint \n",
 					"\n",
 					"val changeDataSource = Seq(\n",
-					"  ChangeData(\"a\", \"10\", deleted = false, time = 0),\n",
-					"  ChangeData(\"a\", null, deleted = true, time = 1),   // a was updated and then deleted\n",
-					"  ChangeData(\"b\", null, deleted = true, time = 2),   // b was just deleted once\n",
-					"  ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\n",
-					"  ChangeData(\"c\", \"20\", deleted = false, time = 4),\n",
-					"  ChangeData(\"d\", \"82\", deleted = false, time = 5),\n",
-					"  ChangeData(\"e\", \"19\", deleted = false, time = 6),\n",
-					"  ChangeData(\"f\", \"12\", deleted = false, time = 7),\n",
-					"  ChangeData(\"g\", null, deleted = false, time = 8),\n",
-					"  ChangeData(\"d\", \"21\", deleted = false, time = 9)\n",
+					"  ChangeData(\"d\", \"82\", deleted = false, time = 6),\n",
+					"  ChangeData(\"e\", \"19\", deleted = false, time = 7),\n",
+					"  ChangeData(\"f\", \"12\", deleted = false, time = 8),\n",
+					"  ChangeData(\"g\", null, deleted = true, time = 9),\n",
+					"  ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
 					").toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"execution_count": 2
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
