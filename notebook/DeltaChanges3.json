@@ -1,5 +1,5 @@
 {
-	"name": "Delta2",
+	"name": "DeltaChanges3",
 	"properties": {
 		"folder": {
 			"name": "Delta"
@@ -42,8 +42,8 @@
 				},
 				"sparkVersion": "3.1",
 				"nodeCount": 3,
-				"cores": 8,
-				"memory": 56,
+				"cores": 16,
+				"memory": 112,
 				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
