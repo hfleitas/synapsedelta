@@ -56,9 +56,9 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Delta",
+								"activity": "CreateDeltaTables",
 								"dependencyConditions": [
-									"Succeeded"
+									"Skipped"
 								]
 							}
 						],
@@ -138,7 +138,7 @@
 						]
 					},
 					{
-						"name": "Delta",
+						"name": "CreateDeltaTables",
 						"description": "Includes CDC",
 						"type": "SynapseNotebook",
 						"dependsOn": [],
@@ -164,7 +164,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Delta",
+								"activity": "CreateDeltaTables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -266,16 +266,10 @@
 						]
 					},
 					{
-						"name": "ShakeNBake",
-						"description": "merge and rename",
+						"name": "MergeLatest",
+						"description": "",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
-							{
-								"activity": "Target",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
 							{
 								"activity": "LastChanges",
 								"dependencyConditions": [
@@ -292,7 +286,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[dbo].[ShakeNBake]"
+							"storedProcedureName": "[dbo].[MegreLatest]"
 						},
 						"linkedServiceName": {
 							"referenceName": "wplushiramsynapseLoaderXL",
@@ -1619,6 +1613,29 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/MegreLatest')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"content": {
+					"query": "if object_id('MegreLatest') is not null drop proc [dbo].[MegreLatest]\ngo \n\ncreate proc [dbo].[MegreLatest] \nas \n\n    merge into [ReportTarget] as t\n    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])\n    on lc.[key] = t.[key]\n    when matched and lc.[deleted] = 1 \n        then delete\n    when matched\n        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]\n    when not matched and lc.[deleted] = 0 \n        then insert ([key], [value]) values(lc.[key], lc.[newValue]);\n\ngo ",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/QueryActivity')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1642,7 +1659,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Reboot')]",
+			"name": "[concat(parameters('workspaceName'), '/Reset')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -1650,7 +1667,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "--reset table\nselect * from [target]\ngo \n\ndelete from [target]; \ngo \n\ninsert [target] values('a','0')\ninsert [target] values('b','1')\ninsert [target] values('c','2')\ninsert [target] values('d','3')\ngo  \n\n\nselect * from [target];\n\ndelete from [target]; \ngo \n\ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo\n\n--reset lastchanges\ndelete from [lastchanges];\ninsert [lastchanges] values ('a','1',NULL,1)\ninsert [lastchanges] values ('c','5','200',0)\ninsert [lastchanges] values ('b','2',NULL,1)",
+					"query": "--reset table\nselect * from [target]\ngo \n\ndelete from [reporttarget]; \ngo \n\ninsert [reporttarget] values('a','0')\ninsert [reporttarget] values('b','1')\ninsert [reporttarget] values('c','2')\ninsert [reporttarget] values('d','3')\ngo  \n\n\nselect * from [target];\n\ndelete from [target]; \ngo \n\ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo\n\n--reset lastchanges\ndelete from [lastchanges];\ninsert [lastchanges] values ('a','1',NULL,1)\ninsert [lastchanges] values ('c','5','200',0)\ninsert [lastchanges] values ('b','2',NULL,1)\n\n\nselect * from [reporttarget];\n\ndelete from [reporttarget]; \ngo \n\ninsert [reporttarget] values('a','0')\ninsert [reporttarget] values('b','1')\ninsert [reporttarget] values('c','2')\ninsert [reporttarget] values('d','3')\ngo  \n\nexec mergelatest",
 					"metadata": {
 						"language": "sql"
 					},
@@ -1708,27 +1725,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/ShakeNBakev1')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "if object_id('ShakeNBake') is not null DROP PROCEDURE [dbo].[ShakeNBake]\nGO\n\nCREATE PROC [dbo].[ShakeNBake] AS \n    -- rename object target2hash TO ReportTarget;\n    \n    --ctas to merge\n    if object_id('target2hash') is not null drop table [target2hash];\n    create table [target2hash]\n    with (\n        distribution = hash([key]),\n        clustered columnstore index\n    ) as select * from [target];\n\n    --merge\n    merge into [target2hash] as t\n    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])\n    on lc.[key] = t.[key]\n    when matched and lc.[deleted] = 1 \n        then delete\n    when matched\n        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]\n    when not matched and lc.[deleted] = 0 \n        then insert ([key], [value]) values(lc.[key], lc.[newValue]);\n\n    --rename\n    if object_id('ReportTarget') is not null drop table [ReportTarget];\n    rename object target2hash TO ReportTarget;\n    \n\nGO",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "wplussynapsedw",
-						"poolName": "wplussynapsedw"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/ShakeNBakev2')]",
+			"name": "[concat(parameters('workspaceName'), '/ShakeNBake')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -1736,7 +1733,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "DROP PROCEDURE [dbo].[ShakeNBake]\nGO\n\nCREATE PROC [dbo].[ShakeNBake] AS \n\n    --merge\n    merge into [ReportTarget] as t\n    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])\n    on lc.[key] = t.[key]\n    when matched and lc.[deleted] = 1 \n        then delete\n    when matched\n        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]\n    when not matched and lc.[deleted] = 0 \n        then insert ([key], [value]) values(lc.[key], lc.[newValue]);\n\nGO",
+					"query": "if object_id('ShakeNBake') is not null DROP PROCEDURE [dbo].[ShakeNBake]\nGO\n\nCREATE PROC [dbo].[ShakeNBake] AS \n    -- rename object target2hash TO ReportTarget;\n    \n    --ctas to merge\n    if object_id('target2hash') is not null drop table [target2hash];\n    create table [target2hash]\n    with (\n        distribution = hash([key]),\n        clustered columnstore index\n    ) as select * from [target];\n\n    --merge\n    merge into [target2hash] as t\n    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])\n    on lc.[key] = t.[key]\n    when matched and lc.[deleted] = 1 \n        then delete\n    when matched\n        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]\n    when not matched and lc.[deleted] = 0 \n        then insert ([key], [value]) values(lc.[key], lc.[newValue]);\n\n    --rename\n    if object_id('ReportTarget') is not null drop table [ReportTarget];\n    rename object target2hash TO ReportTarget;\n    \n\nGO",
 					"metadata": {
 						"language": "sql"
 					},
