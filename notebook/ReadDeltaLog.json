@@ -45,10 +45,17 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"%%pyspark\n",
+					"# %%pyspark #switch kernel to PySpark\n",
 					"from delta.tables import *\n",
 					"deltaTable = DeltaTable.convertToDelta(spark, \"delta.`abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges`\")\n",
 					"deltaTable.show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val df = spark.read.json(\"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\")"
 				],
 				"execution_count": null
 			}
