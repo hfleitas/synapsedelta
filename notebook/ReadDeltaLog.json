@@ -153,6 +153,19 @@
 					"latestonly.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.latestonly\", Constants.INTERNAL)"
 				],
 				"execution_count": 12
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## But he wants it in ADB."
+				]
 			}
 		]
 	}
