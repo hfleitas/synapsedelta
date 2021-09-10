@@ -26,7 +26,7 @@
 				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
-				"name": "python"
+				"name": "scala"
 			},
 			"a365ComputeOptions": {
 				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
@@ -47,20 +47,28 @@
 		},
 		"cells": [
 			{
-				"cell_type": "code",
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
 				"source": [
-					"from delta.tables import *\n",
-					"deltaTable = DeltaTable.convertToDelta(spark, \"delta.`abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges`\")\n",
-					"deltaTable.show()"
-				],
-				"execution_count": null
+					"## Action items\r\n",
+					"1. spark read delta table from adls, use expression to group by for latestchanges.\r\n",
+					"2. call write api from adb to synapse sql dedicated pool to store latestchanges.\r\n",
+					"3. auth to sql pool using keyvault"
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
-					"val df = spark.read.json(\"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\")"
+					"val df_delta = spark.read.format(\"delta\").load(\"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\")\r\n",
+					"df_delta.show()"
 				],
-				"execution_count": 1
+				"execution_count": 4
 			}
 		]
 	}
