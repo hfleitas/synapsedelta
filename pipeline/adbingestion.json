@@ -1,10 +1,10 @@
 {
-	"name": "adb_ingestion",
+	"name": "adbingestion",
 	"properties": {
 		"description": "crime data 2016",
 		"activities": [
 			{
-				"name": "Copy_nuj",
+				"name": "crimedata2016",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
