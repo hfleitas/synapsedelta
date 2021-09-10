@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SQLOnDemand'"
 		},
+		"adbhf_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'adbhf'"
+		},
 		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'wplushiramsynapse-WorkspaceDefaultSqlServer'"
@@ -34,6 +38,10 @@
 		"LaptopFact_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "LAPTOP-RRU3V9OS\\dwloader"
+		},
+		"PublicDataset_sasUri": {
+			"type": "secureString",
+			"metadata": "Secure string for 'sasUri' of 'PublicDataset'"
 		},
 		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -141,7 +149,14 @@
 						"name": "DeltaChanges",
 						"description": "Includes CDC",
 						"type": "SynapseNotebook",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "lab3dts",
+								"dependencyConditions": [
+									"Skipped"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -163,6 +178,12 @@
 						"description": "overwrites staging table in SQL Pools from Serverless",
 						"type": "Copy",
 						"dependsOn": [
+							{
+								"activity": "lab3dts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
 							{
 								"activity": "DeltaChanges",
 								"dependencyConditions": [
@@ -292,6 +313,26 @@
 							"referenceName": "wplushiramsynapseLoaderXL",
 							"type": "LinkedServiceReference"
 						}
+					},
+					{
+						"name": "lab3dts",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/03-Data-Transformation"
+						},
+						"linkedServiceName": {
+							"referenceName": "adbhf",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"annotations": []
@@ -303,6 +344,7 @@
 				"[concat(variables('workspaceId'), '/datasets/vDeltaLastChanges')]",
 				"[concat(variables('workspaceId'), '/datasets/LoaderXLLastChanges')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]",
+				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
 			]
 		},
@@ -861,6 +903,83 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/adbingestion')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "crime data 2016",
+				"activities": [
+					{
+						"name": "crimedata2016",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "training/crime-data-2016/"
+							},
+							{
+								"name": "Destination",
+								"value": "dwtemp/03.02/"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "PreserveHierarchy"
+								}
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"skipErrorFile": {
+								"fileMissing": true
+							},
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_nuj",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_nuj",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/SourceDataset_nuj')]",
+				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_nuj')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/wait')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -885,6 +1004,29 @@
 				"annotations": []
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DestinationDataset_nuj')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "03.02",
+						"fileSystem": "dwtemp"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/HTTPLabFilesZip')]",
@@ -995,6 +1137,29 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SourceDataset_nuj')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "PublicDataset",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "crime-data-2016",
+						"container": "training"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/PublicDataset')]"
 			]
 		},
 		{
@@ -1154,6 +1319,25 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/PublicDataset')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"sasUri": "[parameters('PublicDataset_sasUri')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/SQLOnDemand')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -1162,6 +1346,30 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('SQLOnDemand_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/adbhf')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-1962311870977623.3.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('adbhf_accessToken')]"
+					},
+					"existingClusterId": "0910-004205-suede164"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -1276,7 +1484,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -1956,12 +2164,15 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 16,
-						"memory": 112
-					}
+						"memory": 112,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"case class Data(key: String, value: String)\r\n",
 							"\r\n",
@@ -2432,10 +2643,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 16,
-						"memory": 112,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 112
+					}
 				},
 				"cells": [
 					{
@@ -2478,7 +2687,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"case class Data(key: String, value: String)\r\n",
 							"\r\n",
@@ -3490,8 +3698,8 @@
 				"metadata": {
 					"saveOutput": true,
 					"kernelspec": {
-						"name": "synapse_pyspark",
-						"display_name": "Synapse PySpark"
+						"name": "synapse_spark",
+						"display_name": "scala"
 					},
 					"language_info": {
 						"name": "scala"

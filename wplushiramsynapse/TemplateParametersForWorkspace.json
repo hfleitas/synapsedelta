@@ -11,6 +11,9 @@
 		"SQLOnDemand_connectionString": {
 			"value": ""
 		},
+		"adbhf_accessToken": {
+			"value": ""
+		},
 		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},
@@ -25,6 +28,9 @@
 		},
 		"LaptopFact_properties_typeProperties_userId": {
 			"value": "LAPTOP-RRU3V9OS\\dwloader"
+		},
+		"PublicDataset_sasUri": {
+			"value": ""
 		},
 		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
