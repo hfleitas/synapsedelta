@@ -165,7 +165,8 @@
 				},
 				"source": [
 					"## But he wants it in ADB.\r\n",
-					"https://docs.databricks.com/data/data-sources/azure/synapse-analytics.html#frequently-asked-questions-faq"
+					"1. https://docs.databricks.com/data/data-sources/azure/synapse-analytics.html#frequently-asked-questions-faq\r\n",
+					"2. https://github.com/Azure-Samples/azure-sql-db-databricks/blob/main/notebooks/03b-parallel-switch-in-load-into-partitioned-table-single.ipynb"
 				]
 			}
 		]
