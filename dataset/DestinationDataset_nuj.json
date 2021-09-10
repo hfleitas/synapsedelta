@@ -1,0 +1,18 @@
+{
+	"name": "DestinationDataset_nuj",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "03.02",
+				"fileSystem": "dwtemp"
+			}
+		}
+	}
+}
