@@ -168,7 +168,7 @@
 					"collapsed": true
 				},
 				"source": [
-					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
+					"latestChangeForEachKey.write.format(\"parqut\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
 				"execution_count": 6
 			}
