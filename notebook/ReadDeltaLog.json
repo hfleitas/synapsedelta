@@ -21,6 +21,10 @@
 		},
 		"metadata": {
 			"saveOutput": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
 			"language_info": {
 				"name": "python"
 			},
@@ -45,7 +49,6 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"# %%pyspark #switch kernel to PySpark\n",
 					"from delta.tables import *\n",
 					"deltaTable = DeltaTable.convertToDelta(spark, \"delta.`abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges`\")\n",
 					"deltaTable.show()"
@@ -57,7 +60,7 @@
 				"source": [
 					"val df = spark.read.json(\"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\")"
 				],
-				"execution_count": null
+				"execution_count": 1
 			}
 		]
 	}
