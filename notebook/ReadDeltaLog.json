@@ -25,8 +25,8 @@
 		"metadata": {
 			"saveOutput": true,
 			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "Synapse PySpark"
+				"name": "synapse_spark",
+				"display_name": "scala"
 			},
 			"language_info": {
 				"name": "scala"
@@ -164,7 +164,8 @@
 					}
 				},
 				"source": [
-					"## But he wants it in ADB."
+					"## But he wants it in ADB.\r\n",
+					"https://docs.databricks.com/data/data-sources/azure/synapse-analytics.html#frequently-asked-questions-faq"
 				]
 			}
 		]
