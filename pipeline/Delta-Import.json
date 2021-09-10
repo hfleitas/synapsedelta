@@ -93,7 +93,7 @@
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
-						"activity": "adbhf",
+						"activity": "lab3dts",
 						"dependencyConditions": [
 							"Skipped"
 						]
@@ -121,7 +121,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "adbhf",
+						"activity": "lab3dts",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -255,7 +255,7 @@
 				}
 			},
 			{
-				"name": "adbhf",
+				"name": "lab3dts",
 				"type": "DatabricksNotebook",
 				"dependsOn": [],
 				"policy": {
