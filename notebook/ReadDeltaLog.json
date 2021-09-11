@@ -93,48 +93,6 @@
 				"execution_count": 188
 			},
 			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"collapsed": true
-				},
-				"source": [
-					"latestonly.createOrReplaceTempView(\"latestonly\")"
-				],
-				"execution_count": 189
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%sql\r\n",
-					"select * from latestonly"
-				],
-				"execution_count": 190
-			},
-			{
 				"cell_type": "markdown",
 				"metadata": {
 					"nteract": {
