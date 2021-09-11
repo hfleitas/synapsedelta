@@ -164,9 +164,7 @@
 					"Class.forName(\"com.microsoft.sqlserver.jdbc.SQLServerDriver\")\r\n",
 					"import java.sql.{Connection, DriverManager, ResultSet, Statement}; \r\n",
 					"\r\n",
-					"//drop if exists\r\n",
-					"\r\n",
-					"def die = {\r\n",
+					"def dt = {\r\n",
 					"    val connection_string = \"jdbc:sqlserver://wplushiramsynapse.sql.azuresynapse.net:1433;database=wplussynapsedw;user=LoaderXL;password=XL!sqlPools2021\"\r\n",
 					"    val connection = DriverManager.getConnection(connection_string)\r\n",
 					"    try {\r\n",
@@ -177,9 +175,9 @@
 					"    } \r\n",
 					"}\r\n",
 					"\r\n",
-					"die"
+					"dt"
 				],
-				"execution_count": 181
+				"execution_count": 185
 			},
 			{
 				"cell_type": "code",
