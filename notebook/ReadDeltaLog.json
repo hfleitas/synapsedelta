@@ -196,7 +196,7 @@
 				"source": [
 					"latestonly.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.latestonly\", Constants.INTERNAL)"
 				],
-				"execution_count": 182
+				"execution_count": 186
 			},
 			{
 				"cell_type": "markdown",
