@@ -70,7 +70,7 @@
 					"val df_delta = spark.read.format(\"delta\").load(\"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\")\r\n",
 					"df_delta.show()"
 				],
-				"execution_count": 159
+				"execution_count": 187
 			},
 			{
 				"cell_type": "code",
@@ -90,7 +90,7 @@
 					"val latestonly = df_delta.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestonly.show()"
 				],
-				"execution_count": 160
+				"execution_count": 188
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 				"source": [
 					"latestonly.createOrReplaceTempView(\"latestonly\")"
 				],
-				"execution_count": 161
+				"execution_count": 189
 			},
 			{
 				"cell_type": "code",
@@ -132,7 +132,7 @@
 					"%%sql\r\n",
 					"select * from latestonly"
 				],
-				"execution_count": 162
+				"execution_count": 190
 			},
 			{
 				"cell_type": "markdown",
@@ -177,7 +177,7 @@
 					"\r\n",
 					"dt"
 				],
-				"execution_count": 185
+				"execution_count": 191
 			},
 			{
 				"cell_type": "code",
@@ -196,7 +196,7 @@
 				"source": [
 					"latestonly.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.latestonly\", Constants.INTERNAL)"
 				],
-				"execution_count": 186
+				"execution_count": 193
 			},
 			{
 				"cell_type": "markdown",
