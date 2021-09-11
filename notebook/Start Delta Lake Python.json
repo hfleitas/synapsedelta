@@ -269,7 +269,7 @@
 				"source": [
 					"delta_table.history().show(20, 1000, False)"
 				],
-				"execution_count": 14
+				"execution_count": 16
 			},
 			{
 				"cell_type": "markdown",
@@ -287,7 +287,7 @@
 					"df = spark.read.format(\"delta\").option(\"versionAsOf\", 0).load(delta_table_path)\n",
 					"df.show()"
 				],
-				"execution_count": 15
+				"execution_count": 17
 			},
 			{
 				"cell_type": "markdown",
@@ -318,7 +318,7 @@
 					"    .option(\"checkpointLocation\", \"/tmp/checkpoint-{0}\".format(session_id))\\\n",
 					"    .start(delta_table_path)"
 				],
-				"execution_count": 16
+				"execution_count": 18
 			},
 			{
 				"cell_type": "markdown",
@@ -333,28 +333,28 @@
 				"source": [
 					"delta_table.toDF().sort(col(\"id\").desc()).show(100)"
 				],
-				"execution_count": 17
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"delta_table.history().drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").show(20, 1000, False)"
 				],
-				"execution_count": 18
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"stream.stop()"
 				],
-				"execution_count": 19
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"delta_table.history().drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").show(100, 1000, False)"
 				],
-				"execution_count": 20
+				"execution_count": 22
 			},
 			{
 				"cell_type": "markdown",
@@ -381,7 +381,7 @@
 					"    .mode(\"overwrite\")\\\n",
 					"    .save(delta_table_path)    "
 				],
-				"execution_count": 21
+				"execution_count": 23
 			},
 			{
 				"cell_type": "markdown",
@@ -401,7 +401,7 @@
 					"# Confirm that the data isn't in the Delta format\n",
 					"DeltaTable.isDeltaTable(spark, parquet_path)"
 				],
-				"execution_count": 22
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -411,7 +411,7 @@
 					"# Confirm that the converted data is now in the Delta format\n",
 					"DeltaTable.isDeltaTable(spark, parquet_path)"
 				],
-				"execution_count": 23
+				"execution_count": 25
 			},
 			{
 				"cell_type": "markdown",
@@ -429,14 +429,14 @@
 				"source": [
 					"spark.sql(\"DESCRIBE HISTORY delta.`{0}`\".format(delta_table_path)).show()"
 				],
-				"execution_count": 24
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
 				"source": [
-					"spark.sql(\"VACUUM delta.`{0}`\".format(delta_table_path)).show()"
+					"spark.sql(\"VACUUM delta.`{0}`\".format(delta_table_path)).show(10, 1000, False)"
 				],
-				"execution_count": 25
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -455,7 +455,7 @@
 					"\n",
 					"DeltaTable.isDeltaTable(spark, parquet_path)"
 				],
-				"execution_count": 26
+				"execution_count": 38
 			}
 		]
 	}
