@@ -70,7 +70,7 @@
 					"val df_delta = spark.read.format(\"delta\").load(\"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\")\r\n",
 					"df_delta.show()"
 				],
-				"execution_count": 120
+				"execution_count": 159
 			},
 			{
 				"cell_type": "code",
@@ -90,7 +90,7 @@
 					"val latestonly = df_delta.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestonly.show()"
 				],
-				"execution_count": 135
+				"execution_count": 160
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 				"source": [
 					"latestonly.createOrReplaceTempView(\"latestonly\")"
 				],
-				"execution_count": 136
+				"execution_count": 161
 			},
 			{
 				"cell_type": "code",
@@ -132,7 +132,7 @@
 					"%%sql\r\n",
 					"select * from latestonly"
 				],
-				"execution_count": 137
+				"execution_count": 162
 			},
 			{
 				"cell_type": "markdown",
@@ -144,7 +144,7 @@
 					}
 				},
 				"source": [
-					"https://techcommunity.microsoft.com/t5/azure-synapse-analytics/query-serverless-sql-pool-from-an-apache-spark-scala-notebook/ba-p/2250968"
+					"https://stackoverflow.com/questions/26041479/query-sql-database-with-scala"
 				]
 			},
 			{
@@ -161,21 +161,25 @@
 					}
 				},
 				"source": [
+					"Class.forName(\"com.microsoft.sqlserver.jdbc.SQLServerDriver\")\r\n",
 					"import java.sql.{Connection, DriverManager, ResultSet, Statement}; \r\n",
 					"\r\n",
-					"val connection_string = \"jdbc:sqlserver://wplushiramsynapse.sql.azuresynapse.net:1433;database=wplussynapsedw;user=LoaderXL;password=XL!sqlPools2021\"\r\n",
+					"//drop if exists\r\n",
 					"\r\n",
-					"Class.forName(\"com.microsoft.sqlserver.jdbc.SQLServerDriver\")\r\n",
-					" \r\n",
-					"val connection = DriverManager.getConnection(connection_string)\r\n",
-					"try {\r\n",
-					"    val statement = connection.createStatement()\r\n",
-					"    statement.executeQuery(\" if object_id('latestonly') is not null drop table latestonly; select 1\")\r\n",
-					"} finally {\r\n",
-					"    connection.close\r\n",
-					"}"
+					"def die = {\r\n",
+					"    val connection_string = \"jdbc:sqlserver://wplushiramsynapse.sql.azuresynapse.net:1433;database=wplussynapsedw;user=LoaderXL;password=XL!sqlPools2021\"\r\n",
+					"    val connection = DriverManager.getConnection(connection_string)\r\n",
+					"    try {\r\n",
+					"        val statement = connection.createStatement()\r\n",
+					"        val results = statement.executeQuery(\" if object_id('latestonly') is not null drop table latestonly; select 1\")\r\n",
+					"    } finally {\r\n",
+					"        connection.close\r\n",
+					"    } \r\n",
+					"}\r\n",
+					"\r\n",
+					"die"
 				],
-				"execution_count": 138
+				"execution_count": 181
 			},
 			{
 				"cell_type": "code",
@@ -194,7 +198,7 @@
 				"source": [
 					"latestonly.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.latestonly\", Constants.INTERNAL)"
 				],
-				"execution_count": 139
+				"execution_count": 182
 			},
 			{
 				"cell_type": "markdown",
