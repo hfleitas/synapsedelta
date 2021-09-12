@@ -1,6 +1,7 @@
 {
-	"name": "CICD-Control",
+	"name": "DevOpsCICD",
 	"properties": {
+		"description": "ExposureControl",
 		"activities": [
 			{
 				"name": "FeatureFlag",
