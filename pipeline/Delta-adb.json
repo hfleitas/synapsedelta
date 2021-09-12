@@ -1,0 +1,80 @@
+{
+	"name": "Delta-adb",
+	"properties": {
+		"activities": [
+			{
+				"name": "DeltaChanges",
+				"description": "",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Get Key from AKV",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/Databricks-Data-Transformations",
+					"baseParameters": {
+						"accountName": "wplushiramsynapseadlsv2",
+						"accountKey": {
+							"value": "@string(activity('Get Key from AKV').output.value)",
+							"type": "Expression"
+						},
+						"containerName": "wplushiramsynapseadlsv2"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "adbhf",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Get Key from AKV",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"KeyVaultDNSName": {
+				"type": "string",
+				"defaultValue": "https://synapseakv.vault.azure.net/"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-06-29T19:53:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
