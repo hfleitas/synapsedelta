@@ -12,7 +12,7 @@
 			},
 			{
 				"pipelineReference": {
-					"referenceName": "CICD-Control",
+					"referenceName": "DevOpsCICD",
 					"type": "PipelineReference"
 				},
 				"parameters": {
