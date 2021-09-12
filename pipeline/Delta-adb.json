@@ -29,7 +29,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/Databricks-Data-Transformations",
+					"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/DeltaChanges",
 					"baseParameters": {
 						"accountName": "wplushiramsynapseadlsv2",
 						"accountKey": {
