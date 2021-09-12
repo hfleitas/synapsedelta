@@ -1,0 +1,98 @@
+{
+	"name": "adb",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_dpx",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "training/crime-data-2016/"
+					},
+					{
+						"name": "Destination",
+						"value": "dwtemp/03.02/"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*"
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "PreserveHierarchy"
+						}
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": false,
+					"skipErrorFile": {
+						"fileMissing": true
+					},
+					"validateDataConsistency": false
+				},
+				"inputs": [
+					{
+						"referenceName": "PublicDataset",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_nuj",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "LabNotebook",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Copy_dpx",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/hiram@fleitasarts.com/03-Data-Ingestion-Via-ADF/includes/Databricks-Data-Transformations",
+					"baseParameters": {
+						"accountName": "hiramblob",
+						"accountKey": "EymlJoW5C6ZOVlcHYGIjuhf1Lm22KVREKwpgl8S/p0yGQdYdUvHaXUkYrRa5FnVvrto5lbCR1/GTi5EFaCsoQw==",
+						"containerName": "dwtemp"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-06-29T19:53:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
