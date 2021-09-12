@@ -47,7 +47,7 @@
 			"type": "string",
 			"defaultValue": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
 		},
-		"Daily_properties_CICD-Control_parameters_environment": {
+		"Daily_properties_DevOpsCICD_parameters_environment": {
 			"type": "string",
 			"defaultValue": "dev"
 		}
@@ -57,47 +57,293 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/CICD-Control')]",
+			"name": "[concat(parameters('workspaceName'), '/CrimeData-ADB')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"activities": [
 					{
-						"name": "FeatureFlag",
-						"type": "IfCondition",
-						"dependsOn": [],
+						"name": "Copy_dpx",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Get Key from AKV",
+								"dependencyConditions": [
+									"Skipped"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "training/crime-data-2016/"
+							},
+							{
+								"name": "Destination",
+								"value": "dwtemp/03.02/"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "PreserveHierarchy"
+								}
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"skipErrorFile": {
+								"fileMissing": true
+							},
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "PublicDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_nuj",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "LabNotebook",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Get Key from AKV",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
-							"expression": {
-								"value": "@equals(pipeline().parameters.environment, 'disabled')",
+							"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/Databricks-Data-Transformations",
+							"baseParameters": {
+								"accountName": "wplushiramsynapseadlsv2",
+								"accountKey": {
+									"value": "@string(activity('Get Key from AKV').output.value)",
+									"type": "Expression"
+								},
+								"containerName": "dwtemp"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "adbhf",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Get Key from AKV",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
 								"type": "Expression"
 							},
-							"ifTrueActivities": [
-								{
-									"name": "Wait1",
-									"type": "Wait",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"waitTimeInSeconds": 1
-									}
-								}
-							]
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
 						}
 					}
 				],
 				"parameters": {
-					"environment": {
+					"KeyVaultDNSName": {
 						"type": "string",
-						"defaultValue": "dev"
+						"defaultValue": "https://synapseakv.vault.azure.net/"
 					}
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2021-06-29T19:53:35Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/PublicDataset')]",
+				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_nuj')]",
+				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Delta-Import')]",
+			"name": "[concat(parameters('workspaceName'), '/Delta-Import-ADB')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeltaChanges",
+						"description": "",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Get Key from AKV",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Get ConnectionString from AKV",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": true
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/DeltaChanges",
+							"baseParameters": {
+								"accountName": "wplushiramsynapseadlsv2",
+								"accountKey": {
+									"value": "@string(activity('Get Key from AKV').output.value)",
+									"type": "Expression"
+								},
+								"containerName": "wplushiramsynapseadlsv2",
+								"jdbcConnectionString": {
+									"value": "@string(activity('Get ConnectionString from AKV').output.value)",
+									"type": "Expression"
+								},
+								"deltaPath": "synapse/workspaces/wplushiramsynapse/warehouse/lastchanges"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "adbhf",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Get Key from AKV",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
+						}
+					},
+					{
+						"name": "Get ConnectionString from AKV",
+						"description": "jdbc",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/ConnectionString/?api-version=7.0')",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"KeyVaultDNSName": {
+						"type": "string",
+						"defaultValue": "https://synapseakv.vault.azure.net/"
+					}
+				},
+				"folder": {
+					"name": "Delta"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-06-29T19:53:35Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Delta-Import-Synapse')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -193,14 +439,7 @@
 						"name": "DeltaChanges",
 						"description": "Includes CDC",
 						"type": "SynapseNotebook",
-						"dependsOn": [
-							{
-								"activity": "lab3dts",
-								"dependencyConditions": [
-									"Skipped"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -222,12 +461,6 @@
 						"description": "overwrites staging table in SQL Pools from Serverless",
 						"type": "Copy",
 						"dependsOn": [
-							{
-								"activity": "lab3dts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
 							{
 								"activity": "DeltaChanges",
 								"dependencyConditions": [
@@ -359,8 +592,9 @@
 						}
 					},
 					{
-						"name": "lab3dts",
-						"type": "DatabricksNotebook",
+						"name": "MergeLatest_copy1",
+						"description": "",
+						"type": "SqlServerStoredProcedure",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -371,14 +605,17 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/03-Data-Transformation"
+							"storedProcedureName": "[dbo].[MegreLatest]"
 						},
 						"linkedServiceName": {
-							"referenceName": "adbhf",
+							"referenceName": "wplushiramsynapseLoaderXL",
 							"type": "LinkedServiceReference"
 						}
 					}
 				],
+				"folder": {
+					"name": "Delta"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -388,135 +625,49 @@
 				"[concat(variables('workspaceId'), '/datasets/vDeltaLastChanges')]",
 				"[concat(variables('workspaceId'), '/datasets/LoaderXLLastChanges')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]",
-				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Delta-adb')]",
+			"name": "[concat(parameters('workspaceName'), '/DevOpsCICD')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"description": "ExposureControl",
 				"activities": [
 					{
-						"name": "DeltaChanges",
-						"description": "",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Get Key from AKV",
-								"dependencyConditions": [
-									"Skipped"
-								]
-							},
-							{
-								"activity": "Get ConnectionString from AKV",
-								"dependencyConditions": [
-									"Skipped"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
+						"name": "FeatureFlag",
+						"type": "IfCondition",
+						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/Databricks-Data-Transformations",
-							"baseParameters": {
-								"accountName": "wplushiramsynapseadlsv2",
-								"accountKey": {
-									"value": "@string(activity('Get Key from AKV').output.value)",
-									"type": "Expression"
-								},
-								"containerName": "wplushiramsynapseadlsv2",
-								"jdbcConnectionString": {
-									"value": "@string(activity('Get ConnectionString from AKV').output.value)",
-									"type": "Expression"
+							"expression": {
+								"value": "@equals(pipeline().parameters.environment, 'disabled')",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Wait1",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
+									}
 								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "adbhf",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Get Key from AKV",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://vault.azure.net"
-							}
-						}
-					},
-					{
-						"name": "Get ConnectionString from AKV",
-						"description": "jdbc",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/ConnectionString/?api-version=7.0')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://vault.azure.net"
-							}
+							]
 						}
 					}
 				],
 				"parameters": {
-					"KeyVaultDNSName": {
+					"environment": {
 						"type": "string",
-						"defaultValue": "https://synapseakv.vault.azure.net/"
+						"defaultValue": "dev"
 					}
 				},
-				"annotations": [],
-				"lastPublishTime": "2021-06-29T19:53:35Z"
+				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/GetLabFilesFromHTTP')]",
@@ -810,7 +961,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "Delta-Import",
+								"referenceName": "Delta-Import-Synapse",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -1000,7 +1151,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/pipelines/Delta-Import')]"
+				"[concat(variables('workspaceId'), '/pipelines/Delta-Import-Synapse')]"
 			]
 		},
 		{
@@ -1213,162 +1364,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/adbCrimeData')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_dpx",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Get Key from AKV",
-								"dependencyConditions": [
-									"Skipped"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "training/crime-data-2016/"
-							},
-							{
-								"name": "Destination",
-								"value": "dwtemp/03.02/"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*"
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings",
-									"copyBehavior": "PreserveHierarchy"
-								}
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"skipErrorFile": {
-								"fileMissing": true
-							},
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "PublicDataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_nuj",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "LabNotebook",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Get Key from AKV",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/Databricks-Data-Transformations",
-							"baseParameters": {
-								"accountName": "wplushiramsynapseadlsv2",
-								"accountKey": {
-									"value": "@string(activity('Get Key from AKV').output.value)",
-									"type": "Expression"
-								},
-								"containerName": "dwtemp"
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "adbhf",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Get Key from AKV",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://vault.azure.net"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"KeyVaultDNSName": {
-						"type": "string",
-						"defaultValue": "https://synapseakv.vault.azure.net/"
-					}
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-06-29T19:53:35Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/PublicDataset')]",
-				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_nuj')]",
-				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/wait')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -1436,6 +1431,34 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/LabFilesZip')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/HolCSV')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "user/trusted-service-user/hol.csv",
+						"fileSystem": "wplushiramsynapsefs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
 			]
 		},
 		{
@@ -1871,11 +1894,11 @@
 					},
 					{
 						"pipelineReference": {
-							"referenceName": "CICD-Control",
+							"referenceName": "DevOpsCICD",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"environment": "[parameters('Daily_properties_CICD-Control_parameters_environment')]"
+							"environment": "[parameters('Daily_properties_DevOpsCICD_parameters_environment')]"
 						}
 					}
 				],
@@ -1897,7 +1920,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/pipelines/MoveUnzippedFiles')]",
-				"[concat(variables('workspaceId'), '/pipelines/CICD-Control')]"
+				"[concat(variables('workspaceId'), '/pipelines/DevOpsCICD')]"
 			]
 		},
 		{
@@ -1910,7 +1933,7 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Delta-Import",
+							"referenceName": "Delta-Import-Synapse",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -1927,7 +1950,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/Delta-Import')]"
+				"[concat(variables('workspaceId'), '/pipelines/Delta-Import-Synapse')]"
 			]
 		},
 		{
@@ -3669,6 +3692,19 @@
 					{
 						"cell_type": "code",
 						"metadata": {
+							"tags": [
+								"parameters"
+							]
+						},
+						"source": [
+							"p1 = 5"
+						],
+						"outputs": [],
+						"execution_count": 42
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
 							"jupyter": {
 								"source_hidden": false,
 								"outputs_hidden": false
@@ -3677,20 +3713,82 @@
 								"transient": {
 									"deleting": false
 								}
-							},
-							"tags": [
-								"parameters"
-							]
+							}
 						},
 						"source": [
-							"print(\"accountName\")\r\n",
-							"print(\"accountKey\")\r\n",
-							"print(\"containerName\")\r\n",
-							"print(\"deltaPath\")\r\n",
-							"print(\"jdbcConnectionString\")"
+							"p=p1\r\n",
+							"print(p)"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 48
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from azureml.opendatasets import PublicHolidays\r\n",
+							"\r\n",
+							"from datetime import datetime\r\n",
+							"from dateutil import parser\r\n",
+							"from dateutil.relativedelta import relativedelta\r\n",
+							"\r\n",
+							"\r\n",
+							"end_date = datetime.today()\r\n",
+							"start_date = datetime.today() - relativedelta(months=6)\r\n",
+							"hol = PublicHolidays(start_date=start_date, end_date=end_date)\r\n",
+							"hol_df = hol.to_spark_dataframe()"
+						],
+						"outputs": [],
+						"execution_count": 44
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"hol = hol_df.limit(p)"
+						],
+						"outputs": [],
+						"execution_count": 59
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"csv_path = \"hol.csv\"\r\n",
+							"hol.write.csv(csv_path, mode = 'overwrite', header = 'true')"
+						],
+						"outputs": [],
+						"execution_count": 61
 					}
 				]
 			},
