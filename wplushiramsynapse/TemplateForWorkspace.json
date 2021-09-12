@@ -4346,7 +4346,7 @@
 			"location": "eastus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/ExposureControl')]",
+			"name": "[concat(parameters('workspaceName'), '/CICD-Control')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
