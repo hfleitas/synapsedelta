@@ -16,7 +16,7 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"environment": "prod"
+					"environment": "dev"
 				}
 			}
 		],
