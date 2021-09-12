@@ -4372,7 +4372,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"expression": {
-								"value": "@equals(pipeline().parameters.environment, 'dev')",
+								"value": "@equals(pipeline().parameters.environment, 'disabled')",
 								"type": "Expression"
 							},
 							"ifTrueActivities": [
