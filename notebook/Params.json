@@ -44,32 +44,6 @@
 			},
 			"sessionKeepAliveTimeout": 30
 		},
-		"cells": [
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"tags": [
-						"parameters"
-					]
-				},
-				"source": [
-					"print(\"accountName\")\r\n",
-					"print(\"accountKey\")\r\n",
-					"print(\"containerName\")\r\n",
-					"print(\"deltaPath\")\r\n",
-					"print(\"jdbcConnectionString\")"
-				],
-				"execution_count": 5
-			}
-		]
+		"cells": []
 	}
 }
