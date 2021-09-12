@@ -252,7 +252,7 @@
 									"value": "@string(activity('Get Key from AKV').output.value)",
 									"type": "Expression"
 								},
-								"containerName": "wplushiramsynapseadlsv2",
+								"containerName": "wplushiramsynapsefs",
 								"jdbcConnectionString": {
 									"value": "@string(activity('Get ConnectionString from AKV').output.value)",
 									"type": "Expression"
