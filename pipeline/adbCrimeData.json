@@ -5,7 +5,14 @@
 			{
 				"name": "Copy_dpx",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get Key from AKV",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -100,14 +107,7 @@
 			{
 				"name": "Get Key from AKV",
 				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "Copy_dpx",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
