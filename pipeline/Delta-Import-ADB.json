@@ -1,5 +1,5 @@
 {
-	"name": "Delta-adb",
+	"name": "Delta-Import-ADB",
 	"properties": {
 		"activities": [
 			{
@@ -111,6 +111,9 @@
 				"type": "string",
 				"defaultValue": "https://synapseakv.vault.azure.net/"
 			}
+		},
+		"folder": {
+			"name": "Delta"
 		},
 		"annotations": [],
 		"lastPublishTime": "2021-06-29T19:53:35Z"
