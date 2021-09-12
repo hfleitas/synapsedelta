@@ -9,6 +9,15 @@
 					"referenceName": "MoveUnzippedFiles",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "CICD-Control",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"environment": "prod"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
