@@ -67,6 +67,41 @@
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
+						"activity": "Get Key from AKV",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/Databricks-Data-Transformations",
+					"baseParameters": {
+						"accountName": "wplushiramsynapseadlsv2",
+						"accountKey": {
+							"value": "string(activity('Get Key from AKV').output.accountkey)",
+							"type": "Expression"
+						},
+						"containerName": "dwtemp"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "adbhf",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Get Key from AKV",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
 						"activity": "Copy_dpx",
 						"dependencyConditions": [
 							"Succeeded"
@@ -82,31 +117,13 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/03-Data-Transformation",
-					"baseParameters": {
-						"accountName": "wplushiramsynapseadlsv2",
-						"accountKey": {
-							"value": "@pipeline().parameters.accountKey",
-							"type": "Expression"
-						},
-						"containerName": "dwtemp"
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "adbhf",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],
-		"parameters": {
-			"accountKey": {
-				"type": "securestring",
-				"defaultValue": {
-					"type": "SecureString",
-					"value": "**********"
-				}
-			}
-		},
 		"annotations": [],
 		"lastPublishTime": "2021-06-29T19:53:35Z"
 	},
