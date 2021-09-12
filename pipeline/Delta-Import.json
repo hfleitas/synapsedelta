@@ -91,14 +91,7 @@
 				"name": "DeltaChanges",
 				"description": "Includes CDC",
 				"type": "SynapseNotebook",
-				"dependsOn": [
-					{
-						"activity": "lab3dts",
-						"dependencyConditions": [
-							"Skipped"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -120,12 +113,6 @@
 				"description": "overwrites staging table in SQL Pools from Serverless",
 				"type": "Copy",
 				"dependsOn": [
-					{
-						"activity": "lab3dts",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
 					{
 						"activity": "DeltaChanges",
 						"dependencyConditions": [
@@ -251,26 +238,6 @@
 				},
 				"linkedServiceName": {
 					"referenceName": "wplushiramsynapseLoaderXL",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "lab3dts",
-				"type": "DatabricksNotebook",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/03-Data-Transformation"
-				},
-				"linkedServiceName": {
-					"referenceName": "adbhf",
 					"type": "LinkedServiceReference"
 				}
 			}
