@@ -12,6 +12,12 @@
 						"dependencyConditions": [
 							"Skipped"
 						]
+					},
+					{
+						"activity": "Get ConnectionString from AKV",
+						"dependencyConditions": [
+							"Skipped"
+						]
 					}
 				],
 				"policy": {
@@ -30,7 +36,11 @@
 							"value": "@string(activity('Get Key from AKV').output.value)",
 							"type": "Expression"
 						},
-						"containerName": "wplushiramsynapseadlsv2"
+						"containerName": "wplushiramsynapseadlsv2",
+						"jdbcConnectionString": {
+							"value": "@string(activity('Get ConnectionString from AKV').output.value)",
+							"type": "Expression"
+						}
 					}
 				},
 				"linkedServiceName": {
@@ -41,14 +51,7 @@
 			{
 				"name": "Get Key from AKV",
 				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "Get ConnectionString from AKV",
-						"dependencyConditions": [
-							"Skipped"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -82,7 +85,7 @@
 					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
-					"secureOutput": true,
+					"secureOutput": false,
 					"secureInput": false
 				},
 				"userProperties": [],
