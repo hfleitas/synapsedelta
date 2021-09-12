@@ -41,7 +41,14 @@
 			{
 				"name": "Get Key from AKV",
 				"type": "WebActivity",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get ConnectionString from AKV",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -53,6 +60,35 @@
 				"typeProperties": {
 					"url": {
 						"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "Get ConnectionString from AKV",
+				"description": "jdbc",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/ConnectionString/?api-version=7.0')",
 						"type": "Expression"
 					},
 					"connectVia": {
