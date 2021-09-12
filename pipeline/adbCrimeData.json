@@ -117,13 +117,28 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
+						"type": "Expression"
+					},
 					"connectVia": {
 						"referenceName": "AutoResolveIntegrationRuntime",
 						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
 					}
 				}
 			}
 		],
+		"parameters": {
+			"KeyVaultDNSName": {
+				"type": "string",
+				"defaultValue": "https://keyvaultformyrig.vault.azure.net/"
+			}
+		},
 		"annotations": [],
 		"lastPublishTime": "2021-06-29T19:53:35Z"
 	},
