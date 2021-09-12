@@ -136,7 +136,7 @@
 		"parameters": {
 			"KeyVaultDNSName": {
 				"type": "string",
-				"defaultValue": "https://keyvaultformyrig.vault.azure.net/"
+				"defaultValue": "https://synapseakv.vault.azure.net/"
 			}
 		},
 		"annotations": [],
