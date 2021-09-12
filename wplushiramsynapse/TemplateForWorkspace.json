@@ -323,11 +323,45 @@
 								"resource": "https://vault.azure.net"
 							}
 						}
+					},
+					{
+						"name": "MergeLatest",
+						"description": "",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "DeltaChanges",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[dbo].[MegreLatest]"
+						},
+						"linkedServiceName": {
+							"referenceName": "wplushiramsynapseLoaderXL",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"parameters": {
 					"KeyVaultDNSName": {
 						"type": "string",
+						"defaultValue": "https://synapseakv.vault.azure.net/"
+					}
+				},
+				"variables": {
+					"KeyVaultDNSName": {
+						"type": "String",
 						"defaultValue": "https://synapseakv.vault.azure.net/"
 					}
 				},
@@ -339,7 +373,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
 			]
 		},
 		{
@@ -575,27 +610,6 @@
 								]
 							}
 						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[dbo].[MegreLatest]"
-						},
-						"linkedServiceName": {
-							"referenceName": "wplushiramsynapseLoaderXL",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "MergeLatest_copy1",
-						"description": "",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
