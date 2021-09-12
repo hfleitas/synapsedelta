@@ -34,6 +34,9 @@
 		},
 		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
+		},
+		"Daily_properties_CICD-Control_parameters_environment": {
+			"value": "dev"
 		}
 	}
 }

@@ -46,6 +46,10 @@
 		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
+		},
+		"Daily_properties_CICD-Control_parameters_environment": {
+			"type": "string",
+			"defaultValue": "dev"
 		}
 	},
 	"variables": {
@@ -1456,6 +1460,15 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "CICD-Control",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"environment": "[parameters('Daily_properties_CICD-Control_parameters_environment')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -1475,7 +1488,8 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/MoveUnzippedFiles')]"
+				"[concat(variables('workspaceId'), '/pipelines/MoveUnzippedFiles')]",
+				"[concat(variables('workspaceId'), '/pipelines/CICD-Control')]"
 			]
 		},
 		{
