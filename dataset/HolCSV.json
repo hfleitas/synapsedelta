@@ -1,0 +1,23 @@
+{
+	"name": "HolCSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "user/trusted-service-user/hol.csv",
+				"fileSystem": "wplushiramsynapsefs"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
