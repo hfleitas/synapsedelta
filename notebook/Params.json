@@ -44,6 +44,103 @@
 			},
 			"sessionKeepAliveTimeout": 30
 		},
-		"cells": []
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": [
+						"parameters"
+					]
+				},
+				"source": [
+					"p1 = 5"
+				],
+				"execution_count": 42
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"p=p1\r\n",
+					"print(p)"
+				],
+				"execution_count": 48
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from azureml.opendatasets import PublicHolidays\r\n",
+					"\r\n",
+					"from datetime import datetime\r\n",
+					"from dateutil import parser\r\n",
+					"from dateutil.relativedelta import relativedelta\r\n",
+					"\r\n",
+					"\r\n",
+					"end_date = datetime.today()\r\n",
+					"start_date = datetime.today() - relativedelta(months=6)\r\n",
+					"hol = PublicHolidays(start_date=start_date, end_date=end_date)\r\n",
+					"hol_df = hol.to_spark_dataframe()"
+				],
+				"execution_count": 44
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"hol = hol_df.limit(p)"
+				],
+				"execution_count": 59
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"csv_path = \"hol.csv\"\r\n",
+					"hol.write.csv(csv_path, mode = 'overwrite', header = 'true')"
+				],
+				"execution_count": 61
+			}
+		]
 	}
 }
