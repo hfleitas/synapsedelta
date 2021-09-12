@@ -40,7 +40,8 @@
 						"jdbcConnectionString": {
 							"value": "@string(activity('Get ConnectionString from AKV').output.value)",
 							"type": "Expression"
-						}
+						},
+						"deltaPath": "synapse/workspaces/wplushiramsynapse/warehouse/lastchanges"
 					}
 				},
 				"linkedServiceName": {
