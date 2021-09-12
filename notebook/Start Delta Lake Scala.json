@@ -1,6 +1,9 @@
 {
 	"name": "Start Delta Lake Scala",
 	"properties": {
+		"folder": {
+			"name": "Delta"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"sessionProperties": {
@@ -23,8 +26,7 @@
 			},
 			"language_info": {
 				"name": "scala"
-			},
-			"sessionKeepAliveTimeout": 30
+			}
 		},
 		"cells": [
 			{
