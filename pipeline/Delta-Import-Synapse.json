@@ -1,5 +1,5 @@
 {
-	"name": "Delta-Import",
+	"name": "Delta-Import-Synapse",
 	"properties": {
 		"activities": [
 			{
@@ -242,6 +242,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Delta"
+		},
 		"annotations": []
 	}
 }
