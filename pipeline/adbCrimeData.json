@@ -84,7 +84,7 @@
 				"typeProperties": {
 					"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/03-Data-Transformation",
 					"baseParameters": {
-						"accountName": "hiramblob",
+						"accountName": "wplushiramsynapseadlsv2",
 						"accountKey": "EymlJoW5C6ZOVlcHYGIjuhf1Lm22KVREKwpgl8S/p0yGQdYdUvHaXUkYrRa5FnVvrto5lbCR1/GTi5EFaCsoQw==",
 						"containerName": "dwtemp"
 					}
@@ -95,6 +95,15 @@
 				}
 			}
 		],
+		"parameters": {
+			"accountKey": {
+				"type": "securestring",
+				"defaultValue": {
+					"type": "SecureString",
+					"value": "**********"
+				}
+			}
+		},
 		"annotations": [],
 		"lastPublishTime": "2021-06-29T19:53:35Z"
 	},
