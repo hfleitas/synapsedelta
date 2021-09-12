@@ -1,5 +1,5 @@
 {
-	"name": "adb",
+	"name": "adbCrimeData",
 	"properties": {
 		"activities": [
 			{
@@ -82,12 +82,16 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users/hiram@fleitasarts.com/03-Data-Ingestion-Via-ADF/includes/Databricks-Data-Transformations",
+					"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/03-Data-Transformation",
 					"baseParameters": {
 						"accountName": "hiramblob",
 						"accountKey": "EymlJoW5C6ZOVlcHYGIjuhf1Lm22KVREKwpgl8S/p0yGQdYdUvHaXUkYrRa5FnVvrto5lbCR1/GTi5EFaCsoQw==",
 						"containerName": "dwtemp"
 					}
+				},
+				"linkedServiceName": {
+					"referenceName": "adbhf",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
