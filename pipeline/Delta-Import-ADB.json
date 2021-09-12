@@ -113,6 +113,12 @@
 				"defaultValue": "https://synapseakv.vault.azure.net/"
 			}
 		},
+		"variables": {
+			"KeyVaultDNSName": {
+				"type": "String",
+				"defaultValue": "https://synapseakv.vault.azure.net/"
+			}
+		},
 		"folder": {
 			"name": "Delta"
 		},
