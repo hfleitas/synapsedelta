@@ -1,5 +1,5 @@
 {
-	"name": "SynapseNotebookParams",
+	"name": "Params",
 	"properties": {
 		"activities": [
 			{
@@ -38,7 +38,10 @@
 							"type": "string"
 						},
 						"accountKey": {
-							"value": "@string(activity('Get Key from AKV').output.value)",
+							"value": {
+								"value": "@string(activity('Get Key from AKV').output.value)",
+								"type": "Expression"
+							},
 							"type": "string"
 						},
 						"containerName": {
@@ -50,8 +53,14 @@
 							"type": "string"
 						},
 						"jdbcConnectionString": {
-							"value": "@string(activity('Get ConnectionString from AKV').output.value)",
+							"value": {
+								"value": "@string(activity('Get ConnectionString from AKV').output.value)",
+								"type": "Expression"
+							},
 							"type": "string"
+						},
+						"": {
+							"value": ""
 						}
 					},
 					"snapshot": true
