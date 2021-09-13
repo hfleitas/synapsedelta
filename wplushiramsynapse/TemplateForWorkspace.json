@@ -625,6 +625,65 @@
 							"referenceName": "wplushiramsynapseLoaderXL",
 							"type": "LinkedServiceReference"
 						}
+					},
+					{
+						"name": "Get Key from AKV",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
+						}
+					},
+					{
+						"name": "Get ConnectionString from AKV",
+						"description": "jdbc",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/ConnectionString/?api-version=7.0')",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
+						}
 					}
 				],
 				"folder": {
@@ -639,6 +698,7 @@
 				"[concat(variables('workspaceId'), '/datasets/vDeltaLastChanges')]",
 				"[concat(variables('workspaceId'), '/datasets/LoaderXLLastChanges')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
 			]
 		},
@@ -1169,7 +1229,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SynapseNotebookParams')]",
+			"name": "[concat(parameters('workspaceName'), '/Params')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -1177,20 +1237,7 @@
 					{
 						"name": "Params",
 						"type": "SynapseNotebook",
-						"dependsOn": [
-							{
-								"activity": "Get ConnectionString from AKV",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Get Key from AKV",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -1205,107 +1252,19 @@
 								"type": "NotebookReference"
 							},
 							"parameters": {
-								"accountname": {
-									"value": "wplushiramsynapseadlsv2",
-									"type": "string"
-								},
-								"accountKey": {
-									"value": {
-										"value": "@string(activity('Get Key from AKV').output.value)",
-										"type": "Expression"
-									},
-									"type": "string"
-								},
-								"containerName": {
-									"value": "wplushiramsynapsefs",
-									"type": "string"
-								},
-								"deltaPath": {
-									"value": "synapse/workspaces/wplushiramsynapse/warehouse/lastchanges",
-									"type": "string"
-								},
-								"jdbcConnectionString": {
-									"value": {
-										"value": "@string(activity('Get ConnectionString from AKV').output.value)",
-										"type": "Expression"
-									},
-									"type": "string"
+								"p1": {
+									"value": "3",
+									"type": "int"
 								}
 							},
 							"snapshot": true
 						}
-					},
-					{
-						"name": "Get Key from AKV",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://vault.azure.net"
-							}
-						}
-					},
-					{
-						"name": "Get ConnectionString from AKV",
-						"description": "jdbc",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/ConnectionString/?api-version=7.0')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://vault.azure.net"
-							}
-						}
 					}
 				],
-				"parameters": {
-					"KeyVaultDNSName": {
-						"type": "string",
-						"defaultValue": "https://synapseakv.vault.azure.net/"
-					}
-				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/Params')]",
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+				"[concat(variables('workspaceId'), '/notebooks/Params')]"
 			]
 		},
 		{
@@ -2354,7 +2313,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- devs.csv\n-- first,last\n-- hiram,fleitas\n-- christina,sosa\n-- brent,carpenetti\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/devs.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\n\n\n",
+					"query": "-- devs.csv\n-- first,last\n-- hiram,fleitas\n-- christina,sosa\n-- brent,carpenetti\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/devs.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\n\ngo \n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/user/trusted-service-user/hol.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\ngo",
 					"metadata": {
 						"language": "sql"
 					},
@@ -3700,7 +3659,8 @@
 						"nodeCount": 10,
 						"cores": 64,
 						"memory": 400
-					}
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
