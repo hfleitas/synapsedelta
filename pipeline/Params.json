@@ -59,8 +59,9 @@
 							},
 							"type": "string"
 						},
-						"": {
-							"value": ""
+						"p1": {
+							"value": "3",
+							"type": "int"
 						}
 					},
 					"snapshot": true
