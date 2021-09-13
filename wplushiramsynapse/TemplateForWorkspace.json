@@ -213,172 +213,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Delta-Import-ADB')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "DeltaChanges",
-						"description": "",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Get Key from AKV",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Get ConnectionString from AKV",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": true
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/DeltaChanges",
-							"baseParameters": {
-								"accountName": "wplushiramsynapseadlsv2",
-								"accountKey": {
-									"value": "@string(activity('Get Key from AKV').output.value)",
-									"type": "Expression"
-								},
-								"containerName": "wplushiramsynapsefs",
-								"jdbcConnectionString": {
-									"value": "@string(activity('Get ConnectionString from AKV').output.value)",
-									"type": "Expression"
-								},
-								"deltaPath": "synapse/workspaces/wplushiramsynapse/warehouse/lastchanges"
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "adbhf",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Get Key from AKV",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://vault.azure.net"
-							}
-						}
-					},
-					{
-						"name": "Get ConnectionString from AKV",
-						"description": "jdbc",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/ConnectionString/?api-version=7.0')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://vault.azure.net"
-							}
-						}
-					},
-					{
-						"name": "MergeLatest",
-						"description": "",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "DeltaChanges",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[dbo].[MegreLatest]"
-						},
-						"linkedServiceName": {
-							"referenceName": "wplushiramsynapseLoaderXL",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"parameters": {
-					"KeyVaultDNSName": {
-						"type": "string",
-						"defaultValue": "https://synapseakv.vault.azure.net/"
-					}
-				},
-				"variables": {
-					"KeyVaultDNSName": {
-						"type": "String",
-						"defaultValue": "https://synapseakv.vault.azure.net/"
-					}
-				},
-				"folder": {
-					"name": "Delta"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-06-29T19:53:35Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Delta-Import-Synapse')]",
+			"name": "[concat(parameters('workspaceName'), '/DeltaChanges-Synapse')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -625,67 +460,14 @@
 							"referenceName": "wplushiramsynapseLoaderXL",
 							"type": "LinkedServiceReference"
 						}
-					},
-					{
-						"name": "Get Key from AKV",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://vault.azure.net"
-							}
-						}
-					},
-					{
-						"name": "Get ConnectionString from AKV",
-						"description": "jdbc",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/ConnectionString/?api-version=7.0')",
-								"type": "Expression"
-							},
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "GET",
-							"headers": {},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://vault.azure.net"
-							}
-						}
 					}
 				],
+				"variables": {
+					"kvurl": {
+						"type": "String",
+						"defaultValue": "https://synapseakv.vault.azure.net/"
+					}
+				},
 				"folder": {
 					"name": "Delta"
 				},
@@ -698,7 +480,6 @@
 				"[concat(variables('workspaceId'), '/datasets/vDeltaLastChanges')]",
 				"[concat(variables('workspaceId'), '/datasets/LoaderXLLastChanges')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]",
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
 			]
 		},
@@ -839,6 +620,45 @@
 				"annotations": []
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Params')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Params",
+						"type": "SynapseNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebook": {
+								"referenceName": "Params",
+								"type": "NotebookReference"
+							},
+							"parameters": {
+								"p1": {
+									"value": "3",
+									"type": "int"
+								}
+							},
+							"snapshot": true
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/notebooks/Params')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/Primer')]",
@@ -1035,7 +855,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "Delta-Import-Synapse",
+								"referenceName": "DeltaChanges-Synapse",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -1225,19 +1045,133 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/pipelines/Delta-Import-Synapse')]"
+				"[concat(variables('workspaceId'), '/pipelines/DeltaChanges-Synapse')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Params')]",
+			"name": "[concat(parameters('workspaceName'), '/ReadDeltaLog-ADB')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"activities": [
 					{
-						"name": "Params",
-						"type": "SynapseNotebook",
+						"name": "ReadDeltaLog",
+						"description": "",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Get Key from AKV",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Get ConnectionString from AKV",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": true
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/DeltaChanges",
+							"baseParameters": {
+								"accountName": "wplushiramsynapseadlsv2",
+								"accountKey": {
+									"value": "@string(activity('Get Key from AKV').output.value)",
+									"type": "Expression"
+								},
+								"containerName": "wplushiramsynapsefs",
+								"jdbcConnectionString": {
+									"value": "@string(activity('Get ConnectionString from AKV').output.value)",
+									"type": "Expression"
+								},
+								"deltaPath": "synapse/workspaces/wplushiramsynapse/warehouse/lastchanges"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "adbhf",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Get Key from AKV",
+						"type": "WebActivity",
 						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
+						}
+					},
+					{
+						"name": "Get ConnectionString from AKV",
+						"description": "jdbc",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/ConnectionString/?api-version=7.0')",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
+						}
+					},
+					{
+						"name": "MergeLatest",
+						"description": "",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ReadDeltaLog",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -1247,24 +1181,209 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
+							"storedProcedureName": "[dbo].[MegreLatest]"
+						},
+						"linkedServiceName": {
+							"referenceName": "wplushiramsynapseLoaderXL",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"parameters": {
+					"KeyVaultDNSName": {
+						"type": "string",
+						"defaultValue": "https://synapseakv.vault.azure.net/"
+					}
+				},
+				"variables": {
+					"KeyVaultDNSName": {
+						"type": "String",
+						"defaultValue": "https://synapseakv.vault.azure.net/"
+					}
+				},
+				"folder": {
+					"name": "Delta"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-06-29T19:53:35Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ReadDeltaLog-Synapse')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Key from AKV",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(variables('kvurl'),'secrets/accountkey/?api-version=7.0')",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
+						}
+					},
+					{
+						"name": "Get ConnectionString from AKV",
+						"description": "jdbc",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(variables('kvurl'),'secrets/ConnectionString/?api-version=7.0')",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
+						}
+					},
+					{
+						"name": "ReadDeltaLog",
+						"description": "Includes CDC",
+						"type": "SynapseNotebook",
+						"dependsOn": [
+							{
+								"activity": "Get ConnectionString from AKV",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Get Key from AKV",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": true
+						},
+						"userProperties": [],
+						"typeProperties": {
 							"notebook": {
-								"referenceName": "Params",
+								"referenceName": "ReadDeltaLog",
 								"type": "NotebookReference"
 							},
 							"parameters": {
-								"p1": {
-									"value": "3",
-									"type": "int"
+								"accountName": {
+									"value": "wplushiramsynapseadlsv2",
+									"type": "string"
+								},
+								"accountKey": {
+									"value": {
+										"value": "@string(activity('Get Key from AKV').output.value)",
+										"type": "Expression"
+									},
+									"type": "string"
+								},
+								"containerName": {
+									"value": "wplushiramsynapsefs",
+									"type": "string"
+								},
+								"jdbcConnectionString": {
+									"value": {
+										"value": "@string(activity('Get ConnectionString from AKV').output.value)",
+										"type": "Expression"
+									},
+									"type": "string"
+								},
+								"deltaPath": {
+									"value": "synapse/workspaces/wplushiramsynapse/warehouse/lastchanges",
+									"type": "string"
 								}
 							},
 							"snapshot": true
 						}
+					},
+					{
+						"name": "MergeLatest",
+						"description": "",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ReadDeltaLog",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[dbo].[MegreLatest]"
+						},
+						"linkedServiceName": {
+							"referenceName": "wplushiramsynapseLoaderXL",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
+				"variables": {
+					"kvurl": {
+						"type": "String",
+						"defaultValue": "https://synapseakv.vault.azure.net/"
+					}
+				},
+				"folder": {
+					"name": "Delta"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/Params')]"
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/notebooks/ReadDeltaLog')]",
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
 			]
 		},
 		{
@@ -1906,7 +2025,7 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Delta-Import-Synapse",
+							"referenceName": "DeltaChanges-Synapse",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -1923,7 +2042,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/Delta-Import-Synapse')]"
+				"[concat(variables('workspaceId'), '/pipelines/DeltaChanges-Synapse')]"
 			]
 		},
 		{
@@ -3659,8 +3778,7 @@
 						"nodeCount": 10,
 						"cores": 64,
 						"memory": 400
-					},
-					"sessionKeepAliveTimeout": 30
+					}
 				},
 				"cells": [
 					{
@@ -3779,14 +3897,14 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "threedot0",
+					"referenceName": "XXL",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "112g",
-					"driverCores": 16,
-					"executorMemory": "112g",
-					"executorCores": 16,
+					"driverMemory": "400g",
+					"driverCores": 64,
+					"executorMemory": "400g",
+					"executorCores": 64,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
@@ -3804,18 +3922,18 @@
 						"name": "scala"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
-						"name": "threedot0",
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
+						"name": "XXL",
 						"type": "Spark",
-						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "3.1",
-						"nodeCount": 3,
-						"cores": 16,
-						"memory": 112
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 64,
+						"memory": 400
 					}
 				},
 				"cells": [
@@ -3837,12 +3955,38 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"tags": [
+								"parameters"
+							]
+						},
 						"source": [
-							"val df_delta = spark.read.format(\"delta\").load(\"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\")\r\n",
+							"val accountName = \"wplushiramsynapseadlsv2\"\r\n",
+							"val accountKey = \"\"\r\n",
+							"val containerName = \"wplushiramsynapsefs\"\r\n",
+							"val deltaPath = \"synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\"\r\n",
+							"val jdbcConnectionString = \"\""
+						],
+						"outputs": [],
+						"execution_count": 13
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"val df_delta = spark.read.format(\"delta\").load(\"abfss://\"+containerName+\"@\"+accountName+\".dfs.core.windows.net/\"+deltaPath)\r\n",
 							"df_delta.show()"
 						],
 						"outputs": [],
-						"execution_count": 187
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -3863,7 +4007,7 @@
 							"latestonly.show()"
 						],
 						"outputs": [],
-						"execution_count": 188
+						"execution_count": 8
 					},
 					{
 						"cell_type": "markdown",
@@ -3896,7 +4040,7 @@
 							"import java.sql.{Connection, DriverManager, ResultSet, Statement}; \r\n",
 							"\r\n",
 							"def dt = {\r\n",
-							"    val connection_string = \"jdbc:sqlserver://wplushiramsynapse.sql.azuresynapse.net:1433;database=wplussynapsedw;user=LoaderXL;password=XL!sqlPools2021\"\r\n",
+							"    val connection_string = jdbcConnectionString\r\n",
 							"    val connection = DriverManager.getConnection(connection_string)\r\n",
 							"    try {\r\n",
 							"        val statement = connection.createStatement()\r\n",
@@ -3909,7 +4053,7 @@
 							"dt"
 						],
 						"outputs": [],
-						"execution_count": 191
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -3929,7 +4073,7 @@
 							"latestonly.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.latestonly\", Constants.INTERNAL)"
 						],
 						"outputs": [],
-						"execution_count": 193
+						"execution_count": 11
 					},
 					{
 						"cell_type": "markdown",
