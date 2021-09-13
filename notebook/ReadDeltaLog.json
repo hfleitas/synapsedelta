@@ -7,14 +7,14 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "threedot0",
+			"referenceName": "XXL",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "112g",
-			"driverCores": 16,
-			"executorMemory": "112g",
-			"executorCores": 16,
+			"driverMemory": "400g",
+			"driverCores": 64,
+			"executorMemory": "400g",
+			"executorCores": 64,
 			"numExecutors": 2,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
@@ -32,18 +32,18 @@
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
-				"name": "threedot0",
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
+				"name": "XXL",
 				"type": "Spark",
-				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.1",
-				"nodeCount": 3,
-				"cores": 16,
-				"memory": 112
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 64,
+				"memory": 400
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -66,11 +66,36 @@
 			},
 			{
 				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"tags": [
+						"parameters"
+					]
+				},
 				"source": [
-					"val df_delta = spark.read.format(\"delta\").load(\"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\")\r\n",
+					"val accountName = \"wplushiramsynapseadlsv2\"\r\n",
+					"val accountKey = \"\"\r\n",
+					"val containerName = \"wplushiramsynapsefs\"\r\n",
+					"val deltaPath = \"synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\"\r\n",
+					"val jdbcConnectionString = \"\""
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val df_delta = spark.read.format(\"delta\").load(\"abfss://\"+containerName+\"@\"+accountName+\".dfs.core.windows.net/\"+deltaPath)\r\n",
 					"df_delta.show()"
 				],
-				"execution_count": 187
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -90,7 +115,7 @@
 					"val latestonly = df_delta.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestonly.show()"
 				],
-				"execution_count": 188
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -123,7 +148,7 @@
 					"import java.sql.{Connection, DriverManager, ResultSet, Statement}; \r\n",
 					"\r\n",
 					"def dt = {\r\n",
-					"    val connection_string = \"jdbc:sqlserver://wplushiramsynapse.sql.azuresynapse.net:1433;database=wplussynapsedw;user=LoaderXL;password=XL!sqlPools2021\"\r\n",
+					"    val connection_string = jdbcConnectionString\r\n",
 					"    val connection = DriverManager.getConnection(connection_string)\r\n",
 					"    try {\r\n",
 					"        val statement = connection.createStatement()\r\n",
@@ -135,7 +160,7 @@
 					"\r\n",
 					"dt"
 				],
-				"execution_count": 191
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -154,7 +179,7 @@
 				"source": [
 					"latestonly.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.latestonly\", Constants.INTERNAL)"
 				],
-				"execution_count": 193
+				"execution_count": 11
 			},
 			{
 				"cell_type": "markdown",
