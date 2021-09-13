@@ -105,28 +105,6 @@
 						"referenceName": "DeltaChanges",
 						"type": "NotebookReference"
 					},
-					"parameters": {
-						"accountName": {
-							"value": "wplushiramsynapseadlsv2",
-							"type": "string"
-						},
-						"accountKey": {
-							"value": "@string(activity('Get Key from AKV').output.value)",
-							"type": "string"
-						},
-						"containerName": {
-							"value": "wplushiramsynapsefs",
-							"type": "string"
-						},
-						"jdbcConnectionString": {
-							"value": "@string(activity('Get ConnectionString from AKV').output.value)",
-							"type": "string"
-						},
-						"deltaPath": {
-							"value": "synapse/workspaces/wplushiramsynapse/warehouse/lastchanges",
-							"type": "string"
-						}
-					},
 					"snapshot": true
 				}
 			},
