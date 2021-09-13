@@ -29,12 +29,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"KeyVaultDNSName": {
-				"type": "string",
-				"defaultValue": "https://synapseakv.vault.azure.net/"
-			}
-		},
 		"annotations": []
 	}
 }
