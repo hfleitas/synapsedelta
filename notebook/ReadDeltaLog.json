@@ -87,7 +87,7 @@
 					"val deltaPath = \"synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\"\r\n",
 					"val jdbcConnectionString = \"\""
 				],
-				"execution_count": 12
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
