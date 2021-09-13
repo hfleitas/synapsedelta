@@ -188,7 +188,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "Delta-Import-Synapse",
+						"referenceName": "DeltaChanges-Synapse",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
