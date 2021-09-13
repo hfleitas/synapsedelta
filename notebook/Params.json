@@ -40,9 +40,9 @@
 				"sparkVersion": "2.4",
 				"nodeCount": 10,
 				"cores": 64,
-				"memory": 400
-			},
-			"sessionKeepAliveTimeout": 30
+				"memory": 400,
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -55,6 +55,7 @@
 				"source": [
 					"p1 = 5"
 				],
+				"attachments": null,
 				"execution_count": 42
 			},
 			{
@@ -74,6 +75,7 @@
 					"p=p1\r\n",
 					"print(p)"
 				],
+				"attachments": null,
 				"execution_count": 48
 			},
 			{
@@ -102,6 +104,7 @@
 					"hol = PublicHolidays(start_date=start_date, end_date=end_date)\r\n",
 					"hol_df = hol.to_spark_dataframe()"
 				],
+				"attachments": null,
 				"execution_count": 44
 			},
 			{
@@ -120,6 +123,7 @@
 				"source": [
 					"hol = hol_df.limit(p)"
 				],
+				"attachments": null,
 				"execution_count": 59
 			},
 			{
@@ -139,6 +143,7 @@
 					"csv_path = \"hol.csv\"\r\n",
 					"hol.write.csv(csv_path, mode = 'overwrite', header = 'true')"
 				],
+				"attachments": null,
 				"execution_count": 61
 			}
 		]

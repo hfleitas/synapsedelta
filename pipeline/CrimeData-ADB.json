@@ -140,7 +140,7 @@
 			}
 		},
 		"annotations": [],
-		"lastPublishTime": "2021-06-29T19:53:35Z"
+		"lastPublishTime": "2021-09-13T01:54:04Z"
 	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

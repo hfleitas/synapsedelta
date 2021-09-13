@@ -30,5 +30,6 @@
 			"schema": "dbo",
 			"table": "lastchanges"
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

@@ -12,5 +12,6 @@
 			"referenceName": "wplussynapsedw",
 			"type": "SqlPoolReference"
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

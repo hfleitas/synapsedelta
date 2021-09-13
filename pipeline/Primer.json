@@ -370,6 +370,8 @@
 				"defaultValue": "hiramfleitas@microsoft.com"
 			}
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2021-09-13T01:55:02Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

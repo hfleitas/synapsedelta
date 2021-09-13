@@ -10,8 +10,8 @@
 				"language": "sql"
 			},
 			"currentConnection": {
-				"poolName": "wplussynapsedw",
-				"databaseName": "master"
+				"databaseName": "master",
+				"poolName": "wplussynapsedw"
 			},
 			"resultLimit": 5000
 		},

@@ -24,6 +24,8 @@
 		"folder": {
 			"name": "M01L05Lab01"
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2021-09-13T01:49:58Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

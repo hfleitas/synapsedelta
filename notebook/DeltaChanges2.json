@@ -44,9 +44,8 @@
 				"nodeCount": 3,
 				"cores": 16,
 				"memory": 112,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -58,6 +57,7 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
+				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -82,6 +82,7 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -102,6 +103,7 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -124,6 +126,7 @@
 					"\r\n",
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -163,6 +166,7 @@
 					"//   ChangeData(\"d\", \"21\", deleted = false, time = 9)\n",
 					"// ).toDF().createOrReplaceTempView(\"changes\")"
 				],
+				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -198,6 +202,7 @@
 					"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 					"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 				],
+				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -217,6 +222,7 @@
 				"source": [
 					"val changesDF = spark.sql(\"select * from changes\")"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -236,6 +242,7 @@
 				"source": [
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
 				],
+				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -255,6 +262,7 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
+				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -274,6 +282,7 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
+				"attachments": null,
 				"execution_count": 15
 			}
 		]

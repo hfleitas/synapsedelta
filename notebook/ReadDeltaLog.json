@@ -43,9 +43,9 @@
 				"sparkVersion": "2.4",
 				"nodeCount": 10,
 				"cores": 64,
-				"memory": 400
-			},
-			"sessionKeepAliveTimeout": 30
+				"memory": 400,
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -62,7 +62,8 @@
 					"1. spark read delta table from adls, use expression to group by for latestchanges.\r\n",
 					"2. call write api from adb to synapse sql dedicated pool to store latestchanges.\r\n",
 					"3. auth to sql pool using keyvault"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -87,6 +88,7 @@
 					"val deltaPath = \"synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\"\r\n",
 					"val jdbcConnectionString = \"\""
 				],
+				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -95,6 +97,7 @@
 					"val df_delta = spark.read.format(\"delta\").load(\"abfss://\"+containerName+\"@\"+accountName+\".dfs.core.windows.net/\"+deltaPath)\r\n",
 					"df_delta.show()"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -115,6 +118,7 @@
 					"val latestonly = df_delta.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestonly.show()"
 				],
+				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -128,7 +132,8 @@
 				},
 				"source": [
 					"https://stackoverflow.com/questions/26041479/query-sql-database-with-scala"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -160,6 +165,7 @@
 					"\r\n",
 					"dt"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -179,6 +185,7 @@
 				"source": [
 					"latestonly.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.latestonly\", Constants.INTERNAL)"
 				],
+				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -194,7 +201,8 @@
 					"## But he wants it in ADB.\r\n",
 					"1. https://docs.databricks.com/data/data-sources/azure/synapse-analytics.html#frequently-asked-questions-faq\r\n",
 					"2. https://github.com/Azure-Samples/azure-sql-db-databricks/blob/main/notebooks/03b-parallel-switch-in-load-into-partitioned-table-single.ipynb"
-				]
+				],
+				"attachments": null
 			}
 		]
 	}

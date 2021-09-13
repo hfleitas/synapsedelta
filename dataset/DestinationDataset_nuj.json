@@ -14,5 +14,6 @@
 				"fileSystem": "dwtemp"
 			}
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

@@ -14,5 +14,6 @@
 				"container": "training"
 			}
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

@@ -43,9 +43,9 @@
 				"sparkVersion": "2.4",
 				"nodeCount": 10,
 				"cores": 64,
-				"memory": 400
-			},
-			"sessionKeepAliveTimeout": 30
+				"memory": 400,
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -57,6 +57,7 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -93,6 +94,7 @@
 					"//   ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
 					"// ).toDF().createOrReplaceTempView(\"changes\")"
 				],
+				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -112,6 +114,7 @@
 				"source": [
 					"val changesDF = spark.sql(\"select * from changes\")"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -132,6 +135,7 @@
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestChangeForEachKey.show()"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -151,6 +155,7 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -170,6 +175,7 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
+				"attachments": null,
 				"execution_count": 7
 			}
 		]

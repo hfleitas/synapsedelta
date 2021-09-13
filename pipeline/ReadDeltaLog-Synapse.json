@@ -96,7 +96,10 @@
 							"type": "string"
 						},
 						"accountKey": {
-							"value": "@string(activity('Get Key from AKV').output.value)",
+							"value": {
+								"value": "@string(activity('Get Key from AKV').output.value)",
+								"type": "Expression"
+							},
 							"type": "string"
 						},
 						"containerName": {
@@ -104,7 +107,10 @@
 							"type": "string"
 						},
 						"jdbcConnectionString": {
-							"value": "@string(activity('Get ConnectionString from AKV').output.value)",
+							"value": {
+								"value": "@string(activity('Get ConnectionString from AKV').output.value)",
+								"type": "Expression"
+							},
 							"type": "string"
 						},
 						"deltaPath": {
@@ -153,6 +159,8 @@
 		"folder": {
 			"name": "Delta"
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2021-09-13T01:54:29Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

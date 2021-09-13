@@ -12,5 +12,6 @@
 			"schema": "dbo",
 			"table": "vDeltaLastChanges"
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

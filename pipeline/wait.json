@@ -18,6 +18,8 @@
 				"defaultValue": "SELECT PATINDEX('%schools%', 'W3Schools.com');"
 			}
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2021-09-13T01:50:04Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

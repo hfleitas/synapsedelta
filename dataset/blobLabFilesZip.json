@@ -17,5 +17,6 @@
 				"type": "ZipDeflate"
 			}
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }
