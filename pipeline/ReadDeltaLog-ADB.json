@@ -1,9 +1,9 @@
 {
-	"name": "Delta-Import-ADB",
+	"name": "ReadDeltaLog-ADB",
 	"properties": {
 		"activities": [
 			{
-				"name": "DeltaChanges",
+				"name": "ReadDeltaLog",
 				"description": "",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
@@ -112,7 +112,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "DeltaChanges",
+						"activity": "ReadDeltaLog",
 						"dependencyConditions": [
 							"Succeeded"
 						]
