@@ -24,15 +24,8 @@
 						}
 					},
 					"sink": {
-						"type": "SqlDWSink",
-						"allowPolyBase": true,
-						"polyBaseSettings": {
-							"rejectValue": 0,
-							"rejectType": "value",
-							"useTypeDefault": true
-						},
-						"tableOption": "autoCreate",
-						"disableMetricsCollection": false
+						"type": "SqlPoolSink",
+						"allowCopyCommand": true
 					},
 					"enableStaging": false
 				},
@@ -44,7 +37,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureSynapseAnalyticsTable1",
+						"referenceName": "OrcSample",
 						"type": "DatasetReference"
 					}
 				]
