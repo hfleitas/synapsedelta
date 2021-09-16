@@ -39,7 +39,8 @@
 						"linkedServiceName": {
 							"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
-						}
+						},
+						"path": "dwtemp"
 					}
 				},
 				"inputs": [
