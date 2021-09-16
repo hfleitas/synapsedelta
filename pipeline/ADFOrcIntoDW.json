@@ -4,7 +4,7 @@
 		"activities": [
 			{
 				"name": "Copy data1",
-				"description": "customer wants to use wildcard path for diff partition folders and additional column for filepath month.",
+				"description": "Would like to use wildcard path for diff partition folders and additional column for filepath month.",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
