@@ -37,7 +37,7 @@
 					"enableStaging": true,
 					"stagingSettings": {
 						"linkedServiceName": {
-							"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+							"referenceName": "PublicDataset",
 							"type": "LinkedServiceReference"
 						},
 						"path": "dwtemp"
