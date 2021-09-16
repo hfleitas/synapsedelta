@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "userdata1_orc",
 				"folderPath": "orc_sample",
 				"fileSystem": "wplushiramsynapsefs"
 			},
