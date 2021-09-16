@@ -17,17 +17,9 @@
 				"typeProperties": {
 					"source": {
 						"type": "OrcSource",
-						"additionalColumns": [
-							{
-								"name": "filepath",
-								"value": "$$FILEPATH"
-							}
-						],
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "orc_sample",
-							"wildcardFileName": "*.*",
 							"enablePartitionDiscovery": false
 						}
 					},
