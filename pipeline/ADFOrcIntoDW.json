@@ -35,13 +35,7 @@
 						},
 						"tableOption": "autoCreate"
 					},
-					"enableStaging": true,
-					"stagingSettings": {
-						"linkedServiceName": {
-							"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
-							"type": "LinkedServiceReference"
-						}
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
