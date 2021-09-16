@@ -6,7 +6,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "staging",
-			"table": "OrcSample"
+			"table": "orcsample"
 		},
 		"sqlPool": {
 			"referenceName": "wplussynapsedw",
