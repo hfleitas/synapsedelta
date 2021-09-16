@@ -1,0 +1,21 @@
+{
+	"name": "Orc_Sample",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Orc",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "userdata1_orc",
+				"folderPath": "orc_sample",
+				"fileSystem": "wplushiramsynapsefs"
+			},
+			"enablePhysicalSchema": true
+		},
+		"schema": []
+	}
+}
