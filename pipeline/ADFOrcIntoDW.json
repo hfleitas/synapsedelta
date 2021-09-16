@@ -27,7 +27,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": "orc_sample",
-							"wildcardFileName": "*",
+							"wildcardFileName": "*.*",
 							"enablePartitionDiscovery": false
 						}
 					},
