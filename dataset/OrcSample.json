@@ -5,7 +5,7 @@
 		"type": "SqlPoolTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "staging",
+			"schema": "dbo",
 			"table": "OrcSample"
 		},
 		"sqlPool": {
