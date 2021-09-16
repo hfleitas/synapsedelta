@@ -5,8 +5,8 @@
 		"type": "SqlPoolTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "dbo",
-			"table": "OrcSample"
+			"schema": "staging",
+			"table": "orcsample"
 		},
 		"sqlPool": {
 			"referenceName": "wplussynapsedw",
