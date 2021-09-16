@@ -58,3 +58,48 @@ As
 
 If object_id('staging.autocreatedtablexyz') is not null Drop table staging.autocreatedtablexyz;
 go 
+
+
+--orc sample
+-- https://github.com/Teradata/kylo/tree/master/samples/sample-data/orc
+/*
+userdata[1-5]_orc: These are sample files containing data in ORC format.
+
+-> Number of rows in each file: 1000
+-> Column details:
+column#		column_name		hive_datatype
+=====================================================
+1		registration_dttm 	timestamp
+2		id 			int
+3		first_name 		string
+4		last_name 		string
+5		email 			string
+6		gender 			string
+7		ip_address 		string
+8		cc 			string
+9		country 		string
+10		birthdate 		string
+11		salary 			double
+12		title 			string
+13		comments 		string
+*/
+
+if object_id('staging.orcsample') is not null drop table staging.orcsample; 
+go 
+create table staging.orcsample (
+    registration_dttm datetime,
+    id int,
+    first_name nvarchar(256),
+    last_name nvarchar(256),
+    email nvarchar(256),
+    gender nvarchar(256),
+    ip_address nvarchar(256),
+    cc nvarchar(256),
+    country nvarchar(256),
+    birthdate nvarchar(256),
+    salary float,
+    title nvarchar(256),
+    comments nvarchar(256)
+)
+
+select count(*) from staging.orcsample 
