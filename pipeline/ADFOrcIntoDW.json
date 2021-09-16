@@ -17,12 +17,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "OrcSource",
-						"additionalColumns": [
-							{
-								"name": "filepath",
-								"value": "$$FILEPATH"
-							}
-						],
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
@@ -33,7 +27,6 @@
 					},
 					"sink": {
 						"type": "SqlPoolSink",
-						"preCopyScript": "if object_id('Staging.OrcSample') is not null drop table Staging.OrcSample;",
 						"allowPolyBase": true,
 						"polyBaseSettings": {
 							"rejectValue": 0,
