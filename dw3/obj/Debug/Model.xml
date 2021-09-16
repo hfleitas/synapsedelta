@@ -1,0 +1,2835 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DataSchemaModel FileFormatVersion="1.2" SchemaVersion="3.1" DspName="Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider" CollationLcid="1033" CollationCaseSensitive="False" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+	<Header>
+		<CustomData Category="AnsiNulls">
+			<Metadata Name="AnsiNulls" Value="True" />
+		</CustomData>
+		<CustomData Category="QuotedIdentifier">
+			<Metadata Name="QuotedIdentifier" Value="True" />
+		</CustomData>
+		<CustomData Category="CompatibilityMode">
+			<Metadata Name="CompatibilityMode" Value="150" />
+		</CustomData>
+		<CustomData Category="Reference" Type="Assembly">
+			<Metadata Name="LogicalName" Value="dw3.dll" />
+			<Metadata Name="FileName" Value="c:\hiram-msft\synapsedelta\dw3\obj\Debug\dw3.dll" />
+			<Metadata Name="AssemblyName" Value="dw3" />
+			<Metadata Name="PermissionSet" Value="SAFE" />
+			<Metadata Name="Owner" Value="" />
+			<Metadata Name="GenerateSqlClrDdl" Value="True" />
+			<Metadata Name="IsVisible" Value="True" />
+			<Metadata Name="IsModelAware" Value="True" />
+			<Metadata Name="SkipCreationIfEmpty" Value="True" />
+			<Metadata Name="AssemblySymbolsName" Value="c:\hiram-msft\synapsedelta\dw3\obj\Debug\dw3.pdb" />
+		</CustomData>
+		<CustomData Category="SqlCmdVariables" Type="SqlCmdVariable" />
+	</Header>
+	<Model>
+		<Element Type="SqlDatabaseOptions">
+			<Property Name="Collation" Value="SQL_Latin1_General_CP1_CI_AS" />
+			<Property Name="IsAnsiNullDefaultOn" Value="True" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Property Name="IsAnsiWarningsOn" Value="True" />
+			<Property Name="IsArithAbortOn" Value="True" />
+			<Property Name="IsConcatNullYieldsNullOn" Value="True" />
+			<Property Name="IsTornPageProtectionOn" Value="False" />
+			<Property Name="IsFullTextEnabled" Value="True" />
+			<Property Name="PageVerifyMode" Value="3" />
+			<Property Name="DefaultLanguage" Value="" />
+			<Property Name="DefaultFullTextLanguage" Value="" />
+			<Property Name="QueryStoreStaleQueryThreshold" Value="367" />
+			<Relationship Name="DefaultFilegroup">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[PRIMARY]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlMasterKey" />
+		<Element Type="SqlUser" Name="[Barbara Lake]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Claire Maria Nuñez]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Coach Lawrence]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Darci Scott]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[Character]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[CharacterId]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[FullName]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Affiliation]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="60" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Category]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="10" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Aka]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="300" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Status]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="35" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Race]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Age]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Home]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Relatives]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="300" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Weapons]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[EyeColor]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="20" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[HairColor]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[Minions]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Character].[VoicedBy]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[dateformats]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[dateformats].[id]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[dateformats].[createdate]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="120" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[dateformats2]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[dateformats2].[id]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[dateformats2].[createdate]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[datetime]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[DeltaDropLastChanges]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[ 
+    if object_id('LastChanges') is not null
+    begin
+        drop table LastChanges
+    end]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[lastchanges]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="131" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROC [DeltaDropLastChanges] AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[DeltaDropTarget]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[ 
+    if object_id('target') is not null
+    begin
+        drop table target
+    end]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Target]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="116" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROC [DeltaDropTarget] AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[devs]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[devs].[C1]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[devs].[C2]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[Episode]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Episode].[CharacterId]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Episode].[FullName]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="64" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Episode].[VoicedBy]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="64" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Episode].[BirthYear]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Episode].[Category]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="64" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Episode].[Status]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="64" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Episode].[Age]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExternalTable" Name="[dbo].[extDevs]">
+			<Property Name="Location" Value="devs.csv" />
+			<Property Name="RejectType" Value="0" />
+			<Property Name="RejectValue" Value="0" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[extDevs].[first]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[extDevs].[last]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DataSourceName">
+				<Entry>
+					<References Name="[wplushiramsynapsefs]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="FileFormatName">
+				<Entry>
+					<References Name="[skipHeader_CSV]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[GetRowCounts]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[ 
+set nocount on;
+    
+    declare @sql nvarchar(max), @cnt int, @cnt2 int, @name nvarchar(128);
+
+    if object_id('tempdb.dbo.#t') is not null drop table #t
+    create table #t (
+        name        nvarchar(128),
+        rows        char(20),
+        reserved    varchar(18),
+        data        varchar(18),
+        index_size  varchar(18),
+        unused      varchar(18)
+    );
+
+    if object_id('tempdb.dbo.#tables') is not null drop table #tables
+    create table #tables (
+        name        nvarchar(128)
+    );
+    insert into #tables (name) select trim(value) from string_split(@tables,',');
+    
+    select @cnt = count(*) from information_schema.tables where table_name in (select name from #tables);
+    select @cnt2 = count(*) from #t;
+   
+    while @cnt>@cnt2
+    begin
+        select  top 1 @sql='insert into #t exec sp_spaceused '''+table_name+'''', @name=table_name
+        from    information_schema.tables 
+        where   table_name in (select top 1 name from #tables);
+        
+        exec sp_executesql @sql; --print @sql;
+        
+        delete from #tables where name = @name;
+        select  @cnt2 = count(*) from #t;
+    end
+    select * from #t]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+				</Entry>
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[int]" />
+				</Entry>
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[int]" />
+				</Entry>
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[GetRowCounts].[#t]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[GetRowCounts].[#tables]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[GetRowCounts].[#tables].[name]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[GetRowCounts].[@tables]" />
+				</Entry>
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry>
+					<References Name="[dbo].[GetRowCounts].[#tables].[name]" />
+				</Entry>
+				<Entry />
+			</Relationship>
+			<Relationship Name="DynamicObjects">
+				<Entry>
+					<Element Type="SqlDynamicColumnSource" Name="[dbo].[GetRowCounts].[#t]">
+						<Relationship Name="Columns">
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[GetRowCounts].[#t].[name]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="128" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[GetRowCounts].[#t].[rows]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="20" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[char]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[GetRowCounts].[#t].[reserved]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="18" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[GetRowCounts].[#t].[data]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="18" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[GetRowCounts].[#t].[index_size]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="18" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[GetRowCounts].[#t].[unused]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="18" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlDynamicColumnSource" Name="[dbo].[GetRowCounts].[#tables]">
+						<Relationship Name="Columns">
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[GetRowCounts].[#tables].[name]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="128" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[GetRowCounts].[@tables]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="IsMax" Value="True" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="1229" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROC [GetRowCounts] @tables [nvarchar](max) AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[heapTable]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[heapTable].[col1]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlView" Name="[dbo].[Humans]">
+			<Property Name="QueryScript">
+				<Value><![CDATA[ select	FullName, [Status], Age, Home, Relatives, EyeColor, HairColor
+	from	[Character]
+	where	( FullName = user_name() or Relatives like '%'+user_name()+'%' )
+	or		user_name()='Jim Lake Jr.']]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlComputedColumn" Name="[dbo].[Humans].[FullName]">
+						<Relationship Name="ExpressionDependencies">
+							<Entry>
+								<References Name="[dbo].[Character].[FullName]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlComputedColumn" Name="[dbo].[Humans].[Status]">
+						<Relationship Name="ExpressionDependencies">
+							<Entry>
+								<References Name="[dbo].[Character].[Status]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlComputedColumn" Name="[dbo].[Humans].[Age]">
+						<Relationship Name="ExpressionDependencies">
+							<Entry>
+								<References Name="[dbo].[Character].[Age]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlComputedColumn" Name="[dbo].[Humans].[Home]">
+						<Relationship Name="ExpressionDependencies">
+							<Entry>
+								<References Name="[dbo].[Character].[Home]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlComputedColumn" Name="[dbo].[Humans].[Relatives]">
+						<Relationship Name="ExpressionDependencies">
+							<Entry>
+								<References Name="[dbo].[Character].[Relatives]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlComputedColumn" Name="[dbo].[Humans].[EyeColor]">
+						<Relationship Name="ExpressionDependencies">
+							<Entry>
+								<References Name="[dbo].[Character].[EyeColor]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlComputedColumn" Name="[dbo].[Humans].[HairColor]">
+						<Relationship Name="ExpressionDependencies">
+							<Entry>
+								<References Name="[dbo].[Character].[HairColor]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="QueryDependencies">
+				<Entry>
+					<References Name="[dbo].[Character]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Character].[FullName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Character].[Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Character].[Age]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Character].[Home]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Character].[Relatives]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Character].[EyeColor]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Character].[HairColor]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="219" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE VIEW [Humans]&#xD;&#xA;AS" />
+				<Property Name="FooterContents" Value=";" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[lastchanges]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[lastchanges].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="8000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[lastchanges].[time]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[lastchanges].[newValue]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="8000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[lastchanges].[deleted]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bit]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[latestonly]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[latestonly].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[latestonly].[time]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[latestonly].[newValue]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[latestonly].[deleted]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bit]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[Letters]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Letters].[Letter]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="1" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[Locations]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Locations].[LocationId]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Locations].[LocationName]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Locations].[CharacterId]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[MegreLatest]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[ 
+
+    merge into [ReportTarget] as t
+    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])
+    on lc.[key] = t.[key]
+    when matched and lc.[deleted] = 1 
+        then delete
+    when matched
+        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]
+    when not matched and lc.[deleted] = 0 
+        then insert ([key], [value]) values(lc.[key], lc.[newValue]);]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[lastchanges]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[ReportTarget]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[ReportTarget].[key]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[ReportTarget].[value]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[ReportTarget].[key]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[ReportTarget].[value]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="441" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROC [dbo].[MegreLatest] AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[parks]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[parks].[id]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[parks].[createdate]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="120" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlSecurityPolicy" Name="[dbo].[PortalPolicy]">
+			<Relationship Name="Predicates">
+				<Entry>
+					<Element Type="SqlSecurityPredicate">
+						<Property Name="BodyScript">
+							<Value><![CDATA[[Portal].[fn_PortalAccess]([FullName], [Relatives])]]></Value>
+						</Property>
+						<Relationship Name="BodyDependencies">
+							<Entry>
+								<References Name="[Portal].[fn_PortalAccess]" />
+							</Entry>
+							<Entry>
+								<References Name="[dbo].[Character].[FullName]" />
+							</Entry>
+							<Entry>
+								<References Name="[dbo].[Character].[Relatives]" />
+							</Entry>
+						</Relationship>
+						<Relationship Name="TargetObject">
+							<Entry>
+								<References Name="[dbo].[Character]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[QueryActivity]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[ 
+-- + -------------- +
+-- | Query Activity |
+-- + -------------- +
+with cte as (
+    select      top 100
+                request_id, 
+                status, 
+                total_elapsed_time/60000 as TotalElapsedMinutes, 
+                resource_class, 
+                importance
+    from        sys.dm_pdw_exec_requests 
+    where       status not in ('Completed','Failed','Cancelled','Suspended')
+                -- and request_id in ('QID3187802','QID3188080')
+    and         session_id <> session_id()
+    order by    submit_time desc
+)
+select      es.app_name,
+            rs.request_id, 
+            rs.step_index, 
+            rs.operation_type, 
+            rs.distribution_type, 
+            rs.location_type, 
+            rs.status, 
+            rs.error_id, 
+            rs.start_time, 
+            rs.end_time, 
+            case when rs.end_time is not null then cast(rs.end_time - rs.start_time as time) end as duration, 
+            rs.total_elapsed_time/60000 as TotalElapsedMinutes, 
+            rs.total_elapsed_time/3600000 as TotalElapsedHours, 
+            rs.row_count, 
+            rs.command, 
+            cte.*
+from        sys.dm_pdw_request_steps rs
+inner join  cte 
+    on rs.request_id = cte.request_id
+left join  sys.dm_pdw_exec_sessions es 
+    on rs.request_id = es.request_id
+where       rs.status<>'complete'
+order by    step_index;
+
+--request_id	step_index	operation_type	distribution_type	location_type	status	error_id	start_time	end_time	duration	TotalElapsedMinutes	TotalElapsedHours	row_count	command	request_id	status	TotalElapsedMinutes	resource_class	importance
+--QID827319	3	OnOperation	AllDistributions	Compute	Running	NULL	2019-09-05 21:30:07.010	NULL	NULL	199	3	-1	INSERT INTO [sql-eastus2-int-dev-reboot-analytics_wh].[dbo].[Inforce12New] WITH (TABLOCK) ([JOIN_KEY_ACTUALS], [SourceTableName], [BLOCK], [Date_Incurred], [Date_Reported], [Date_Posted], [YRMO], [InforceQuarter], [TLID], [TLID_SecondInsd], [Treaty_Sage_ID], [Treaty_TRS_ID], [Policy_Number], [Policy_Record_Number], [Policy_Rider_Number], [Coverage_Sage_CCID], [ConversionFlag], [OriginalCCID], [OriginalCCID_2], [OriginalPolicy], [OriginalPolicy_2], [FACE], [ReinsuredFace], [NAR], [sourceTableNameInput], [sourceTableNameInputTS], [sourceFileName], [IssueAgeL1], [SmokerL1], [BusinessBlockShort], [mosesBand], [mosesSeries], [mosesClassL1], [GenderL1], [mosesPlan], [IssueDate], [FalloutType1], [Treaty_Model_ID], [Treaty_PeopleSoft_ID], [BusinessBlock], [JOIN_KEY_MODEL], [JOIN_KEY_NO_DATE], [BenefitType])SELECT [T1_1].[JOIN_KEY_ACTUALS], [T1_1].[SourceTableName], [T1_1].[BLOCK], [T1_1].[Date_Incurred], [T1_1].[Date_Reported], [T1_1].[Date_Posted], [T1_1].[YRMO], [T1_1].[InforceQuarter], [T1_1].[TLID], [T1_1].[TLID_SecondInsd], [T1_1].[Treaty_Sage_ID], [T1_1].[Treaty_TRS_ID], [T1_1].[Policy_Number], [T1_1].[Policy_Record_Number], [T1_1].[Policy_Rider_Number], [T1_1].[Coverage_Sage_CCID], [T1_1].[ConversionFlag], [T1_1].[OriginalCCID], [T1_1].[OriginalCCID_2], [T1_1].[OriginalPolicy], [T1_1].[OriginalPolicy_2], [T1_1].[FACE], [T1_1].[ReinsuredFace], [T1_1].[NAR], [T1_1].[sourceTableNameInput], [T1_1].[sourceTableNameInputTS], [T1_1].[sourceFileName], [T1_1].[IssueAgeL1], [T1_1].[SmokerL1], [T1_1].[BusinessBlockShort], [T1_1].[mosesBand], [T1_1].[mosesSeries], [T1_1].[mosesClassL1], [T1_1].[GenderL1], [T1_1].[mosesPlan], [T1_1].[IssueDate], [T1_1].[FalloutType1], [T1_1].[Treaty_Model_ID], [T1_1].[col], [T1_1].[BusinessBlock], [T1_1].[JOIN_KEY_MODEL], [T1_1].[JOIN_KEY_NO_DATE], [T1_1].[BenefitType] FROM (SELECT CASE WHEN ([T2_1].[Treaty_PeopleSoft_ID] LIKE CAST (N'HA%' COLLATE SQL_Latin1_General_CP1_CI_AS AS VARCHAR (3)) COLLATE SQL_Latin1_General_CP1_CI_AS) THEN concat([T2_1].[Treaty_PeopleSoft_ID], CAST (N'-001' COLLATE SQL_Latin1_General_CP1_CI_AS AS VARCHAR (4)) COLLATE SQL_Latin1_General_CP1_CI_AS) ELSE [T2_1].[Treaty_PeopleSoft_ID]END AS [col], [T2_1].[JOIN_KEY_ACTUALS] AS [JOIN_KEY_ACTUALS], [T2_1].[SourceTableName] AS [SourceTableName], [T2_1].[BLOCK] AS [BLOCK], [T2_1].[Date_Incurred] AS [Date_Incurred], [T2_1].[Date_Reported] AS [Date_Reported], [T2_1].[Date_Posted] AS [Date_Posted], [T2_1].[YRMO] AS [YRMO], [T2_1].[InforceQuarter] AS [InforceQuarter], [T2_1].[TLID] AS [TLID], [T2_1].[TLID_SecondInsd] AS [TLID_SecondInsd], [T2_1].[Treaty_Sage_ID] AS [Treaty_Sage_ID], [T2_1].[Treaty_TRS_ID] AS [Treaty_TRS_ID], [T2_1].[Policy_Number] AS [Policy_Number], [T2_1].[Policy_Record_Number] AS [Policy_Record_Number], [T2_1].[Policy_Rider_Number] AS [Policy_Rider_Number], [T2_1].[Coverage_Sage_CCID] AS [Coverage_Sage_CCID], [T2_1].[ConversionFlag] AS [ConversionFlag], [T2_1].[OriginalCCID] AS [OriginalCCID], [T2_1].[OriginalCCID_2] AS [OriginalCCID_2], [T2_1].[OriginalPolicy] AS [OriginalPolicy], [T2_1].[OriginalPolicy_2] AS [OriginalPolicy_2], [T2_1].[FACE] AS [FACE], [T2_1].[ReinsuredFace] AS [ReinsuredFace], [T2_1].[NAR] AS [NAR], [T2_1].[sourceTableNameInput] AS [sourceTableNameInput], [T2_1].[sourceTableNameInputTS] AS [sourceTableNameInputTS], [T2_1].[sourceFileName] AS [sourceFileName], [T2_1].[IssueAgeL1] AS [IssueAgeL1], [T2_1].[SmokerL1] AS [SmokerL1], [T2_1].[BusinessBlockShort] AS [BusinessBlockShort], [T2_1].[mosesBand] AS [mosesBand], [T2_1].[mosesSeries] AS [mosesSeries], [T2_1].[mosesClassL1] AS [mosesClassL1], [T2_1].[GenderL1] AS [GenderL1], [T2_1].[mosesPlan] AS [mosesPlan], [T2_1].[IssueDate] AS [IssueDate], [T2_1].[FalloutType1] AS [FalloutType1], [T2_1].[Treaty_Model_ID] AS [Treaty_Model_ID], [T2_1].[BusinessBlock] AS [BusinessBlock], [T2_1].[JOIN_KEY_MODEL] AS [JOIN_KEY_MODEL], [T2_1].[JOIN_KEY_NO_DATE] AS [JOIN_KEY_NO_DATE], [T2_1].[BenefitType] AS [BenefitType] FROM [sql-eastus2-int-dev-reboot-analytics_w	QID827319	Running	199	xlargerc	normal
+/*
+SELECT * FROM sys.dm_pdw_sql_requests WHERE request_id = 'QID891260' AND status <>'Complete' -- and step_index = 3;
+DBCC PDW_SHOWEXECUTIONPLAN(57, 192);
+SELECT 'DBCC PDW_SHOWEXECUTIONPLAN(',distribution_id,',',spid,')' FROM sys.dm_pdw_sql_requests WHERE request_id = 'QID891260' AND step_index = 3;
+
+dbcc pdw_showspaceused(ctasSuperTableSum)
+dbcc pdw_showspaceused(mapTreatyTermsReplicate)
+*/]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[time]" />
+				</Entry>
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+			</Relationship>
+			<Relationship Name="DynamicObjects">
+				<Entry>
+					<Element Type="SqlDynamicColumnSource" Name="[dbo].[QueryActivity].[CTE1].[cte]">
+						<Relationship Name="Columns">
+							<Entry>
+								<Element Type="SqlComputedColumn" Name="[dbo].[QueryActivity].[CTE1].[cte].[request_id]">
+									<Relationship Name="ExpressionDependencies">
+										<Entry />
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlComputedColumn" Name="[dbo].[QueryActivity].[CTE1].[cte].[status]">
+									<Relationship Name="ExpressionDependencies">
+										<Entry />
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlComputedColumn" Name="[dbo].[QueryActivity].[CTE1].[cte].[TotalElapsedMinutes]" />
+							</Entry>
+							<Entry>
+								<Element Type="SqlComputedColumn" Name="[dbo].[QueryActivity].[CTE1].[cte].[resource_class]">
+									<Relationship Name="ExpressionDependencies">
+										<Entry />
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlComputedColumn" Name="[dbo].[QueryActivity].[CTE1].[cte].[importance]">
+									<Relationship Name="ExpressionDependencies">
+										<Entry />
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="6178" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROC [dbo].[QueryActivity] AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[replTable]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[replTable].[col1]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[ReportTarget]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[ReportTarget].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="8000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[ReportTarget].[value]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="8000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[RRTable]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[RRTable].[col1]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[ShakeNBake]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[ 
+    -- rename object target2hash TO ReportTarget;
+    
+    --ctas to merge
+    if object_id('target2hash') is not null drop table [target2hash];
+    create table [target2hash]
+    with (
+        distribution = hash([key]),
+        clustered columnstore index
+    ) as select * from [target];
+
+    --merge
+    merge into [target2hash] as t
+    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])
+    on lc.[key] = t.[key]
+    when matched and lc.[deleted] = 1 
+        then delete
+    when matched
+        then update set t.[key] = lc.[key], t.[value] = lc.[newValue]
+    when not matched and lc.[deleted] = 0 
+        then insert ([key], [value]) values(lc.[key], lc.[newValue]);
+
+    --rename
+    if object_id('ReportTarget') is not null drop table [ReportTarget];
+    rename object target2hash TO ReportTarget;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry />
+				<Entry />
+				<Entry>
+					<References Name="[dbo].[lastchanges]" />
+				</Entry>
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry>
+					<References Name="[dbo].[ReportTarget]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="894" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROC [ShakeNBake] AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[sp_spaceused_all]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+set nocount on
+
+declare @sql nvarchar(max)
+    create table #tables(name varchar(128))
+    
+    select @sql = 'insert #tables select TABLE_NAME from ' + @SourceDB + '.INFORMATION_SCHEMA.TABLES where TABLE_TYPE = ''BASE TABLE'''
+    exec (@sql)
+    
+    create table #SpaceUsed (name varchar(128), rows varchar(11), reserved varchar(18), data varchar(18), index_size varchar(18), unused varchar(18))
+    declare @name varchar(128)
+    select @name = ''
+    while exists (select * from #tables where name > @name)
+    begin
+        select @name = min(name) from #tables where name > @name
+        select @sql = N'exec ' + @SourceDB + N'..sp_executesql N''insert #SpaceUsed exec sp_spaceused ' + @name + ''''
+        exec (@sql)
+    end
+    select * from #SpaceUsed
+    drop table #tables
+    drop table #SpaceUsed]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+				</Entry>
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[varchar]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[sp_spaceused_all].[@SourceDB]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[sp_spaceused_all].[#tables]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[sp_spaceused_all].[#tables].[name]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[sp_spaceused_all].[#tables].[name]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[sp_spaceused_all].[#SpaceUsed]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="DynamicObjects">
+				<Entry>
+					<Element Type="SqlDynamicColumnSource" Name="[dbo].[sp_spaceused_all].[#tables]">
+						<Relationship Name="Columns">
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[sp_spaceused_all].[#tables].[name]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="128" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlDynamicColumnSource" Name="[dbo].[sp_spaceused_all].[#SpaceUsed]">
+						<Relationship Name="Columns">
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[sp_spaceused_all].[#SpaceUsed].[name]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="128" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[sp_spaceused_all].[#SpaceUsed].[rows]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="11" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[sp_spaceused_all].[#SpaceUsed].[reserved]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="18" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[sp_spaceused_all].[#SpaceUsed].[data]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="18" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[sp_spaceused_all].[#SpaceUsed].[index_size]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="18" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+							<Entry>
+								<Element Type="SqlSimpleColumn" Name="[dbo].[sp_spaceused_all].[#SpaceUsed].[unused]">
+									<Relationship Name="TypeSpecifier">
+										<Entry>
+											<Element Type="SqlTypeSpecifier">
+												<Property Name="Length" Value="18" />
+												<Relationship Name="Type">
+													<Entry>
+														<References ExternalSource="BuiltIns" Name="[varchar]" />
+													</Entry>
+												</Relationship>
+											</Element>
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[sp_spaceused_all].[@SourceDB]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="IsMax" Value="True" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="871" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROC [sp_spaceused_all] @SourceDB [nvarchar](max) AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[Table]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Table].[col1]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[Target]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Target].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="8000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Target].[value]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="8000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[WhoConnected]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    select 
+        min(cast(login_time as date)) as MinLoginDate, 
+        max(cast(login_time as date)) as MaxLoginDate
+    from sys.dm_pdw_exec_sessions 
+    where session_id <> session_id()
+
+    select 
+        cast(login_time as date) as LoginDate, 
+        login_name, 
+        client_id, 
+        app_name, 
+        status
+    from sys.dm_pdw_exec_sessions 
+    where session_id <> session_id()
+    group by 
+        cast(login_time as date),
+        login_name, 
+        client_id, 
+        app_name, 
+        status
+    order by LoginDate desc]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry />
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[date]" />
+				</Entry>
+				<Entry />
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[date]" />
+				</Entry>
+				<Entry />
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[date]" />
+				</Entry>
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry />
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[date]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="603" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROC [WhoConnected] AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlLogin" Name="[DWLoader]">
+			<Property Name="Password" Value="X{MofdaUtzFUlKWg%chnpalamsFT7_&amp;#$!~&lt;wbzZbp;Pdzkk" />
+			<Annotation Type="GloballyScoped" />
+		</Element>
+		<Element Type="SqlUser" Name="[DWLoader]" Disambiguator="5">
+			<Property Name="LoginIdentifierScript">
+				<Value><![CDATA[[DWLoader]]]></Value>
+			</Property>
+			<Property Name="AuthenticationType" Value="1" />
+			<Relationship Name="Login">
+				<Entry>
+					<References Name="[DWLoader]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlLogin" Name="[dwloaderrc10]">
+			<Property Name="Password" Value="{ofLd+a tzlghnpalAaJwdbzmsFT7_&amp;#$!~&lt;bpUdXXk~k|bi" />
+			<Annotation Type="GloballyScoped" />
+		</Element>
+		<Element Type="SqlUser" Name="[dwloaderrc10]" Disambiguator="3">
+			<Property Name="LoginIdentifierScript">
+				<Value><![CDATA[[dwloaderrc10]]]></Value>
+			</Property>
+			<Property Name="AuthenticationType" Value="1" />
+			<Relationship Name="Login">
+				<Entry>
+					<References Name="[dwloaderrc10]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlUser" Name="[Elijah Leslie Pepperjack]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Enrique Nuñez]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Jim Lake Jr.]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Jim Lake Sr.]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlLogin" Name="[LoaderXL]" Disambiguator="4">
+			<Property Name="Password" Value="{ofda_ttz%3RqT&gt;plfghZnpamsFT7_&amp;#$!~&lt;9lawbzTbp.9d" />
+			<Annotation Type="GloballyScoped" />
+		</Element>
+		<Element Type="SqlUser" Name="[LoaderXL]">
+			<Property Name="LoginIdentifierScript">
+				<Value><![CDATA[[LoaderXL]]]></Value>
+			</Property>
+			<Property Name="AuthenticationType" Value="1" />
+			<Relationship Name="Login">
+				<Entry>
+					<References Name="[LoaderXL]" Disambiguator="4" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlUser" Name="[Mary J. Wang]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Mr. Nuñez]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Mrs. Nuñez]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Nana]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlSchema" Name="[Portal]">
+			<Relationship Name="Authorizer">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlInlineTableValuedFunction" Name="[Portal].[fn_PortalAccess]">
+			<Property Name="IsSchemaBound" Value="True" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[Portal].[fn_PortalAccess].[@FullName]" />
+				</Entry>
+				<Entry>
+					<References Name="[Portal].[fn_PortalAccess].[@Relatives]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlComputedColumn" Name="[Portal].[fn_PortalAccess].[PortalAccess]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="FunctionBody">
+				<Entry>
+					<Element Type="SqlScriptFunctionImplementation">
+						<Property Name="BodyScript">
+							<Value><![CDATA[ select	1 as PortalAccess 
+		where	( @FullName = user_name() or @Relatives like '%'+user_name()+'%' )
+		or		user_name() = 'Jim Lake Jr.']]></Value>
+						</Property>
+						<Annotation Type="SysCommentsObjectAnnotation">
+							<Property Name="Length" Value="269" />
+							<Property Name="StartLine" Value="1" />
+							<Property Name="StartColumn" Value="1" />
+							<Property Name="HeaderContents" Value="CREATE FUNCTION [Portal].[fn_PortalAccess] (@FullName [sysname],@Relatives [sysname]) RETURNS TABLE&#xD;&#xA;WITH SCHEMABINDING&#xD;&#xA;AS&#xD;&#xA;RETURN" />
+						</Annotation>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[Portal].[fn_PortalAccess].[@FullName]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[sys].[sysname]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[Portal].[fn_PortalAccess].[@Relatives]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[sys].[sysname]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References Name="[Portal]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlUser" Name="[Señor Uhl]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Shannon Longhannon]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlExternalFileFormat" Name="[skipHeader_CSV]">
+			<Property Name="StringDelimiter" Value="&quot;" />
+			<Property Name="UseTypeDefault" Value="True" />
+			<Property Name="FieldTerminator" Value="," />
+		</Element>
+		<Element Type="SqlSchema" Name="[SqlAnalyticsConnector]">
+			<Relationship Name="Authorizer">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExternalTable" Name="[SqlAnalyticsConnector].[a7yrlc0KwG1_sanW7eyjNwI]">
+			<Property Name="Location" Value="SQLAnalyticsConnectorStaging/application_1631378015730_0001/a7yrlc0KwG1_sanW7eyjNwI.tbl" />
+			<Property Name="RejectType" Value="0" />
+			<Property Name="RejectValue" Value="0" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[a7yrlc0KwG1_sanW7eyjNwI].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[a7yrlc0KwG1_sanW7eyjNwI].[time]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[a7yrlc0KwG1_sanW7eyjNwI].[newValue]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[a7yrlc0KwG1_sanW7eyjNwI].[deleted]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bit]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DataSourceName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorDataSource_sanW7eyjNwI]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="FileFormatName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorFileFormat_sanW7eyjNwI]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References Name="[SqlAnalyticsConnector]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExternalTable" Name="[SqlAnalyticsConnector].[aeCZa2DMdYZ_so3AH5TAYqF]">
+			<Property Name="Location" Value="SQLAnalyticsConnectorStaging/application_1630590379987_0001/aeCZa2DMdYZ_so3AH5TAYqF.tbl" />
+			<Property Name="RejectType" Value="0" />
+			<Property Name="RejectValue" Value="0" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aeCZa2DMdYZ_so3AH5TAYqF].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aeCZa2DMdYZ_so3AH5TAYqF].[time]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aeCZa2DMdYZ_so3AH5TAYqF].[newValue]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aeCZa2DMdYZ_so3AH5TAYqF].[deleted]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bit]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DataSourceName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorDataSource_so3AH5TAYqF]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="FileFormatName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorFileFormat_so3AH5TAYqF]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References Name="[SqlAnalyticsConnector]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExternalTable" Name="[SqlAnalyticsConnector].[aessDYnYmOo_s0mWcKcJTZ8]">
+			<Property Name="Location" Value="SQLAnalyticsConnectorStaging/application_1631388437932_0001/aessDYnYmOo_s0mWcKcJTZ8.tbl" />
+			<Property Name="RejectType" Value="0" />
+			<Property Name="RejectValue" Value="0" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aessDYnYmOo_s0mWcKcJTZ8].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aessDYnYmOo_s0mWcKcJTZ8].[time]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aessDYnYmOo_s0mWcKcJTZ8].[newValue]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aessDYnYmOo_s0mWcKcJTZ8].[deleted]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bit]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DataSourceName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorDataSource_s0mWcKcJTZ8]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="FileFormatName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorFileFormat_s0mWcKcJTZ8]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References Name="[SqlAnalyticsConnector]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExternalTable" Name="[SqlAnalyticsConnector].[aGEtauorUyt_se64pLH4ETa]">
+			<Property Name="Location" Value="SQLAnalyticsConnectorStaging/application_1631378015730_0001/aGEtauorUyt_se64pLH4ETa.tbl" />
+			<Property Name="RejectType" Value="0" />
+			<Property Name="RejectValue" Value="0" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aGEtauorUyt_se64pLH4ETa].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aGEtauorUyt_se64pLH4ETa].[time]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aGEtauorUyt_se64pLH4ETa].[newValue]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aGEtauorUyt_se64pLH4ETa].[deleted]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bit]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DataSourceName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorDataSource_se64pLH4ETa]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="FileFormatName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorFileFormat_se64pLH4ETa]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References Name="[SqlAnalyticsConnector]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExternalTable" Name="[SqlAnalyticsConnector].[amP8QwkSmu8_sj8AbXEFdLX]">
+			<Property Name="Location" Value="SQLAnalyticsConnectorStaging/application_1631378015730_0001/amP8QwkSmu8_sj8AbXEFdLX.tbl" />
+			<Property Name="RejectType" Value="0" />
+			<Property Name="RejectValue" Value="0" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[amP8QwkSmu8_sj8AbXEFdLX].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[amP8QwkSmu8_sj8AbXEFdLX].[time]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[amP8QwkSmu8_sj8AbXEFdLX].[newValue]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[amP8QwkSmu8_sj8AbXEFdLX].[deleted]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bit]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DataSourceName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorDataSource_sj8AbXEFdLX]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="FileFormatName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorFileFormat_sj8AbXEFdLX]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References Name="[SqlAnalyticsConnector]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExternalTable" Name="[SqlAnalyticsConnector].[aWP5do8ePKm_slALvpws9NR]">
+			<Property Name="Location" Value="SQLAnalyticsConnectorStaging/application_1631378015730_0001/aWP5do8ePKm_slALvpws9NR.tbl" />
+			<Property Name="RejectType" Value="0" />
+			<Property Name="RejectValue" Value="0" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aWP5do8ePKm_slALvpws9NR].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aWP5do8ePKm_slALvpws9NR].[time]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aWP5do8ePKm_slALvpws9NR].[newValue]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aWP5do8ePKm_slALvpws9NR].[deleted]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bit]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DataSourceName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorDataSource_slALvpws9NR]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="FileFormatName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorFileFormat_slALvpws9NR]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References Name="[SqlAnalyticsConnector]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExternalTable" Name="[SqlAnalyticsConnector].[aztjTutE57K_s1RJx1EGQJE]">
+			<Property Name="Location" Value="SQLAnalyticsConnectorStaging/application_1631378015730_0001/aztjTutE57K_s1RJx1EGQJE.tbl" />
+			<Property Name="RejectType" Value="0" />
+			<Property Name="RejectValue" Value="0" />
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aztjTutE57K_s1RJx1EGQJE].[key]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aztjTutE57K_s1RJx1EGQJE].[time]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aztjTutE57K_s1RJx1EGQJE].[newValue]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="4000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[SqlAnalyticsConnector].[aztjTutE57K_s1RJx1EGQJE].[deleted]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bit]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DataSourceName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorDataSource_s1RJx1EGQJE]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="FileFormatName">
+				<Entry>
+					<References Name="[SQLAnalyticsConnectorFileFormat_s1RJx1EGQJE]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References Name="[SqlAnalyticsConnector]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExternalDataSource" Name="[SQLAnalyticsConnectorDataSource_s0mWcKcJTZ8]">
+			<Property Name="Location" Value="abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/sparkpools/threedot0/sparkpoolinstances/e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb/livysessions/2021/09/11/89/tempdata/" />
+		</Element>
+		<Element Type="SqlExternalDataSource" Name="[SQLAnalyticsConnectorDataSource_s1RJx1EGQJE]">
+			<Property Name="Location" Value="abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/sparkpools/threedot0/sparkpoolinstances/e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb/livysessions/2021/09/11/88/tempdata/" />
+		</Element>
+		<Element Type="SqlExternalDataSource" Name="[SQLAnalyticsConnectorDataSource_sanW7eyjNwI]">
+			<Property Name="Location" Value="abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/sparkpools/threedot0/sparkpoolinstances/e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb/livysessions/2021/09/11/88/tempdata/" />
+		</Element>
+		<Element Type="SqlExternalDataSource" Name="[SQLAnalyticsConnectorDataSource_se64pLH4ETa]">
+			<Property Name="Location" Value="abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/sparkpools/threedot0/sparkpoolinstances/e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb/livysessions/2021/09/11/88/tempdata/" />
+		</Element>
+		<Element Type="SqlExternalDataSource" Name="[SQLAnalyticsConnectorDataSource_sj8AbXEFdLX]">
+			<Property Name="Location" Value="abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/sparkpools/threedot0/sparkpoolinstances/e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb/livysessions/2021/09/11/88/tempdata/" />
+		</Element>
+		<Element Type="SqlExternalDataSource" Name="[SQLAnalyticsConnectorDataSource_slALvpws9NR]">
+			<Property Name="Location" Value="abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/sparkpools/threedot0/sparkpoolinstances/e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb/livysessions/2021/09/11/88/tempdata/" />
+		</Element>
+		<Element Type="SqlExternalDataSource" Name="[SQLAnalyticsConnectorDataSource_so3AH5TAYqF]">
+			<Property Name="Location" Value="abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/sparkpools/threedot0/sparkpoolinstances/e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb/livysessions/2021/09/02/4/tempdata/" />
+		</Element>
+		<Element Type="SqlExternalFileFormat" Name="[SQLAnalyticsConnectorFileFormat_s0mWcKcJTZ8]">
+			<Property Name="FormatType" Value="3" />
+			<Property Name="DataCompression" Value="org.apache.hadoop.io.compress.SnappyCodec" />
+		</Element>
+		<Element Type="SqlExternalFileFormat" Name="[SQLAnalyticsConnectorFileFormat_s1RJx1EGQJE]">
+			<Property Name="FormatType" Value="3" />
+			<Property Name="DataCompression" Value="org.apache.hadoop.io.compress.SnappyCodec" />
+		</Element>
+		<Element Type="SqlExternalFileFormat" Name="[SQLAnalyticsConnectorFileFormat_sanW7eyjNwI]">
+			<Property Name="FormatType" Value="3" />
+			<Property Name="DataCompression" Value="org.apache.hadoop.io.compress.SnappyCodec" />
+		</Element>
+		<Element Type="SqlExternalFileFormat" Name="[SQLAnalyticsConnectorFileFormat_se64pLH4ETa]">
+			<Property Name="FormatType" Value="3" />
+			<Property Name="DataCompression" Value="org.apache.hadoop.io.compress.SnappyCodec" />
+		</Element>
+		<Element Type="SqlExternalFileFormat" Name="[SQLAnalyticsConnectorFileFormat_sj8AbXEFdLX]">
+			<Property Name="FormatType" Value="3" />
+			<Property Name="DataCompression" Value="org.apache.hadoop.io.compress.SnappyCodec" />
+		</Element>
+		<Element Type="SqlExternalFileFormat" Name="[SQLAnalyticsConnectorFileFormat_slALvpws9NR]">
+			<Property Name="FormatType" Value="3" />
+			<Property Name="DataCompression" Value="org.apache.hadoop.io.compress.SnappyCodec" />
+		</Element>
+		<Element Type="SqlExternalFileFormat" Name="[SQLAnalyticsConnectorFileFormat_so3AH5TAYqF]">
+			<Property Name="FormatType" Value="3" />
+			<Property Name="DataCompression" Value="org.apache.hadoop.io.compress.SnappyCodec" />
+		</Element>
+		<Element Type="SqlUser" Name="[Steve Palchuk]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Tobias Domzalski]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[Waltolemew Strickler]">
+			<Property Name="IsWithoutLogin" Value="True" />
+		</Element>
+		<Element Type="SqlUser" Name="[wplushiramsynapse]">
+			<Property Name="AuthenticationType" Value="4" />
+		</Element>
+		<Element Type="SqlExternalDataSource" Name="[wplushiramsynapsefs]">
+			<Property Name="Location" Value="wasbs://wplushiramsynapsefs@wplushiramsynapseadlsv2.blob.core.windows.net/" />
+			<Relationship Name="Credential">
+				<Entry>
+					<References Name="[wplushiramsynapsefs_cred]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlDatabaseCredential" Name="[wplushiramsynapsefs_cred]">
+			<Property Name="Identity" Value="wplushiramsynapseadlsv2" />
+		</Element>
+	</Model>
+</DataSchemaModel>

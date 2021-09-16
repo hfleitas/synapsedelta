@@ -1,0 +1,5 @@
+CREATE USER [Mary J. Wang] WITHOUT LOGIN;
+
+
+GO
+

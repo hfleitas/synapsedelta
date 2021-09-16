@@ -1,0 +1,5 @@
+CREATE USER [DWLoader] FOR LOGIN [DWLoader];
+
+
+GO
+

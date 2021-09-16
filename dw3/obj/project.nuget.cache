@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "1xLwCUyzC6uflEcp2F8ZBJrJpwtIe9vlF5g06zqDCVs7dUoGErvTy4Ma6qw8guPj2ePI6kZylLj4Nbb5SnrQ0A==",
+  "success": true,
+  "projectFilePath": "c:\\hiram-msft\\synapsedelta\\dw3\\dw3.sqlproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\hiramfleitas\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.0\\microsoft.netframework.referenceassemblies.1.0.0.nupkg.sha512",
+    "C:\\Users\\hiramfleitas\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net46\\1.0.0\\microsoft.netframework.referenceassemblies.net46.1.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

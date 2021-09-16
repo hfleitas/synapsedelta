@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>dw3</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{7538C1B6-81D6-4537-8852-2A0CD78A4E38}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>dw3</RootNamespace>
+    <AssemblyName>dw3</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(NetCoreBuild)' == 'true'" Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <PackageReference Condition="'$(NetCoreBuild)' == 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="SqlAnalyticsConnector\" />
+    <Folder Include="SqlAnalyticsConnector\ExternalTables\" />
+    <Folder Include="Security\" />
+    <Folder Include="Portal\" />
+    <Folder Include="Portal\Functions\" />
+    <Folder Include="ExternalResources\" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Views\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\StoredProcedures\" />
+    <Folder Include="dbo\Security\" />
+    <Folder Include="dbo\ExternalTables\" />
+  </ItemGroup>
+  <Target Name="BeforeBuild">
+    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />
+  </Target>
+  <ItemGroup>
+    <Build Include="SqlAnalyticsConnector\ExternalTables\aztjTutE57K_s1RJx1EGQJE.sql" />
+    <Build Include="SqlAnalyticsConnector\ExternalTables\aWP5do8ePKm_slALvpws9NR.sql" />
+    <Build Include="SqlAnalyticsConnector\ExternalTables\amP8QwkSmu8_sj8AbXEFdLX.sql" />
+    <Build Include="SqlAnalyticsConnector\ExternalTables\aGEtauorUyt_se64pLH4ETa.sql" />
+    <Build Include="SqlAnalyticsConnector\ExternalTables\aessDYnYmOo_s0mWcKcJTZ8.sql" />
+    <Build Include="SqlAnalyticsConnector\ExternalTables\aeCZa2DMdYZ_so3AH5TAYqF.sql" />
+    <Build Include="SqlAnalyticsConnector\ExternalTables\a7yrlc0KwG1_sanW7eyjNwI.sql" />
+    <Build Include="Security\wplushiramsynapsefs_cred.sql" />
+    <Build Include="Security\wplushiramsynapse.sql" />
+    <Build Include="Security\Waltolemew Strickler.sql" />
+    <Build Include="Security\Tobias Domzalski.sql" />
+    <Build Include="Security\Steve Palchuk.sql" />
+    <!-- <Build Include="Security\SqlRoleMembership.sql" /> -->
+    <Build Include="Security\SqlAnalyticsConnector.sql" />
+    <Build Include="Security\Shannon Longhannon.sql" />
+    <Build Include="Security\Señor Uhl.sql" />
+    <Build Include="Security\Portal.sql" />
+    <Build Include="Security\Nana.sql" />
+    <Build Include="Security\Mrs. Nuñez.sql" />
+    <Build Include="Security\Mr. Nuñez.sql" />
+    <Build Include="Security\Master Key.sql" />
+    <Build Include="Security\Mary J. Wang.sql" />
+    <Build Include="Security\LoaderXL_1.sql" />
+    <Build Include="Security\LoaderXL.sql" />
+    <Build Include="Security\Jim Lake Sr..sql" />
+    <Build Include="Security\Jim Lake Jr..sql" />
+    <Build Include="Security\Enrique Nuñez.sql" />
+    <Build Include="Security\Elijah Leslie Pepperjack.sql" />
+    <Build Include="Security\DWLoader_1.sql" />
+    <Build Include="Security\dwloaderrc10_1.sql" />
+    <Build Include="Security\dwloaderrc10.sql" />
+    <Build Include="Security\DWLoader.sql" />
+    <Build Include="Security\Darci Scott.sql" />
+    <Build Include="Security\Coach Lawrence.sql" />
+    <Build Include="Security\Claire Maria Nuñez.sql" />
+    <Build Include="Security\Barbara Lake.sql" />
+    <Build Include="Portal\Functions\fn_PortalAccess.sql" />
+    <Build Include="ExternalResources\wplushiramsynapsefs.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorFileFormat_so3AH5TAYqF.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorFileFormat_slALvpws9NR.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorFileFormat_sj8AbXEFdLX.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorFileFormat_se64pLH4ETa.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorFileFormat_sanW7eyjNwI.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorFileFormat_s1RJx1EGQJE.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorFileFormat_s0mWcKcJTZ8.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorDataSource_so3AH5TAYqF.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorDataSource_slALvpws9NR.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorDataSource_sj8AbXEFdLX.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorDataSource_se64pLH4ETa.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorDataSource_sanW7eyjNwI.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorDataSource_s1RJx1EGQJE.sql" />
+    <Build Include="ExternalResources\SQLAnalyticsConnectorDataSource_s0mWcKcJTZ8.sql" />
+    <Build Include="ExternalResources\skipHeader_CSV.sql" />
+    <!-- <Build Include="dbo\Views\vTableSizes.sql" /> -->
+    <Build Include="dbo\Views\Humans.sql" />
+    <Build Include="dbo\Tables\Target.sql" />
+    <Build Include="dbo\Tables\Table.sql" />
+    <Build Include="dbo\Tables\RRTable.sql" />
+    <Build Include="dbo\Tables\ReportTarget.sql" />
+    <Build Include="dbo\Tables\replTable.sql" />
+    <Build Include="dbo\Tables\parks.sql" />
+    <Build Include="dbo\Tables\Locations.sql" />
+    <Build Include="dbo\Tables\Letters.sql" />
+    <Build Include="dbo\Tables\latestonly.sql" />
+    <Build Include="dbo\Tables\lastchanges.sql" />
+    <Build Include="dbo\Tables\heapTable.sql" />
+    <Build Include="dbo\Tables\Episode.sql" />
+    <Build Include="dbo\Tables\devs.sql" />
+    <Build Include="dbo\Tables\dateformats2.sql" />
+    <Build Include="dbo\Tables\dateformats.sql" />
+    <Build Include="dbo\Tables\Character.sql" />
+    <Build Include="dbo\StoredProcedures\WhoConnected.sql" />
+    <Build Include="dbo\StoredProcedures\sp_spaceused_all.sql" />
+    <Build Include="dbo\StoredProcedures\ShakeNBake.sql" />
+    <Build Include="dbo\StoredProcedures\QueryActivity.sql" />
+    <Build Include="dbo\StoredProcedures\MegreLatest.sql" />
+    <Build Include="dbo\StoredProcedures\GetRowCounts.sql" />
+    <Build Include="dbo\StoredProcedures\DeltaDropTarget.sql" />
+    <Build Include="dbo\StoredProcedures\DeltaDropLastChanges.sql" />
+    <Build Include="dbo\Security\PortalPolicy.sql" />
+    <Build Include="dbo\ExternalTables\extDevs.sql" />
+  </ItemGroup>
+</Project>

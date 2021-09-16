@@ -1,0 +1,5 @@
+CREATE USER [Jim Lake Sr.] WITHOUT LOGIN;
+
+
+GO
+

@@ -1,0 +1,5 @@
+CREATE USER [wplushiramsynapse] FOR EXTERNAL PROVIDER;
+
+
+GO
+

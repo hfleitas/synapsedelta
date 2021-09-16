@@ -1,0 +1,5 @@
+CREATE USER [Barbara Lake] WITHOUT LOGIN;
+
+
+GO
+
