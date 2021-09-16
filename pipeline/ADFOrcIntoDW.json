@@ -34,14 +34,7 @@
 							"useTypeDefault": true
 						}
 					},
-					"enableStaging": true,
-					"stagingSettings": {
-						"linkedServiceName": {
-							"referenceName": "PublicDataset",
-							"type": "LinkedServiceReference"
-						},
-						"path": "dwtemp"
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
