@@ -4,6 +4,10 @@
 		"annotations": [],
 		"type": "SqlPoolTable",
 		"schema": [],
+		"typeProperties": {
+			"schema": "staging",
+			"table": "OrcSample"
+		},
 		"sqlPool": {
 			"referenceName": "wplussynapsedw",
 			"type": "SqlPoolReference"
