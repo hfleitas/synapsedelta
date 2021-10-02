@@ -10,3 +10,9 @@ create user uniparkspowerapp for login uniparkspowerapp
 
 exec sp_addrolemember @rolename = 'db_owner', @membername = 'uniparkspowerapp';
 
+--azure sql db - master
+exec sp_addrolemember @rolename = 'dbmanager', @membername = 'uniparkspowerapp';
+exec sp_droprolemember @rolename = 'dbmanager', @membername = 'uniparkspowerapp';
+--
+exec sp_addrolemember @rolename = 'db_owner', @membername = 'uniparkspowerapp';
+
