@@ -8,7 +8,7 @@
 #.settings/
 
 # Executables
-*.zip
+# *.zip
 *.exe
 *.csv
 *.parquet
