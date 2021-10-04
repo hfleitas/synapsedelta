@@ -239,6 +239,6 @@ set identity_insert t1 off;
 alter table t1 add VerCol rowversion
 
 select * from dbo.t1
-update t1 set b1=31555 where a1=3
+update t1 set b1=2 where a1=3
 select * from t1
 
