@@ -20,7 +20,6 @@ go
 
 select * from t1 where a1=3
 
-
 /*
 refrences:
 https://us.flow.microsoft.com/manage/environments/Default-800d472c-8288-4f27-8978-f726a7a3d1f0/flows/95be371d-9384-4fe6-a4f7-8210bc933df8?backUrl=%2Fflows%2F95be371d-9384-4fe6-a4f7-8210bc933df8%2Fdetails
@@ -33,3 +32,33 @@ https://nextstepcreations.com.au/running-sql-queries-in-powerapps/
 https://dc7669.wordpress.com/2020/08/10/power-automate-get-rowsv2-connector-filter-query-date-fields-how-to/
 https://powerusers.microsoft.com/t5/Webinars-and-Video-Gallery/Using-the-When-an-Item-is-modified-trigger-with-Azure-SQL-DB/td-p/306455
 */
+
+drop table powerautomate.flowstatuslog;
+create table powerautomate.flowstatuslog (
+    Name varchar(120),
+    ReturnCode bit, 
+    Finished datetime
+)
+
+insert powerautomate.flowstatuslog values('sql update', 0)
+insert powerautomate.flowstatuslog (name) values('sql update')
+delete powerautomate.flowstatuslog
+go 
+
+if object_id('PowerAutomate.LogFlowStatus') is not null drop proc PowerAutomate.LogFlowStatus
+go
+create proc PowerAutomate.LogFlowStatus
+    @name varchar(120),
+    @ReturnCode bit
+as 
+    insert powerautomate.flowstatuslog (Name, ReturnCode, Finished)
+    values (
+        @name,
+        @ReturnCode,
+        getdate()
+    )
+go
+select max(finished) as latest, returncode
+from PowerAutomate.flowstatuslog 
+where returncode = 0
+group by returncode
