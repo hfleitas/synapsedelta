@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"sparkJob": {
-						"referenceName": "helloworld",
+						"referenceName": "wordcount",
 						"type": "SparkJobDefinitionReference"
 					}
 				}
