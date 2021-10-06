@@ -12,9 +12,9 @@
 			"file": "abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/wordcount.py",
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "1",
-				"spark.dynamicAllocation.maxExecutors": "4",
-				"spark.autotune.trackingId": "e0439a8c-2990-406b-bc1d-4ba793f620a8"
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "02eb26b1-dc9d-4420-93be-8903e75b89ae"
 			},
 			"args": [
 				"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/shakespeare.txt",
@@ -22,11 +22,11 @@
 			],
 			"jars": [],
 			"files": [],
-			"driverMemory": "400g",
-			"driverCores": 64,
-			"executorMemory": "400g",
-			"executorCores": 64,
-			"numExecutors": 4
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2
 		}
 	}
 }
