@@ -10,11 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "part-00000",
 				"folderPath": "result",
 				"fileSystem": "wplushiramsynapsefs"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": "$",
 			"escapeChar": "$",
 			"quoteChar": "'"
 		},
