@@ -1,0 +1,17 @@
+{
+	"name": "WordCountResult",
+	"properties": {
+		"content": {
+			"query": "--use serverless: default db\n\nSELECT *\nFROM OPENROWSET(\nBULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/resultparquet',\nFORMAT = 'parquet') as resultparquet\n\n\n/* fails due to unicode and \nSELECT *\nFROM OPENROWSET(\n    BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/result/part-00000',\n    FORMAT = 'csv',\n    FIELDTERMINATOR ='',\n    PARSER_VERSION='2.0'\n) WITH ( C1 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n    C2 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n    C3 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8   ) as results\n\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/resultcsv',\n    FORMAT = 'csv',\n    PARSER_VERSION='2.0',\n    -- FIELDTERMINATOR = '$',\n    FIELDQUOTE = '-',\n    ESCAPECHAR = '$'\n)  as results\n*/",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "default",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
