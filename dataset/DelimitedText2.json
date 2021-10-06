@@ -14,9 +14,9 @@
 				"folderPath": "result",
 				"fileSystem": "wplushiramsynapsefs"
 			},
-			"columnDelimiter": ", ",
+			"columnDelimiter": ",",
 			"escapeChar": "",
-			"quoteChar": ""
+			"quoteChar": "'"
 		},
 		"schema": []
 	}
