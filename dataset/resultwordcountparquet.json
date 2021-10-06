@@ -10,7 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "resultparquet",
+				"folderPath": {
+					"value": "@concat('resultparquet_', string(utcnow()))",
+					"type": "Expression"
+				},
 				"fileSystem": "wplushiramsynapsefs"
 			},
 			"compressionCodec": "snappy"
