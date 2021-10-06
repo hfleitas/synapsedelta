@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "helloworld",
+				"name": "wordcount",
 				"type": "SparkJob",
 				"dependsOn": [],
 				"policy": {
@@ -26,7 +26,7 @@
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
-						"activity": "helloworld",
+						"activity": "wordcount",
 						"dependencyConditions": [
 							"Completed"
 						]
