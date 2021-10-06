@@ -217,7 +217,7 @@ select * from dbo.t1
 update t1 set b1=55 where a1=2
 select * from t1
 
-
+/*t1*/
 drop table if exists t1
 CREATE TABLE t1 (
 	a1 INT not null identity(1,1) primary key clustered, 
@@ -241,4 +241,75 @@ alter table t1 add VerCol rowversion
 select * from dbo.t1
 update t1 set b1=987 where a1=3; select getdate()
 select * from t1
+
+
+/*t2*/
+drop table if exists t2
+CREATE TABLE t2 (
+	a1 INT not null identity(1,1) primary key clustered, 
+	b1 INT, 
+	c1 varchar(50), 
+	v1 rowversion
+)
+set identity_insert t2 on;
+	INSERT INTO t2 (a1,b1,c1) VALUES (1, 100, 'hiram')
+	-- INSERT INTO t1 VALUES (1, 1000, 'sam')
+	INSERT INTO t2 (a1,b1,c1) VALUES (2, 200, 'ernest')
+	INSERT INTO t2 (a1,b1,c1) VALUES (3, 300, 'mara')
+	INSERT INTO t2 (a1,b1,c1) VALUES (4, 400, 'neelie')
+	INSERT INTO t2 (a1,b1,c1) VALUES (5, 1000, 'sam')
+set identity_insert t2 off;
+
+/*t3*/
+drop table if exists t3
+create table t3 (
+	ww INT not null identity(1,1) primary key clustered, 
+	xx datetime, 
+	yy varchar(50), 
+	zz rowversion
+)
+insert t3 (xx,yy) values(getdate(),'free text')
+insert t3 (xx,yy) values(getdate(),'lorem ipsum')
+insert t3 (xx,yy) values(getdate(),'lorem ipsum')
+insert t3 (xx,yy) values(getdate(),'lorem ipsum')
+insert t3 (xx,yy) values(getdate(),'lorem ipsum')
+insert t3 (xx,yy) values(getdate(),'fox jumps')
+insert t3 (xx,yy) values(getdate(),'lorem ipsum')
+select * from t3
+
+
+/*DW*
+/*t2*/
+if object_id('t2') is not null drop table t2
+CREATE TABLE t2 (
+	a1 INT, 
+	b1 INT, 
+	c1 varchar(50)
+)
+
+INSERT INTO t2 VALUES (1, 100, 'hiram')
+INSERT INTO t2 VALUES (2, 200, 'ernest')
+INSERT INTO t2 VALUES (3, 300, 'mara')
+INSERT INTO t2 VALUES (4, 400, 'neelie')
+INSERT INTO t2 VALUES (5, 1000, 'sam')
+
+
+/*t3*/
+if object_id('t3') is not null drop table t3
+create table t3 (
+	ww int, 
+	xx datetime, 
+	yy varchar(50)
+)
+insert t3 select 1,getdate(),'free text'
+insert t3 select 2,getdate(),'lorem ipsum'
+insert t3 select 3,getdate(),'lorem ipsum'
+insert t3 select 4,getdate(),'lorem ipsum'
+insert t3 select 5,getdate(),'lorem ipsum'
+insert t3 select 6,getdate(),'fox jumps'
+insert t3 select 7,getdate(),'lorem ipsum'
+
+select * from t2
+select * from t3
+
 
