@@ -1,6 +1,7 @@
 {
 	"name": "resultwordcountparquet",
 	"properties": {
+		"description": "@concat('resultparquet_', string(utcnow()))",
 		"linkedServiceName": {
 			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
@@ -10,10 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": {
-					"value": "@concat('resultparquet_', string(utcnow()))",
-					"type": "Expression"
-				},
+				"folderPath": "resultparquet",
 				"fileSystem": "wplushiramsynapsefs"
 			},
 			"compressionCodec": "snappy"
