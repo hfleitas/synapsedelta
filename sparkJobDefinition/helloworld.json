@@ -1,0 +1,29 @@
+{
+	"name": "helloworld",
+	"properties": {
+		"targetBigDataPool": {
+			"referenceName": "XXL",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "2.4",
+		"language": "python",
+		"jobProperties": {
+			"name": "helloworld",
+			"file": "abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/batchjobs/Spark%20job%20definition%201/helloworld.py",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "4",
+				"spark.autotune.trackingId": "40d6f0d4-275f-437f-8503-023ade83c9e0"
+			},
+			"args": [],
+			"jars": [],
+			"files": [],
+			"driverMemory": "400g",
+			"driverCores": 64,
+			"executorMemory": "400g",
+			"executorCores": 64,
+			"numExecutors": 4
+		}
+	}
+}
