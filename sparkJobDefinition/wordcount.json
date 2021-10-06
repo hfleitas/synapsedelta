@@ -14,14 +14,16 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "02eb26b1-dc9d-4420-93be-8903e75b89ae"
+				"spark.autotune.trackingId": "4c9ea2c7-568b-4a7d-84bd-1d5eb4e1101d"
 			},
 			"args": [
 				"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/shakespeare.txt",
 				"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/result"
 			],
 			"jars": [],
-			"files": [],
+			"files": [
+				"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/shakespeare.txt abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/result"
+			],
 			"driverMemory": "28g",
 			"driverCores": 4,
 			"executorMemory": "28g",
