@@ -22,7 +22,7 @@
 				}
 			},
 			{
-				"name": "Notebook1",
+				"name": "helloworld",
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
