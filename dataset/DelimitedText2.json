@@ -15,7 +15,7 @@
 				"fileSystem": "wplushiramsynapsefs"
 			},
 			"columnDelimiter": "",
-			"escapeChar": "\\",
+			"escapeChar": "",
 			"quoteChar": ""
 		},
 		"schema": []
