@@ -1592,7 +1592,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"sparkJob": {
-								"referenceName": "helloworld",
+								"referenceName": "wordcount",
 								"type": "SparkJobDefinitionReference"
 							}
 						}
@@ -1632,7 +1632,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/sparkJobDefinitions/helloworld')]",
+				"[concat(variables('workspaceId'), '/sparkJobDefinitions/wordcount')]",
 				"[concat(variables('workspaceId'), '/notebooks/helloworld')]"
 			]
 		},
@@ -5511,7 +5511,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/helloworld')]",
+			"name": "[concat(parameters('workspaceName'), '/wordcount')]",
 			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -5522,22 +5522,27 @@
 				"requiredSparkVersion": "2.4",
 				"language": "python",
 				"jobProperties": {
-					"name": "helloworld",
-					"file": "abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/batchjobs/Spark%20job%20definition%201/helloworld.py",
+					"name": "wordcount",
+					"file": "abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/wordcount.py",
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "1",
-						"spark.dynamicAllocation.maxExecutors": "4",
-						"spark.autotune.trackingId": "40d6f0d4-275f-437f-8503-023ade83c9e0"
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "4c9ea2c7-568b-4a7d-84bd-1d5eb4e1101d"
 					},
-					"args": [],
+					"args": [
+						"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/shakespeare.txt",
+						"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/result"
+					],
 					"jars": [],
-					"files": [],
-					"driverMemory": "400g",
-					"driverCores": 64,
-					"executorMemory": "400g",
-					"executorCores": 64,
-					"numExecutors": 4
+					"files": [
+						"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/shakespeare.txt abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/result"
+					],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
 				}
 			},
 			"dependsOn": []
