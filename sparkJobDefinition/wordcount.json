@@ -14,7 +14,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3d9e9a0b-7c67-4b19-a1c2-267c2adf7bdc"
+				"spark.autotune.trackingId": "92d60163-1901-4958-8b85-68639244b63f"
 			},
 			"args": [
 				"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/shakespeare.txt",
