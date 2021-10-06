@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText2",
+	"name": "resultwordcount",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
