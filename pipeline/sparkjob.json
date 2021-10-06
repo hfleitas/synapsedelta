@@ -5,14 +5,7 @@
 			{
 				"name": "wordcount",
 				"type": "SparkJob",
-				"dependsOn": [
-					{
-						"activity": "Copy Result",
-						"dependencyConditions": [
-							"Skipped"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -58,7 +51,14 @@
 			{
 				"name": "Copy Result",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "wordcount",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
