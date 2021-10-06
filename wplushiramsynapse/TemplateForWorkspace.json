@@ -1579,7 +1579,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "helloworld",
+						"name": "wordcount",
 						"type": "SparkJob",
 						"dependsOn": [],
 						"policy": {
@@ -1598,11 +1598,11 @@
 						}
 					},
 					{
-						"name": "Notebook1",
+						"name": "helloworld",
 						"type": "SynapseNotebook",
 						"dependsOn": [
 							{
-								"activity": "helloworld",
+								"activity": "wordcount",
 								"dependencyConditions": [
 									"Completed"
 								]
@@ -1623,6 +1623,73 @@
 							},
 							"snapshot": true
 						}
+					},
+					{
+						"name": "Copy Result",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "wordcount",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "result",
+									"wildcardFileName": "part-*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "resultwordcounttxt",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "resultwordcountparquet",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -1633,7 +1700,9 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/sparkJobDefinitions/wordcount')]",
-				"[concat(variables('workspaceId'), '/notebooks/helloworld')]"
+				"[concat(variables('workspaceId'), '/notebooks/helloworld')]",
+				"[concat(variables('workspaceId'), '/datasets/resultwordcounttxt')]",
+				"[concat(variables('workspaceId'), '/datasets/resultwordcountparquet')]"
 			]
 		},
 		{
@@ -5528,16 +5597,14 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "4c9ea2c7-568b-4a7d-84bd-1d5eb4e1101d"
+						"spark.autotune.trackingId": "92d60163-1901-4958-8b85-68639244b63f"
 					},
 					"args": [
 						"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/shakespeare.txt",
 						"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/result"
 					],
 					"jars": [],
-					"files": [
-						"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/shakespeare.txt abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/result"
-					],
+					"files": [],
 					"driverMemory": "28g",
 					"driverCores": 4,
 					"executorMemory": "28g",
@@ -5559,6 +5626,130 @@
 			},
 			"dependsOn": [],
 			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WordCountResult')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "--use serverless: default db\n\nSELECT count(*)\nFROM OPENROWSET(\nBULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/resultparquet',\nFORMAT = 'parquet') as resultparquet\n\n\n/* fails due to unicode and \nSELECT *\nFROM OPENROWSET(\n    BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/result/part-00000',\n    FORMAT = 'csv',\n    FIELDTERMINATOR ='',\n    PARSER_VERSION='2.0'\n) WITH ( C1 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n    C2 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n    C3 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8   ) as results\n\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/resultcsv',\n    FORMAT = 'csv',\n    PARSER_VERSION='2.0',\n    -- FIELDTERMINATOR = '$',\n    FIELDQUOTE = '-',\n    ESCAPECHAR = '$'\n)  as results\n*/",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "default",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Binary1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "part-00000",
+						"folderPath": "result",
+						"fileSystem": "wplushiramsynapsefs"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DelimitedText1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "resultcsv",
+						"fileSystem": "wplushiramsynapsefs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/resultwordcounttxt')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "result",
+						"fileSystem": "wplushiramsynapsefs"
+					},
+					"columnDelimiter": "$",
+					"escapeChar": "$",
+					"quoteChar": "'"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/resultwordcountparquet')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "@concat('resultparquet_', string(utcnow()))",
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "resultparquet",
+						"fileSystem": "wplushiramsynapsefs"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
 		}
 	]
 }
