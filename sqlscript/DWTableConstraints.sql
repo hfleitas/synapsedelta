@@ -311,5 +311,3 @@ insert t3 select 7,getdate(),'lorem ipsum'
 
 select * from t2
 select * from t3
-
-
