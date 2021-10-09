@@ -316,7 +316,10 @@ if object_id('DemoTables') is not null drop view DemoTables
 go 
 create view DemoTables 
 as 
-	select '['+table_schema+'].['+table_name+']' as DemoTables
+	--select '['+table_schema+'].['+table_name+']' as DemoTables
+	select 'Data' as [Value]
+	union
+	select table_name as [Value]
 	from information_schema.tables
 	where table_name in ('t1', 't2', 't3') and table_schema = 'dbo'
 go
