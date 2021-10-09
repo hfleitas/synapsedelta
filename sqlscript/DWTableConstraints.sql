@@ -311,3 +311,14 @@ insert t3 select 7,getdate(),'lorem ipsum'
 
 select * from t2
 select * from t3
+
+if object_id('DemoTables') is not null drop view DemoTables
+go 
+create view DemoTables 
+as 
+	select '['+table_schema+'].['+table_name+']' as DemoTables
+	from information_schema.tables
+	where table_name in ('t1', 't2', 't3') and table_schema = 'dbo'
+go
+
+select * from DemoTables
