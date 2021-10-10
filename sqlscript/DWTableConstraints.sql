@@ -279,6 +279,10 @@ select * from t3
 
 
 /*DW*
+/*t1*/
+insert t3 select 8,getdate(),'lorem ipsum'
+
+
 /*t2*/
 if object_id('t2') is not null drop table t2
 CREATE TABLE t2 (
@@ -293,6 +297,21 @@ INSERT INTO t2 VALUES (3, 300, 'mara')
 INSERT INTO t2 VALUES (4, 400, 'neelie')
 INSERT INTO t2 VALUES (5, 1000, 'sam')
 
+insert t2 select 6,505,'lorem ipsum'
+insert t2 select 7,505,'lorem ipsum'
+insert t2 select 8,505,'lorem ipsum'
+insert t2 select 9,505,'lorem ipsum'
+insert t2 select 10,505,'lorem ipsum'
+insert t2 select 11,505,'lorem ipsum'
+insert t2 select 12,505,'lorem ipsum'
+insert t2 select 13,505,'lorem ipsum'
+insert t2 select 14,505,'lorem ipsum'
+insert t2 select 15,505,'lorem ipsum'
+insert t2 select 16,505,'lorem ipsum'
+insert t2 select 17,505,'lorem ipsum'
+insert t2 select 18,505,'lorem ipsum'
+insert t2 select 19,505,'lorem ipsum'
+insert t2 select 20,505,'lorem ipsum'
 
 /*t3*/
 if object_id('t3') is not null drop table t3
@@ -308,6 +327,20 @@ insert t3 select 4,getdate(),'lorem ipsum'
 insert t3 select 5,getdate(),'lorem ipsum'
 insert t3 select 6,getdate(),'fox jumps'
 insert t3 select 7,getdate(),'lorem ipsum'
+
+insert t3 select 8,getdate(),'lorem ipsum'
+insert t3 select 9,getdate(),'lorem ipsum'
+insert t3 select 10,getdate(),'lorem ipsum'
+insert t3 select 11,getdate(),'lorem ipsum'
+insert t3 select 12,getdate(),'lorem ipsum'
+insert t3 select 13,getdate(),'lorem ipsum'
+insert t3 select 14,getdate(),'lorem ipsum'
+insert t3 select 15,getdate(),'lorem ipsum'
+insert t3 select 16,getdate(),'lorem ipsum'
+insert t3 select 17,getdate(),'lorem ipsum'
+insert t3 select 18,getdate(),'lorem ipsum'
+insert t3 select 19,getdate(),'lorem ipsum'
+insert t3 select 20,getdate(),'lorem ipsum'
 
 select * from t2
 select * from t3
