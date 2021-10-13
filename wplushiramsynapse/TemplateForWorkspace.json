@@ -1758,6 +1758,57 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Binary1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "part-00000",
+						"folderPath": "result",
+						"fileSystem": "wplushiramsynapsefs"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DelimitedText1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "resultcsv",
+						"fileSystem": "wplushiramsynapsefs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/DestinationDataset_nuj')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -2076,6 +2127,59 @@
 						"fileSystem": "nyctaxistaging"
 					}
 				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/resultwordcountparquet')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "@concat('resultparquet_', string(utcnow()))",
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "resultparquet",
+						"fileSystem": "wplushiramsynapsefs"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/resultwordcounttxt')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "result",
+						"fileSystem": "wplushiramsynapsefs"
+					},
+					"columnDelimiter": "$",
+					"escapeChar": "$",
+					"quoteChar": "'"
+				},
+				"schema": []
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
@@ -2853,6 +2957,26 @@
 					},
 					"currentConnection": {
 						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WordCountResult')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "--use serverless: default db\n\nSELECT count(*)\nFROM OPENROWSET(\nBULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/resultparquet',\nFORMAT = 'parquet') as resultparquet\n\n\n/* fails due to unicode and \nSELECT *\nFROM OPENROWSET(\n    BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/result/part-00000',\n    FORMAT = 'csv',\n    FIELDTERMINATOR ='',\n    PARSER_VERSION='2.0'\n) WITH ( C1 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n    C2 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n    C3 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8   ) as results\n\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/resultcsv',\n    FORMAT = 'csv',\n    PARSER_VERSION='2.0',\n    -- FIELDTERMINATOR = '$',\n    FIELDQUOTE = '-',\n    ESCAPECHAR = '$'\n)  as results\n*/",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "default",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -5628,128 +5752,155 @@
 			"location": "eastus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/WordCountResult')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"name": "[concat(parameters('workspaceName'), '/SparkSQLCTE')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"content": {
-					"query": "--use serverless: default db\n\nSELECT count(*)\nFROM OPENROWSET(\nBULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/resultparquet',\nFORMAT = 'parquet') as resultparquet\n\n\n/* fails due to unicode and \nSELECT *\nFROM OPENROWSET(\n    BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/result/part-00000',\n    FORMAT = 'csv',\n    FIELDTERMINATOR ='',\n    PARSER_VERSION='2.0'\n) WITH ( C1 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n    C2 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n    C3 nVARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8   ) as results\n\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/resultcsv',\n    FORMAT = 'csv',\n    PARSER_VERSION='2.0',\n    -- FIELDTERMINATOR = '$',\n    FIELDQUOTE = '-',\n    ESCAPECHAR = '$'\n)  as results\n*/",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "default",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "XXL",
+					"type": "BigDataPoolReference"
 				},
-				"type": "SqlQuery"
+				"sessionProperties": {
+					"driverMemory": "400g",
+					"driverCores": 64,
+					"executorMemory": "400g",
+					"executorCores": 64,
+					"numExecutors": 4,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "4",
+						"spark.dynamicAllocation.maxExecutors": "4"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
+						"name": "XXL",
+						"type": "Spark",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 64,
+						"memory": 400,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "python"
+							}
+						},
+						"source": [
+							"%%pyspark\n",
+							"df = spark.sql(\"SELECT * FROM `default`.`lastchanges`\")\n",
+							"# df.show(10)"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"select * from default.lastchanges"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql \r\n",
+							"with t as (\r\n",
+							"    SELECT 'a' as x,'b' as y\r\n",
+							") \r\n",
+							"select * from t\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 24
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"\r\n",
+							"WITH CTE \r\n",
+							"AS \r\n",
+							"    (SELECT key as x, time, deleted FROM default.lastchanges)\r\n",
+							"\r\n",
+							"SELECT * FROM CTE"
+						],
+						"outputs": [],
+						"execution_count": 6
+					}
+				]
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Binary1')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "part-00000",
-						"folderPath": "result",
-						"fileSystem": "wplushiramsynapsefs"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/DelimitedText1')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "resultcsv",
-						"fileSystem": "wplushiramsynapsefs"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/resultwordcounttxt')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "result",
-						"fileSystem": "wplushiramsynapsefs"
-					},
-					"columnDelimiter": "$",
-					"escapeChar": "$",
-					"quoteChar": "'"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/resultwordcountparquet')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"description": "@concat('resultparquet_', string(utcnow()))",
-				"linkedServiceName": {
-					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "resultparquet",
-						"fileSystem": "wplushiramsynapsefs"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
-			]
 		}
 	]
 }
