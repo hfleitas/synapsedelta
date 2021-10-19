@@ -20,6 +20,9 @@
 		"wplushiramsynapseLoaderXL_connectionString": {
 			"value": ""
 		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://synapseAKV.vault.azure.net/"
+		},
 		"LabFilesZip_properties_typeProperties_url": {
 			"value": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
 		},
@@ -31,6 +34,9 @@
 		},
 		"PublicDataset_sasUri": {
 			"value": ""
+		},
+		"powerapps_properties_typeProperties_connectionString_secretName": {
+			"value": "powerappssqlconnectionstring"
 		},
 		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
