@@ -19,14 +19,16 @@
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "4d8e220b-6f1b-4a98-8844-1e74cc0fa8f7"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_spark",
-				"display_name": "Synapse Spark"
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "scala"
@@ -41,11 +43,12 @@
 					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.1",
-				"nodeCount": 3,
-				"cores": 16,
-				"memory": 112,
-				"extraHeader": null
-			}
+				"nodeCount": 5,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -60,12 +63,11 @@
 				"source": [
 					"# Delta Demo\r\n",
 					"\r\n",
-					"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/Delta.json))\r\n",
+					"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/DeltaChanges3.json))\r\n",
 					"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
 					"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
 					"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -84,7 +86,6 @@
 				"source": [
 					"spark.version"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -96,8 +97,7 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"attachments": null,
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -121,7 +121,6 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -142,7 +141,6 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -167,7 +165,6 @@
 					"\r\n",
 					"// targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -191,7 +188,6 @@
 					"%%sql\r\n",
 					"select * from target order by key"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -215,7 +211,6 @@
 					"%%sql\r\n",
 					"describe extended target"
 				],
-				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -242,7 +237,6 @@
 					"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
 					").toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -256,8 +250,7 @@
 				},
 				"source": [
 					"### SQL Example"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -292,7 +285,6 @@
 					"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 					"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -317,7 +309,6 @@
 					"val changesDF = spark.sql(\"select * from changes\")\r\n",
 					"changesDF.head()"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -337,7 +328,6 @@
 				"source": [
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
 				],
-				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -357,7 +347,6 @@
 				"source": [
 					"latestChangeForEachKey.show() // shows the latest change for each key"
 				],
-				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -377,7 +366,6 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -401,7 +389,6 @@
 					"%%sql\r\n",
 					"select * from lastchanges"
 				],
-				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -423,7 +410,6 @@
 					"\r\n",
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -437,8 +423,7 @@
 				},
 				"source": [
 					"### SCALA Merge example (Skipped)"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -467,7 +452,6 @@
 					"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
 					"//   .execute()"
 				],
-				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -492,7 +476,6 @@
 					"\r\n",
 					"// lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
 				],
-				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -514,8 +497,7 @@
 					"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
 					"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas\r\n",
 					"* https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example-part-2/"
-				],
-				"attachments": null
+				]
 			}
 		]
 	}
