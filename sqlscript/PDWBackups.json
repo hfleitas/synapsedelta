@@ -1,0 +1,17 @@
+{
+	"name": "PDWBackups",
+	"properties": {
+		"content": {
+			"query": "select   *\nfrom     sys.pdw_loader_backup_runs\norder by run_id desc\n;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
