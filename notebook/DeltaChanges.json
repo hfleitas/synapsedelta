@@ -19,11 +19,13 @@
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "2afe70ff-4c53-498e-86c5-8070eb4f519d"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_spark",
 				"display_name": "Synapse Spark"
@@ -44,10 +46,24 @@
 				"nodeCount": 10,
 				"cores": 64,
 				"memory": 400,
-				"extraHeader": null
-			}
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Create the class"
+				]
+			},
 			{
 				"cell_type": "code",
 				"source": [
@@ -57,8 +73,20 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 1
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Create the sequence data for changes"
+				]
 			},
 			{
 				"cell_type": "code",
@@ -94,8 +122,20 @@
 					"//   ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
 					"// ).toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"attachments": null,
 				"execution_count": 2
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Read changes using context sql"
+				]
 			},
 			{
 				"cell_type": "code",
@@ -114,8 +154,20 @@
 				"source": [
 					"val changesDF = spark.sql(\"select * from changes\")"
 				],
-				"attachments": null,
 				"execution_count": 3
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Use expession to get latest changes only"
+				]
 			},
 			{
 				"cell_type": "code",
@@ -135,8 +187,20 @@
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestChangeForEachKey.show()"
 				],
-				"attachments": null,
 				"execution_count": 5
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Create temp view of latest changes"
+				]
 			},
 			{
 				"cell_type": "code",
@@ -155,8 +219,20 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
-				"attachments": null,
 				"execution_count": 6
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Write latest changes to dedicated pool"
+				]
 			},
 			{
 				"cell_type": "code",
@@ -175,7 +251,6 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"attachments": null,
 				"execution_count": 7
 			}
 		]
