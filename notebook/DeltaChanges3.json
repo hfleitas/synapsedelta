@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "60705b82-670d-4b25-9128-4b9f6efa5d1a"
+				"spark.autotune.trackingId": "a93c7a50-b671-44f2-88f0-787eed7bc182"
 			}
 		},
 		"metadata": {
@@ -158,6 +158,9 @@
 					"collapsed": true
 				},
 				"source": [
+					"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+					"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+					"\r\n",
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
 				"execution_count": 20
@@ -293,7 +296,7 @@
 					"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 					"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 				],
-				"execution_count": 9
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
