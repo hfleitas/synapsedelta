@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4d8e220b-6f1b-4a98-8844-1e74cc0fa8f7"
+				"spark.autotune.trackingId": "60705b82-670d-4b25-9128-4b9f6efa5d1a"
 			}
 		},
 		"metadata": {
@@ -86,7 +86,7 @@
 				"source": [
 					"spark.version"
 				],
-				"execution_count": 1
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -97,7 +97,7 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"execution_count": 3
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -121,7 +121,7 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"execution_count": 3
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -141,7 +141,7 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"execution_count": 4
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -158,14 +158,9 @@
 					"collapsed": true
 				},
 				"source": [
-					"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
-					"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
-					"\r\n",
-					"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
-					"\r\n",
-					"// targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
+					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
-				"execution_count": 5
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +206,20 @@
 					"%%sql\r\n",
 					"describe extended target"
 				],
-				"execution_count": 7
+				"execution_count": 22
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"![ShakeTimeToShakeGIF](https://github.com/hfleitas/synapsedelta/raw/main/ShakeTimeToShakeGIF.gif)"
+				]
 			},
 			{
 				"cell_type": "code",
@@ -237,7 +245,7 @@
 					"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
 					").toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"execution_count": 8
+				"execution_count": 24
 			},
 			{
 				"cell_type": "markdown",
