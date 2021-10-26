@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a93c7a50-b671-44f2-88f0-787eed7bc182"
+				"spark.autotune.trackingId": "4089fe38-0b64-4fb9-a04f-106e1144f568"
 			}
 		},
 		"metadata": {
@@ -97,7 +97,7 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"execution_count": 17
+				"execution_count": 55
 			},
 			{
 				"cell_type": "code",
@@ -121,7 +121,7 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"execution_count": 18
+				"execution_count": 56
 			},
 			{
 				"cell_type": "code",
@@ -141,7 +141,7 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"execution_count": 19
+				"execution_count": 57
 			},
 			{
 				"cell_type": "code",
@@ -163,7 +163,7 @@
 					"\r\n",
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
-				"execution_count": 20
+				"execution_count": 58
 			},
 			{
 				"cell_type": "code",
@@ -186,7 +186,7 @@
 					"%%sql\r\n",
 					"select * from target order by key"
 				],
-				"execution_count": 6
+				"execution_count": 59
 			},
 			{
 				"cell_type": "code",
@@ -209,7 +209,7 @@
 					"%%sql\r\n",
 					"describe extended target"
 				],
-				"execution_count": 22
+				"execution_count": 60
 			},
 			{
 				"cell_type": "markdown",
@@ -221,7 +221,7 @@
 					}
 				},
 				"source": [
-					"![ShakeTimeToShakeGIF](https://github.com/hfleitas/synapsedelta/raw/main/ShakeTimeToShakeGIF.gif)"
+					"# 🧂 Shake it up"
 				]
 			},
 			{
@@ -248,7 +248,7 @@
 					"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
 					").toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"execution_count": 24
+				"execution_count": 61
 			},
 			{
 				"cell_type": "markdown",
@@ -296,7 +296,7 @@
 					"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 					"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 				],
-				"execution_count": 25
+				"execution_count": 62
 			},
 			{
 				"cell_type": "code",
@@ -313,14 +313,10 @@
 					"collapsed": true
 				},
 				"source": [
-					"// import io.delta.tables._\r\n",
-					"// import org.apache.spark.sql.functions._\r\n",
-					"\r\n",
-					"// val deltaTable = DeltaTable.forName(\"target\")\r\n",
 					"val changesDF = spark.sql(\"select * from changes\")\r\n",
 					"changesDF.head()"
 				],
-				"execution_count": 10
+				"execution_count": 63
 			},
 			{
 				"cell_type": "code",
@@ -337,9 +333,14 @@
 					"collapsed": true
 				},
 				"source": [
-					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
+					"val latestChangeForEachKey = changesDF.\r\n",
+					"selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").\r\n",
+					"groupBy(\"key\").\r\n",
+					"agg(max(\"otherCols\").\r\n",
+					"as(\"latest\")).\r\n",
+					"selectExpr(\"key\", \"latest.*\")"
 				],
-				"execution_count": 11
+				"execution_count": 64
 			},
 			{
 				"cell_type": "code",
@@ -358,7 +359,7 @@
 				"source": [
 					"latestChangeForEachKey.show() // shows the latest change for each key"
 				],
-				"execution_count": 12
+				"execution_count": 65
 			},
 			{
 				"cell_type": "code",
@@ -377,7 +378,7 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
-				"execution_count": 13
+				"execution_count": 66
 			},
 			{
 				"cell_type": "code",
@@ -400,7 +401,7 @@
 					"%%sql\r\n",
 					"select * from lastchanges"
 				],
-				"execution_count": 14
+				"execution_count": 67
 			},
 			{
 				"cell_type": "code",
@@ -417,11 +418,9 @@
 					"collapsed": true
 				},
 				"source": [
-					"//instead of delta to read as ext table in dedicated pool\r\n",
-					"\r\n",
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"execution_count": 15
+				"execution_count": 68
 			},
 			{
 				"cell_type": "markdown",
@@ -480,14 +479,16 @@
 					"collapsed": true
 				},
 				"source": [
-					"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
-					"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+					"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+					"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
 					"\r\n",
 					"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
 					"\r\n",
-					"// lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
+					"lastchangesDF.write.option(Constants.\r\n",
+					"SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").\r\n",
+					"synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
 				],
-				"execution_count": 17
+				"execution_count": 70
 			},
 			{
 				"cell_type": "markdown",
