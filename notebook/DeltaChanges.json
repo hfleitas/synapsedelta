@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a9a51d89-296d-43b8-989e-fb0d2bd99cdb"
+				"spark.autotune.trackingId": "2786881f-b91b-4e62-94bf-a32da2a89940"
 			}
 		},
 		"metadata": {
@@ -73,7 +73,7 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"execution_count": 1
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -122,7 +122,7 @@
 					"//   ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
 					"// ).toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"execution_count": 2
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
