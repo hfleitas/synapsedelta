@@ -1,0 +1,17 @@
+{
+	"name": "Create external table with SQL",
+	"properties": {
+		"content": {
+			"query": "/* Note: this script is filtered on a specific month. You can modify the location to read the entire dataset. */\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat')\n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat]\n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'nyctlc_azureopendatastorage_blob_core_windows_net')\n\tCREATE EXTERNAL DATA SOURCE [nyctlc_azureopendatastorage_blob_core_windows_net]\n\tWITH (\n\t\tLOCATION = 'wasbs://nyctlc@azureopendatastorage.blob.core.windows.net',\n\t\tTYPE     = HADOOP\n\t)\nGO\n\nCREATE EXTERNAL TABLE nyc_tlc_yellow_trip_ext (\n\t[vendorID] varchar(8000),\n\t[tpepPickupDateTime] datetime2(7),\n\t[tpepDropoffDateTime] datetime2(7),\n\t[passengerCount] int,\n\t[tripDistance] float,\n\t[puLocationId] varchar(8000),\n\t[doLocationId] varchar(8000),\n\t[startLon] float,\n\t[startLat] float,\n\t[endLon] float,\n\t[endLat] float,\n\t[rateCodeId] int,\n\t[storeAndFwdFlag] varchar(8000),\n\t[paymentType] varchar(8000),\n\t[fareAmount] float,\n\t[extra] float,\n\t[mtaTax] float,\n\t[improvementSurcharge] varchar(8000),\n\t[tipAmount] float,\n\t[tollsAmount] float,\n\t[totalAmount] float\n\t)\n\tWITH (\n    LOCATION = 'yellow/puYear=2014/puMonth=3/',\n    -- LOCATION = 'yellow'\n\tDATA_SOURCE = [nyctlc_azureopendatastorage_blob_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat],\n\tREJECT_TYPE = VALUE,\n\tREJECT_VALUE = 0\n\t)\nGO\n\nSELECT TOP 100 * FROM nyc_tlc_yellow_trip_ext\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "wplussynapsedw",
+				"poolName": "wplussynapsedw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
