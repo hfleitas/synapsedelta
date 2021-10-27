@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2afe70ff-4c53-498e-86c5-8070eb4f519d"
+				"spark.autotune.trackingId": "1f1c3eec-8119-48da-9987-034d4906d039"
 			}
 		},
 		"metadata": {
@@ -61,7 +61,7 @@
 					}
 				},
 				"source": [
-					"Create the class"
+					"## 0. Create the class"
 				]
 			},
 			{
@@ -85,7 +85,7 @@
 					}
 				},
 				"source": [
-					"Create the sequence data for changes"
+					"## 1. Add sequence of changes"
 				]
 			},
 			{
@@ -134,7 +134,7 @@
 					}
 				},
 				"source": [
-					"Read changes using context sql"
+					"## 2. Read changes into DF"
 				]
 			},
 			{
@@ -166,7 +166,7 @@
 					}
 				},
 				"source": [
-					"Use expession to get latest changes only"
+					"## 3. Expression for only latest changes"
 				]
 			},
 			{
@@ -199,7 +199,7 @@
 					}
 				},
 				"source": [
-					"Create temp view of latest changes"
+					"## 4. Temp view of latest changes"
 				]
 			},
 			{
