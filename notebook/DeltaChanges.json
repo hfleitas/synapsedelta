@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1f1c3eec-8119-48da-9987-034d4906d039"
+				"spark.autotune.trackingId": "ed6664e0-1f74-4753-935a-c284d7e644bf"
 			}
 		},
 		"metadata": {
@@ -231,7 +231,7 @@
 					}
 				},
 				"source": [
-					"Write latest changes to dedicated pool"
+					"## 5. Write latest changes to DW"
 				]
 			},
 			{
