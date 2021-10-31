@@ -570,6 +570,56 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaPipeline')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeltaUpdates",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeltaLake1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Delta"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/DeltaLake1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/DevOpsCICD')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -2141,6 +2191,60 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/moviesCSV')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "PublicDataset",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "moviesDB.csv",
+						"folderPath": "SampleData",
+						"container": "mycontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "movie",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "genres",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "Rating",
+						"type": "String"
+					},
+					{
+						"name": "RottenTomato",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/PublicDataset')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/resultwordcountparquet')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -2601,6 +2705,50 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaLake1')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "moviesCSV",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "DerivedColumn1"
+						},
+						{
+							"name": "AlterRow1"
+						},
+						{
+							"name": "Filter1"
+						}
+					],
+					"script": "source(output(\n\t\tmovie as integer,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as short,\n\t\tRating as short,\n\t\tRottenTomato as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nFilter1 derive(Rating = iif(year==1988,1,toInteger(Rating)),\n\t\tyear = iif(year==1960,2021,toInteger(year))) ~> DerivedColumn1\nDerivedColumn1 alterRow(updateIf(year==1988),\n\tinsertIf(year==2021),\n\tdeleteIf(year==1950)) ~> AlterRow1\nsource1 filter(year == 1988 || year == 1960 || year == 1950) ~> Filter1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delta',\n\tfileSystem: 'mycontainer',\n\tfolderPath: 'moviesdelta',\n\tmergeSchema: false,\n\tautoCompact: false,\n\toptimizedWrite: false,\n\tvacuum: 0,\n\tdeletable:true,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['movie','year'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/moviesCSV')]",
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
 			"type": "Microsoft.Synapse/workspaces/credentials",
 			"apiVersion": "2019-06-01-preview",
@@ -2617,6 +2765,26 @@
 			"properties": {
 				"content": {
 					"query": "IF NOT EXISTS (SELECT * FROM sys.objects O JOIN sys.schemas S ON O.schema_id = S.schema_id WHERE O.NAME = 'devs' AND O.TYPE = 'U' AND S.NAME = 'dbo')\nCREATE TABLE dbo.devs\n\t(\n\t [C1] nvarchar(4000),\n\t [C2] nvarchar(4000)\n\t)\nWITH\n\t(\n\tDISTRIBUTION = ROUND_ROBIN,\n\t CLUSTERED COLUMNSTORE INDEX\n\t -- HEAP\n\t)\nGO\n\n--Uncomment the 4 lines below to create a stored procedure for data pipeline orchestration​\n--CREATE PROC bulk_load_devs\n--AS\n--BEGIN\nCOPY INTO dbo.devs\n(C1 1, C2 2)\nFROM 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/devs.csv'\nWITH\n(\n\tFILE_TYPE = 'CSV'\n\t,MAXERRORS = 0\n\t,ERRORFILE = 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/'\n)\n--END\nGO\n\nSELECT TOP 100 * FROM dbo.devs\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Create external table with SQL')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "/* Note: this script is filtered on a specific month. You can modify the location to read the entire dataset. */\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat')\n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat]\n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'nyctlc_azureopendatastorage_blob_core_windows_net')\n\tCREATE EXTERNAL DATA SOURCE [nyctlc_azureopendatastorage_blob_core_windows_net]\n\tWITH (\n\t\tLOCATION = 'wasbs://nyctlc@azureopendatastorage.blob.core.windows.net',\n\t\tTYPE     = HADOOP\n\t)\nGO\n\nCREATE EXTERNAL TABLE nyc_tlc_yellow_trip_ext (\n\t[vendorID] varchar(8000),\n\t[tpepPickupDateTime] datetime2(7),\n\t[tpepDropoffDateTime] datetime2(7),\n\t[passengerCount] int,\n\t[tripDistance] float,\n\t[puLocationId] varchar(8000),\n\t[doLocationId] varchar(8000),\n\t[startLon] float,\n\t[startLat] float,\n\t[endLon] float,\n\t[endLat] float,\n\t[rateCodeId] int,\n\t[storeAndFwdFlag] varchar(8000),\n\t[paymentType] varchar(8000),\n\t[fareAmount] float,\n\t[extra] float,\n\t[mtaTax] float,\n\t[improvementSurcharge] varchar(8000),\n\t[tipAmount] float,\n\t[tollsAmount] float,\n\t[totalAmount] float\n\t)\n\tWITH (\n    LOCATION = 'yellow/puYear=2014/puMonth=3/',\n    -- LOCATION = 'yellow'\n\tDATA_SOURCE = [nyctlc_azureopendatastorage_blob_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat],\n\tREJECT_TYPE = VALUE,\n\tREJECT_VALUE = 0\n\t)\nGO\n\nSELECT TOP 100 * FROM nyc_tlc_yellow_trip_ext\nGO\n",
 					"metadata": {
 						"language": "sql"
 					},
@@ -2751,7 +2919,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "create credential [https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs] \nwith \n    identity = 'SHARED ACCESS SIGNATURE', \n    secret = 'mySASkey';\ngo \n\nselect * from sys.credentials;\ngo\n\ndrop view if exists vDeltaTarget;\ngo\ncreate view vDeltaTarget\nas\nSELECT [key], [value]\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows\ngo\n\ndrop view if exists vDeltaLastChanges;\ngo\ncreate view vDeltaLastChanges\nas\nSELECT [key], [time], [newvalue], [deleted]\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows \ngo\n\nselect * from vDeltaTarget\nselect * from vDeltaLastChanges\n\n{\n    \"errorCode\": \"2200\",\n    \"message\": \"Failure happened on 'Source' side. ErrorCode=SqlOperationFailed,\n    'Type=Microsoft.DataTransfer.Common.Shared.HybridDeliveryException,\n    Message=A database operation failed with the following error: 'Invalid column name 'value'.',\n    Source=,''Type=System.Data.SqlClient.SqlException,Message=Invalid column name 'value'.,\n    Source=.Net SqlClient Data Provider,SqlErrorNumber=207,Class=16,ErrorCode=-2146232060,State=1,Errors=[{Class=16,Number=207,State=1,Message=Invalid column name 'value'.,},],'\",\n    \"failureType\": \"UserError\",\n    \"target\": \"LastChanges\",\n    \"details\": []\n}\n\n{\n    \"errorCode\": \"2200\",\n    \"message\": \"Failure happened on 'Source' side. ErrorCode=SqlOperationFailed,\n    'Type=Microsoft.DataTransfer.Common.Shared.HybridDeliveryException,\n    Message=A database operation failed with the following error: 'Invalid column name 'value'.',\n    Source=,''Type=System.Data.SqlClient.SqlException,Message=Invalid column name 'value'.,\n    Source=.Net SqlClient Data Provider,SqlErrorNumber=207,Class=16,ErrorCode=-2146232060,State=1,\n    Errors=[{Class=16,Number=207,State=1,Message=Invalid column name 'value'.,},],'\",\n    \"failureType\": \"UserError\",\n    \"target\": \"LastChanges\",\n    \"details\": []\n}",
+					"query": "create credential [https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs] \nwith \n    identity = 'Managed Identity'\ngo \n\nselect * from sys.credentials;\ngo\n\ndrop view if exists vDeltaTarget;\ngo\ncreate view vDeltaTarget\nas\nSELECT [key], [value]\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/target',\n    FORMAT = 'delta') as rows\ngo\n\ndrop view if exists vDeltaLastChanges;\ngo\ncreate view vDeltaLastChanges\nas\nSELECT [key], [time], [newvalue], [deleted]\nFROM OPENROWSET(\n    BULK 'abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/warehouse/lastchanges',\n    FORMAT = 'delta') as rows \ngo\n\nselect * from vDeltaTarget\nselect * from vDeltaLastChanges\n\n/*\n{\n    \"errorCode\": \"2200\",\n    \"message\": \"Failure happened on 'Source' side. ErrorCode=SqlOperationFailed,\n    'Type=Microsoft.DataTransfer.Common.Shared.HybridDeliveryException,\n    Message=A database operation failed with the following error: 'Invalid column name 'value'.',\n    Source=,''Type=System.Data.SqlClient.SqlException,Message=Invalid column name 'value'.,\n    Source=.Net SqlClient Data Provider,SqlErrorNumber=207,Class=16,ErrorCode=-2146232060,State=1,Errors=[{Class=16,Number=207,State=1,Message=Invalid column name 'value'.,},],'\",\n    \"failureType\": \"UserError\",\n    \"target\": \"LastChanges\",\n    \"details\": []\n}\n\n{\n    \"errorCode\": \"2200\",\n    \"message\": \"Failure happened on 'Source' side. ErrorCode=SqlOperationFailed,\n    'Type=Microsoft.DataTransfer.Common.Shared.HybridDeliveryException,\n    Message=A database operation failed with the following error: 'Invalid column name 'value'.',\n    Source=,''Type=System.Data.SqlClient.SqlException,Message=Invalid column name 'value'.,\n    Source=.Net SqlClient Data Provider,SqlErrorNumber=207,Class=16,ErrorCode=-2146232060,State=1,\n    Errors=[{Class=16,Number=207,State=1,Message=Invalid column name 'value'.,},],'\",\n    \"failureType\": \"UserError\",\n    \"target\": \"LastChanges\",\n    \"details\": []\n}\n*/",
 					"metadata": {
 						"language": "sql"
 					},
@@ -2856,6 +3024,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/PDWBackups')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "select   *\nfrom     sys.pdw_loader_backup_runs\norder by run_id desc\n;",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "wplussynapsedw",
+						"poolName": "wplussynapsedw"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/QueryActivity')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -2887,7 +3075,7 @@
 					"name": "Delta"
 				},
 				"content": {
-					"query": "--reset table\nselect * from [target]\ngo \n\ndelete from [reporttarget]; \ngo \n\ninsert [reporttarget] values('a','0')\ninsert [reporttarget] values('b','1')\ninsert [reporttarget] values('c','2')\ninsert [reporttarget] values('d','3')\ngo  \n\n\nselect * from [target];\n\ndelete from [target]; \ngo \n\ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo\n\n--reset lastchanges\ndelete from [lastchanges];\ninsert [lastchanges] values ('a','1',NULL,1)\ninsert [lastchanges] values ('c','5','200',0)\ninsert [lastchanges] values ('b','2',NULL,1)\n\n\nselect * from [reporttarget];\n\ndelete from [reporttarget]; \ngo \n\ninsert [reporttarget] values('a','0')\ninsert [reporttarget] values('b','1')\ninsert [reporttarget] values('c','2')\ninsert [reporttarget] values('d','3')\ngo  \n\nexec mergelatest",
+					"query": "--reset table\nselect * from [target]\ngo \ninsert [target] values('a','0')\ninsert [target] values('b','1')\ninsert [target] values('c','2')\ninsert [target] values('d','3')\ngo  \nselect * from [target];\n\n--set target back to post merged 3rd changes.\ndelete from [target]; \ngo \ninsert [target] values('d','3')\ninsert [target] values('c','200')\ngo\n\n--reset lastchanges\nselect * from lastchanges;\ndelete from [lastchanges];\ninsert [lastchanges] values ('a','1',NULL,1)\ninsert [lastchanges] values ('c','5','200',0)\ninsert [lastchanges] values ('b','2',NULL,1)\ngo\n\n--reset reporttarget\nselect * from [reporttarget];\ndelete from [reporttarget]; \ngo \ninsert [reporttarget] values('a','0')\ninsert [reporttarget] values('b','1')\ninsert [reporttarget] values('c','2')\ninsert [reporttarget] values('d','3')\ngo  \n\nexec mergelatest",
 					"metadata": {
 						"language": "sql"
 					},
@@ -3172,14 +3360,16 @@
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2"
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "2786881f-b91b-4e62-94bf-a32da2a89940"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
-						"name": "synapse_spark",
-						"display_name": "Synapse Spark"
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
 					},
 					"language_info": {
 						"name": "scala"
@@ -3196,11 +3386,23 @@
 						"sparkVersion": "2.4",
 						"nodeCount": 10,
 						"cores": 64,
-						"memory": 400,
-						"extraHeader": null
+						"memory": 400
 					}
 				},
 				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 0. Create the class"
+						]
+					},
 					{
 						"cell_type": "code",
 						"source": [
@@ -3210,9 +3412,21 @@
 							"  assert(newValue != null ^ deleted)\r\n",
 							"}"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": null
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 1. Add sequence of changes"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3248,9 +3462,21 @@
 							"//   ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
 							"// ).toDF().createOrReplaceTempView(\"changes\")"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": null
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 2. Read changes into DF"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3269,9 +3495,21 @@
 						"source": [
 							"val changesDF = spark.sql(\"select * from changes\")"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": null
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 3. Expression for only latest changes"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3291,9 +3529,21 @@
 							"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 							"latestChangeForEachKey.show()"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": null
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 4. Temp view of latest changes"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3312,9 +3562,21 @@
 						"source": [
 							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": null
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 5. Save delta table"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3333,9 +3595,8 @@
 						"source": [
 							"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": null
 					}
 				]
 			},
@@ -3667,14 +3928,16 @@
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2"
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "4089fe38-0b64-4fb9-a04f-106e1144f568"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
-						"name": "synapse_spark",
-						"display_name": "Synapse Spark"
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
 					},
 					"language_info": {
 						"name": "scala"
@@ -3689,10 +3952,9 @@
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.1",
-						"nodeCount": 3,
-						"cores": 16,
-						"memory": 112,
-						"extraHeader": null
+						"nodeCount": 5,
+						"cores": 8,
+						"memory": 56
 					}
 				},
 				"cells": [
@@ -3708,12 +3970,11 @@
 						"source": [
 							"# Delta Demo\r\n",
 							"\r\n",
-							"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/Delta.json))\r\n",
+							"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/DeltaChanges3.json))\r\n",
 							"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
 							"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
 							"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3732,9 +3993,8 @@
 						"source": [
 							"spark.version"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 16
 					},
 					{
 						"cell_type": "code",
@@ -3745,9 +4005,8 @@
 							"  assert(newValue != null ^ deleted)\r\n",
 							"}"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 55
 					},
 					{
 						"cell_type": "code",
@@ -3771,9 +4030,8 @@
 							"  Data(\"d\", \"3\")\r\n",
 							").toDF()"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 56
 					},
 					{
 						"cell_type": "code",
@@ -3793,9 +4051,8 @@
 							"sql(\"drop table if exists target\")\r\n",
 							"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 57
 					},
 					{
 						"cell_type": "code",
@@ -3812,16 +4069,13 @@
 							"collapsed": true
 						},
 						"source": [
-							"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
-							"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+							"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+							"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
 							"\r\n",
-							"val targetDF = spark.sqlContext.sql(\"select * from target\")\r\n",
-							"\r\n",
-							"// targetDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.target\", Constants.INTERNAL)"
+							"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 58
 					},
 					{
 						"cell_type": "code",
@@ -3844,9 +4098,8 @@
 							"%%sql\r\n",
 							"select * from target order by key"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 59
 					},
 					{
 						"cell_type": "code",
@@ -3869,9 +4122,21 @@
 							"%%sql\r\n",
 							"describe extended target"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 60
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# 🧂 Shake it up"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3897,9 +4162,8 @@
 							"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
 							").toDF().createOrReplaceTempView(\"changes\")"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 61
 					},
 					{
 						"cell_type": "markdown",
@@ -3912,8 +4176,7 @@
 						},
 						"source": [
 							"### SQL Example"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3948,9 +4211,8 @@
 							"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 							"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 62
 					},
 					{
 						"cell_type": "code",
@@ -3967,16 +4229,11 @@
 							"collapsed": true
 						},
 						"source": [
-							"// import io.delta.tables._\r\n",
-							"// import org.apache.spark.sql.functions._\r\n",
-							"\r\n",
-							"// val deltaTable = DeltaTable.forName(\"target\")\r\n",
 							"val changesDF = spark.sql(\"select * from changes\")\r\n",
 							"changesDF.head()"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 63
 					},
 					{
 						"cell_type": "code",
@@ -3993,11 +4250,15 @@
 							"collapsed": true
 						},
 						"source": [
-							"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
+							"val latestChangeForEachKey = changesDF.\r\n",
+							"selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").\r\n",
+							"groupBy(\"key\").\r\n",
+							"agg(max(\"otherCols\").\r\n",
+							"as(\"latest\")).\r\n",
+							"selectExpr(\"key\", \"latest.*\")"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 64
 					},
 					{
 						"cell_type": "code",
@@ -4016,9 +4277,8 @@
 						"source": [
 							"latestChangeForEachKey.show() // shows the latest change for each key"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 12
+						"execution_count": 65
 					},
 					{
 						"cell_type": "code",
@@ -4037,9 +4297,8 @@
 						"source": [
 							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 66
 					},
 					{
 						"cell_type": "code",
@@ -4062,9 +4321,8 @@
 							"%%sql\r\n",
 							"select * from lastchanges"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 14
+						"execution_count": 67
 					},
 					{
 						"cell_type": "code",
@@ -4081,13 +4339,10 @@
 							"collapsed": true
 						},
 						"source": [
-							"//instead of delta to read as ext table in dedicated pool\r\n",
-							"\r\n",
 							"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 68
 					},
 					{
 						"cell_type": "markdown",
@@ -4100,8 +4355,7 @@
 						},
 						"source": [
 							"### SCALA Merge example (Skipped)"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -4130,7 +4384,6 @@
 							"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
 							"//   .execute()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 16
 					},
@@ -4149,16 +4402,17 @@
 							"collapsed": true
 						},
 						"source": [
-							"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
-							"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+							"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+							"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
 							"\r\n",
 							"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
 							"\r\n",
-							"// lastchangesDF.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
+							"lastchangesDF.write.option(Constants.\r\n",
+							"SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").\r\n",
+							"synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 17
+						"execution_count": 70
 					},
 					{
 						"cell_type": "markdown",
@@ -4179,8 +4433,7 @@
 							"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
 							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas\r\n",
 							"* https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example-part-2/"
-						],
-						"attachments": null
+						]
 					}
 				]
 			},
@@ -5947,6 +6200,21 @@
 			},
 			"dependsOn": [],
 			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Dataflow1')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [],
+					"sinks": [],
+					"transformations": [],
+					"script": ""
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
