@@ -1,0 +1,22 @@
+{
+	"name": "lakehiramdb",
+	"properties": {
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"IsSyMSCDMDatabase": true
+		},
+		"Name": "lakehiramdb",
+		"EntityType": "DATABASE",
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/lakehiramdb",
+			"Properties": {
+				"FormatType": "parquet",
+				"LinkedServiceName": "wplushiramsynapse-WorkspaceDefaultStorage"
+			}
+		}
+	},
+	"type": "DATABASE"
+}
