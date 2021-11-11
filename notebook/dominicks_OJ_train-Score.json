@@ -4,20 +4,20 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "XXL",
+			"referenceName": "threedot0",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "400g",
-			"driverCores": 64,
-			"executorMemory": "400g",
-			"executorCores": 64,
-			"numExecutors": 4,
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 1,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "4",
-				"spark.dynamicAllocation.maxExecutors": "4",
-				"spark.autotune.trackingId": "e33b18c1-7304-48a2-86c8-1be12ee7b2c0"
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "1",
+				"spark.autotune.trackingId": "5baf5350-a686-4a84-bac1-ce7bb04114c0"
 			}
 		},
 		"metadata": {
@@ -31,18 +31,18 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
-				"name": "XXL",
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+				"name": "threedot0",
 				"type": "Spark",
-				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
-				"nodeCount": 10,
-				"cores": 64,
-				"memory": 400,
+				"sparkVersion": "3.1",
+				"nodeCount": 5,
+				"cores": 8,
+				"memory": 56,
 				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
@@ -83,15 +83,15 @@
 					"#In URI \":x\" signifies model version in AML. You can   choose which model version you want to run. If \":x\" is not provided then by default   latest version will be picked.\r\n",
 					"\r\n",
 					"    #Set ADLS URI, if trained model is uploaded in ADLS\r\n",
-					"ADLS_MODEL_URI = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapse-dominicks_oj_train-20211111010118-Best_/\"\r\n",
+					"ADLS_MODEL_URI = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapse-dominicks_oj_train-20211111010118-Best_/model.pkl\"\r\n",
 					"\r\n",
 					"#Define model return type\r\n",
-					"RETURN_TYPES = \"float\" # for ex: int, float etc. PySpark data types are supported\r\n",
+					"RETURN_TYPES = \"double\" # for ex: int, float etc. PySpark data types are supported\r\n",
 					"\r\n",
 					"#Define model runtime. This supports only mlflow\r\n",
 					"RUNTIME = \"mlflow\""
 				],
-				"execution_count": 2
+				"execution_count": 60
 			},
 			{
 				"cell_type": "code",
@@ -109,9 +109,139 @@
 				"source": [
 					"#AML workspace authentication using linked service\r\n",
 					"from notebookutils.mssparkutils import azureML\r\n",
-					"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\") #   \"<linked_service_name>\" is the linked service name, not AML workspace name. Also, linked   service supports MSI and service principal both"
+					"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\") # \"<linked_service_name>\" is the linked service name, not AML workspace name. Also, linked service supports MSI and service principal both"
 				],
-				"execution_count": 3
+				"execution_count": 48
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#Enable SynapseML predict\r\n",
+					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
+				],
+				"execution_count": 56
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#Bind model within Spark session\r\n",
+					"model = pcontext.bind_model(\r\n",
+					"    return_types=RETURN_TYPES, \r\n",
+					"    runtime=RUNTIME, \r\n",
+					"    model_alias=\"model\", \r\n",
+					"    model_uri=ADLS_MODEL_URI\r\n",
+					"    ).register()"
+				],
+				"execution_count": 61
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#Read data from ADLS\r\n",
+					"df = spark.read \\\r\n",
+					".format(\"csv\") \\\r\n",
+					".option(\"header\", \"true\") \\\r\n",
+					".csv(DATA_FILE,\r\n",
+					"    inferSchema=True)\r\n",
+					"df.createOrReplaceTempView('datafile')"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#Call PREDICT using Spark SQL API\r\n",
+					"\r\n",
+					"predictions = spark.sql(\"\"\"SELECT PREDICT(model, Quantity) AS predict FROM datafile\"\"\").show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Round 2 "
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Import libraries and read training dataset from ADLS\r\n",
+					"\r\n",
+					"import fsspec\r\n",
+					"import pandas\r\n",
+					"from fsspec.core import split_protocol\r\n",
+					"\r\n",
+					"adls_account_name = 'wplushiramsynapseadlsv2' #Provide exact ADLS account name\r\n",
+					"adls_account_key = 'xyz' #Provide exact ADLS account key\r\n",
+					"\r\n",
+					"fsspec_handle = fsspec.open('abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapse-dominicks_oj_train-20211111010118-Best_/model.pkl', account_name=adls_account_name, account_key=adls_account_key)\r\n",
+					"\r\n",
+					"with fsspec_handle.open() as f:\r\n",
+					"       train_df = pandas.read_csv(f)"
+				],
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
