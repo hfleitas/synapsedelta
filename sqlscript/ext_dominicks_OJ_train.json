@@ -1,5 +1,5 @@
 {
-	"name": "SQL script 3",
+	"name": "ext_dominicks_OJ_train",
 	"properties": {
 		"content": {
 			"query": "create schema ext\ngo \n\nselect * from sys.database_scoped_credentials\ngo\nselect * from sys.external_data_sources\ngo \nselect * from sys.external_file_formats\ngo\n\ncreate external table ext.dominicks_OJ_train\n(\n\t[WeekStarting] date,\n\t[Store] int,\n\t[Brand] nvarchar(4000),\n\t[Quantity] bigint,\n\t[Advert] bit,\n\t[Price] float,\n\t[Age60] float,\n\t[COLLEGE] float,\n\t[INCOME] float,\n\t[Hincome150] float,\n\t[Large HH] float,\n\t[Minorities] float,\n\t[WorkingWoman] float,\n\t[SSTRDIST] float,\n\t[SSTRVOL] float,\n\t[CPDIST5] float,\n\t[CPWVOL5] float\n)\nWITH\n(\n\tLOCATION = 'dominicks_OJ_train.csv',\n\tDATA_SOURCE = wplushiramsynapsefs,\n\tFILE_FORMAT = skipHeader_CSV\n)\n\nselect count(*) from  ext.dominicks_OJ_train\nSELECT TOP 100 * FROM ext.dominicks_OJ_train\nGO\n",
