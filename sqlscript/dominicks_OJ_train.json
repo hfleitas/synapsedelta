@@ -1,0 +1,17 @@
+{
+	"name": "dominicks_OJ_train",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) \n [WeekStarting]\n,[Store]\n,[Brand]\n,[Quantity]\n,[Advert]\n,[Price]\n,[Age60]\n,[COLLEGE]\n,[INCOME]\n,[Hincome150]\n,[Large_HH]\n,[Minorities]\n,[WorkingWoman]\n,[SSTRDIST]\n,[SSTRVOL]\n,[CPDIST5]\n,[CPWVOL5]\n FROM [default].[dbo].[dominicks_oj_train]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "default",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
