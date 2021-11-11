@@ -1,0 +1,17 @@
+{
+	"name": "sqldbedgeoulvzyml",
+	"properties": {
+		"annotations": [],
+		"type": "AzureMLService",
+		"typeProperties": {
+			"subscriptionId": "e4e06275-58d1-4081-8f1b-be12462eb701",
+			"resourceGroupName": "wind",
+			"mlWorkspaceName": "sqldbedgeoulvzyml",
+			"authentication": "MSI"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
