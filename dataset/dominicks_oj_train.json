@@ -20,54 +20,71 @@
 		},
 		"schema": [
 			{
+				"name": "WeekStarting",
 				"type": "String"
 			},
 			{
+				"name": "Store",
 				"type": "String"
 			},
 			{
+				"name": "Brand",
 				"type": "String"
 			},
 			{
+				"name": "Quantity",
 				"type": "String"
 			},
 			{
+				"name": "Advert",
 				"type": "String"
 			},
 			{
+				"name": "Price",
 				"type": "String"
 			},
 			{
+				"name": "Age60",
 				"type": "String"
 			},
 			{
+				"name": "COLLEGE",
 				"type": "String"
 			},
 			{
+				"name": "INCOME",
 				"type": "String"
 			},
 			{
+				"name": "Hincome150",
 				"type": "String"
 			},
 			{
+				"name": "Large HH",
 				"type": "String"
 			},
 			{
+				"name": "Minorities",
 				"type": "String"
 			},
 			{
+				"name": "WorkingWoman",
 				"type": "String"
 			},
 			{
+				"name": "SSTRDIST",
 				"type": "String"
 			},
 			{
+				"name": "SSTRVOL",
 				"type": "String"
 			},
 			{
+				"name": "CPDIST5",
 				"type": "String"
 			},
 			{
+				"name": "CPWVOL5",
 				"type": "String"
 			}
 		]
