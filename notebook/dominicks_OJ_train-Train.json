@@ -1,0 +1,147 @@
+{
+	"name": "dominicks_OJ_train-Train",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "XXL",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "b5a985ca-47c1-4463-b74b-8cd88d5e881f"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
+				"name": "XXL",
+				"type": "Spark",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 64,
+				"memory": 400,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import azureml.core\n",
+					"\n",
+					"from azureml.core import Experiment, Workspace, Dataset, Datastore\n",
+					"from azureml.train.automl import AutoMLConfig\n",
+					"from notebookutils import mssparkutils\n",
+					"from azureml.data.dataset_factory import TabularDatasetFactory"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"linkedService_name = \"sqldbedgeoulvzyml\"\n",
+					"experiment_name = \"wplushiramsynapse-dominicks_oj_train-20211111125807\"\n",
+					"\n",
+					"ws = mssparkutils.azureML.getWorkspace(linkedService_name)\n",
+					"experiment = Experiment(ws, experiment_name)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df = spark.sql(\"SELECT * FROM default.dominicks_oj_train\")\n",
+					"\n",
+					"datastore = Datastore.get_default(ws)\n",
+					"dataset = TabularDatasetFactory.register_spark_dataframe(df, datastore, name = experiment_name + \"-dataset\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from azureml.automl.core.forecasting_parameters import ForecastingParameters\n",
+					"\n",
+					"forecasting_parameters = ForecastingParameters(\n",
+					"    time_column_name = \"WeekStarting\",\n",
+					"    forecast_horizon = \"auto\",\n",
+					"    time_series_id_column_names = [\"Store\",\"Brand\"],\n",
+					")\n",
+					"\n",
+					"automl_config = AutoMLConfig(spark_context = sc,\n",
+					"                             task = \"forecasting\",\n",
+					"                             training_data = dataset,\n",
+					"                             label_column_name = \"Quantity\",\n",
+					"                             primary_metric = \"normalized_root_mean_squared_error\",\n",
+					"                             experiment_timeout_hours = 0.25,\n",
+					"                             max_concurrent_iterations = 2,\n",
+					"                             n_cross_validations = 5,\n",
+					"                             forecasting_parameters = forecasting_parameters)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"run = experiment.submit(automl_config)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"displayHTML(\"<a href={} target='_blank'>Your experiment in Azure Machine Learning portal: {}</a>\".format(run.get_portal_url(), run.id))"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"run.wait_for_completion()\n",
+					"\n",
+					"import mlflow\n",
+					"\n",
+					"# Get best model from automl run\n",
+					"best_run, non_onnx_model = run.get_output()\n",
+					"\n",
+					"artifact_path = experiment_name + \"_artifact\"\n",
+					"\n",
+					"mlflow.set_tracking_uri(ws.get_mlflow_tracking_uri())\n",
+					"mlflow.set_experiment(experiment_name)\n",
+					"\n",
+					"with mlflow.start_run() as run:\n",
+					"    # Save the model to the outputs directory for capture\n",
+					"    mlflow.sklearn.log_model(non_onnx_model, artifact_path)\n",
+					"\n",
+					"    # Register the model to AML model registry\n",
+					"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"wplushiramsynapse-dominicks_oj_train-20211111125807-Best\")"
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
