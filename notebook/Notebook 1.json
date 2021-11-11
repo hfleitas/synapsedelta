@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "4",
 				"spark.dynamicAllocation.maxExecutors": "4",
-				"spark.autotune.trackingId": "462335ca-ac78-4765-ac88-8cf72be8cb6a"
+				"spark.autotune.trackingId": "05bfa8f4-60eb-4b43-92ed-26aadf842eba"
 			}
 		},
 		"metadata": {
@@ -87,25 +87,7 @@
 					"\r\n",
 					"df.write.mode(\"overwrite\").saveAsTable(\"dominicks_OJ_train\")"
 				],
-				"execution_count": 15
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					""
-				],
-				"execution_count": null
+				"execution_count": 17
 			}
 		]
 	}
