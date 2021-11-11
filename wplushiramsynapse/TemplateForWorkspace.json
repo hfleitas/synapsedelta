@@ -58,6 +58,14 @@
 		"Daily_properties_DevOpsCICD_parameters_environment": {
 			"type": "string",
 			"defaultValue": "dev"
+		},
+		"sqldbedgeoulvzyml_properties_typeProperties_subscriptionId": {
+			"type": "string",
+			"defaultValue": "e4e06275-58d1-4081-8f1b-be12462eb701"
+		},
+		"sqldbedgeoulvzyml_properties_typeProperties_resourceGroupName": {
+			"type": "string",
+			"defaultValue": "wind"
 		}
 	},
 	"variables": {
@@ -6202,19 +6210,241 @@
 			"location": "eastus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Dataflow1')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"name": "[concat(parameters('workspaceName'), '/dominicks_OJ_train')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [],
-					"sinks": [],
-					"transformations": [],
-					"script": ""
-				}
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "XXL",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "400g",
+					"driverCores": 64,
+					"executorMemory": "400g",
+					"executorCores": 64,
+					"numExecutors": 4,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "4",
+						"spark.dynamicAllocation.maxExecutors": "4",
+						"spark.autotune.trackingId": "57dd9df4-96d9-4cac-83bd-c4ee1612a100"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
+						"name": "XXL",
+						"type": "Spark",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 64,
+						"memory": 400,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "python"
+							}
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"from pyspark.sql.types import StringType, DateType, DoubleType\r\n",
+							"\r\n",
+							"df = spark.read.load('abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/dominicks_OJ_train.csv', format='csv'\r\n",
+							"## If header exists uncomment line below\r\n",
+							", header=True\r\n",
+							")\r\n",
+							"\r\n",
+							"df = df.withColumnRenamed(\"Large HH\", \"Large_HH\")\r\n",
+							"\r\n",
+							"df = df \\\r\n",
+							".withColumn(\"WeekStarting\", df[\"WeekStarting\"].cast(DateType())) \\\r\n",
+							".withColumn(\"Store\", df[\"Store\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"Brand\", df[\"Brand\"].cast(StringType())) \\\r\n",
+							".withColumn(\"Quantity\", df[\"Quantity\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"Advert\", df[\"Advert\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"Price\", df[\"Price\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"Age60\", df[\"Age60\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"COLLEGE\", df[\"COLLEGE\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"INCOME\", df[\"INCOME\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"Hincome150\", df[\"Hincome150\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"Large_HH\", df[\"Large_HH\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"Minorities\", df[\"Minorities\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"WorkingWoman\", df[\"WorkingWoman\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"SSTRDIST\", df[\"SSTRDIST\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"SSTRVOL\", df[\"SSTRVOL\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"CPDIST5\", df[\"CPDIST5\"].cast(DoubleType())) \\\r\n",
+							".withColumn(\"CPWVOL5\", df[\"CPWVOL5\"].cast(DoubleType())) \r\n",
+							"\r\n",
+							"df.write.mode(\"overwrite\").saveAsTable(\"dominicks_OJ_train\")"
+						],
+						"outputs": [],
+						"execution_count": 17
+					}
+				]
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dominicks_oj_train')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "dominicks_OJ_train.csv",
+						"fileSystem": "wplushiramsynapsefs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "WeekStarting",
+						"type": "String"
+					},
+					{
+						"name": "Store",
+						"type": "String"
+					},
+					{
+						"name": "Brand",
+						"type": "String"
+					},
+					{
+						"name": "Quantity",
+						"type": "String"
+					},
+					{
+						"name": "Advert",
+						"type": "String"
+					},
+					{
+						"name": "Price",
+						"type": "String"
+					},
+					{
+						"name": "Age60",
+						"type": "String"
+					},
+					{
+						"name": "COLLEGE",
+						"type": "String"
+					},
+					{
+						"name": "INCOME",
+						"type": "String"
+					},
+					{
+						"name": "Hincome150",
+						"type": "String"
+					},
+					{
+						"name": "Large HH",
+						"type": "String"
+					},
+					{
+						"name": "Minorities",
+						"type": "String"
+					},
+					{
+						"name": "WorkingWoman",
+						"type": "String"
+					},
+					{
+						"name": "SSTRDIST",
+						"type": "String"
+					},
+					{
+						"name": "SSTRVOL",
+						"type": "String"
+					},
+					{
+						"name": "CPDIST5",
+						"type": "String"
+					},
+					{
+						"name": "CPWVOL5",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dominicks_OJ_train')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) \n [WeekStarting]\n,[Store]\n,[Brand]\n,[Quantity]\n,[Advert]\n,[Price]\n,[Age60]\n,[COLLEGE]\n,[INCOME]\n,[Hincome150]\n,[Large_HH]\n,[Minorities]\n,[WorkingWoman]\n,[SSTRDIST]\n,[SSTRVOL]\n,[CPDIST5]\n,[CPWVOL5]\n FROM [default].[dbo].[dominicks_oj_train]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "default",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/sqldbedgeoulvzyml')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureMLService",
+				"typeProperties": {
+					"subscriptionId": "[parameters('sqldbedgeoulvzyml_properties_typeProperties_subscriptionId')]",
+					"resourceGroupName": "[parameters('sqldbedgeoulvzyml_properties_typeProperties_resourceGroupName')]",
+					"mlWorkspaceName": "sqldbedgeoulvzyml",
+					"authentication": "MSI"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
 		}
 	]
 }

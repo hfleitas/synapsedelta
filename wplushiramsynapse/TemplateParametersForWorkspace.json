@@ -43,6 +43,12 @@
 		},
 		"Daily_properties_DevOpsCICD_parameters_environment": {
 			"value": "dev"
+		},
+		"sqldbedgeoulvzyml_properties_typeProperties_subscriptionId": {
+			"value": "e4e06275-58d1-4081-8f1b-be12462eb701"
+		},
+		"sqldbedgeoulvzyml_properties_typeProperties_resourceGroupName": {
+			"value": "wind"
 		}
 	}
 }
