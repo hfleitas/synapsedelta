@@ -1,0 +1,112 @@
+{
+	"name": "Notebook 1",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "XXL",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "400g",
+			"driverCores": 64,
+			"executorMemory": "400g",
+			"executorCores": 64,
+			"numExecutors": 4,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "4",
+				"spark.dynamicAllocation.maxExecutors": "4",
+				"spark.autotune.trackingId": "24a78581-872d-4d57-ba4e-b7c997c24640"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
+				"name": "XXL",
+				"type": "Spark",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 64,
+				"memory": 400,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "python"
+					}
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"from pyspark.sql.types import StringType, DateType, DoubleType\r\n",
+					"\r\n",
+					"df = spark.read.load('abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/dominicks_OJ_train.csv', format='csv'\r\n",
+					"## If header exists uncomment line below\r\n",
+					", header=True\r\n",
+					")\r\n",
+					"\r\n",
+					"df = df.withColumnRenamed(\"Large HH\", \"Large_HH\")\r\n",
+					"\r\n",
+					"df = df \\\r\n",
+					".withColumn(\"WeekStarting\", df[\"WeekStarting\"].cast(DateType())) \\\r\n",
+					".withColumn(\"Store\", df[\"Store\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"Brand\", df[\"Brand\"].cast(StringType())) \\\r\n",
+					".withColumn(\"Quantity\", df[\"Quantity\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"Advert\", df[\"Advert\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"Price\", df[\"Price\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"Age60\", df[\"Age60\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"COLLEGE\", df[\"COLLEGE\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"INCOME\", df[\"INCOME\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"Hincome150\", df[\"Hincome150\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"Large_HH\", df[\"Large_HH\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"Minorities\", df[\"Minorities\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"WorkingWoman\", df[\"WorkingWoman\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"SSTRDIST\", df[\"SSTRDIST\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"SSTRVOL\", df[\"SSTRVOL\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"CPDIST5\", df[\"CPDIST5\"].cast(DoubleType())) \\\r\n",
+					".withColumn(\"CPWVOL5\", df[\"CPWVOL5\"].cast(DoubleType())) \r\n",
+					"\r\n",
+					"df.write.mode(\"overwrite\").saveAsTable(\"dominicks_OJ_train\")"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
