@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "4",
 				"spark.dynamicAllocation.maxExecutors": "4",
-				"spark.autotune.trackingId": "4275034c-f0d1-4f35-ac93-52968413f1db"
+				"spark.autotune.trackingId": "e33b18c1-7304-48a2-86c8-1be12ee7b2c0"
 			}
 		},
 		"metadata": {
@@ -90,6 +90,44 @@
 					"\r\n",
 					"#Define model runtime. This supports only mlflow\r\n",
 					"RUNTIME = \"mlflow\""
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#AML workspace authentication using linked service\r\n",
+					"from notebookutils.mssparkutils import azureML\r\n",
+					"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\") #   \"<linked_service_name>\" is the linked service name, not AML workspace name. Also, linked   service supports MSI and service principal both"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
 				],
 				"execution_count": null
 			}
