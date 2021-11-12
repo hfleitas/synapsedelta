@@ -38,17 +38,17 @@
 		"powerapps_properties_typeProperties_connectionString_secretName": {
 			"value": "powerappssqlconnectionstring"
 		},
-		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
-			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
-		},
-		"Daily_properties_DevOpsCICD_parameters_environment": {
-			"value": "dev"
-		},
 		"sqldbedgeoulvzyml_properties_typeProperties_subscriptionId": {
 			"value": "e4e06275-58d1-4081-8f1b-be12462eb701"
 		},
 		"sqldbedgeoulvzyml_properties_typeProperties_resourceGroupName": {
 			"value": "wind"
+		},
+		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
+		},
+		"Daily_properties_DevOpsCICD_parameters_environment": {
+			"value": "dev"
 		}
 	}
 }
