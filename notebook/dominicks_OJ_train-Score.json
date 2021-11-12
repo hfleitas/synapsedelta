@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "73d190ae-9b61-44a6-9f04-38d0f572a1ad"
+				"spark.autotune.trackingId": "e5084eb8-a0a5-4d8b-be5a-76aa273cefa1"
 			}
 		},
 		"metadata": {
@@ -116,7 +116,25 @@
 				"source": [
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"execution_count": 4
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.conf.get(\"spark.synapse.ml.predict.enabled\")"
+				],
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -163,7 +181,7 @@
 					"    inferSchema=True)\r\n",
 					"df.createOrReplaceTempView('datafile')"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -176,14 +194,39 @@
 						"transient": {
 							"deleting": false
 						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql \r\n",
+					"select * from datafile"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
 					}
 				},
 				"source": [
-					"#Call PREDICT using Spark SQL API\r\n",
-					"\r\n",
-					"predictions = spark.sql(\"\"\"SELECT PREDICT(model, Quantity) AS predict FROM datafile\"\"\").show()"
+					"%%sql\r\n",
+					"SELECT PREDICT(oj_forecast, Quantity) AS predict FROM datafile"
 				],
-				"execution_count": null
+				"execution_count": 15
 			},
 			{
 				"cell_type": "markdown",
