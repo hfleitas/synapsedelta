@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "c6e69964-bb3a-406f-9fe3-5dc1503affa5"
+				"spark.autotune.trackingId": "1245d709-27b3-4001-85ed-6dc2a3169226"
 			}
 		},
 		"metadata": {
@@ -85,7 +85,6 @@
 					"import pandas as pd\r\n",
 					"from sklearn.linear_model import LinearRegression\r\n",
 					"\r\n",
-					"\r\n",
 					"class LinearRegressionModel():\r\n",
 					"    _ARGS_FILENAME = 'args.json'\r\n",
 					"    FEATURES_KEY = 'features'\r\n",
@@ -109,14 +108,10 @@
 					"    self.model = LinearRegression(fit_intercept=self.fit_intercept)\r\n",
 					"\r\n",
 					"def train(self, dataset):\r\n",
-					"\r\n",
 					"    features = np.stack([sample for sample in iter(\r\n",
 					"        dataset[LinearRegressionModel.FEATURES_KEY])], axis=0)\r\n",
-					"\r\n",
 					"    targets = np.stack([sample for sample in iter(\r\n",
 					"        dataset[LinearRegressionModel.TARGETS_KEY])], axis=0)\r\n",
-					"\r\n",
-					"\r\n",
 					"    self.model.fit(features, targets)\r\n",
 					"\r\n",
 					"def predict(self, dataset):\r\n",
@@ -128,10 +123,7 @@
 					"def save(self, path):\r\n",
 					"    if os.path.exists(path):\r\n",
 					"        shutil.rmtree(path)\r\n",
-					"\r\n",
 					"    mlflow.sklearn.save_model(self.model, path)\r\n",
-					"\r\n",
-					"    # save args\r\n",
 					"    self._save_args(path)\r\n",
 					"\r\n",
 					"def _save_args(self, path):\r\n",
@@ -143,13 +135,11 @@
 					"def train(train_df, output_model_path):\r\n",
 					"    print(f\"Start to train LinearRegressionModel.\")\r\n",
 					"\r\n",
-					"    # Initialize input dataset\r\n",
 					"    dataset = train_df.to_numpy()\r\n",
 					"    datasets = {}\r\n",
 					"    datasets['targets'] = dataset[:, -1]\r\n",
 					"    datasets['features'] = dataset[:, :9]\r\n",
 					"\r\n",
-					"    # Initialize model class obj\r\n",
 					"    model_class = LinearRegressionModel(fit_intercept=10)\r\n",
 					"    with mlflow.start_run(nested=True) as run:\r\n",
 					"        model_class.create_model()\r\n",
@@ -160,7 +150,25 @@
 					"train(train_df, './artifacts/output')\r\n",
 					""
 				],
-				"execution_count": 34
+				"execution_count": 35
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
 			}
 		]
 	}
