@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "4",
 				"spark.dynamicAllocation.maxExecutors": "4",
-				"spark.autotune.trackingId": "0506ea69-aaf3-43a6-994c-456b1761b789"
+				"spark.autotune.trackingId": "8b7e11b5-ae6a-4452-9102-75b56027443f"
 			}
 		},
 		"metadata": {
@@ -84,6 +84,25 @@
 					"print(numbers_list)"
 				],
 				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"loaded_model = pickle.load(open(list_pickle_path, 'rb'))\r\n",
+					"loaded_model"
+				],
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
