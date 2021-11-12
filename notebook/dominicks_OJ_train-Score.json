@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "370458b7-531d-4641-b97f-619f5358a3e5"
+				"spark.autotune.trackingId": "c9f99200-d476-407a-bbd3-b18714049e00"
 			}
 		},
 		"metadata": {
@@ -75,11 +75,11 @@
 				"source": [
 					"DATA_FILE = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/dominicks_OJ_train.csv\"\r\n",
 					"AML_MODEL_URI = \"https://ml.azure.com/model/wplushiramsynapse-dominicks_oj_train-20211111125807-Best:1\" \r\n",
-					"ADLS_MODEL_URI = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapse-dominicks_oj_train-20211111010118-Best_/model.pkl\"\r\n",
+					"ADLS_MODEL_URI = \"https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/wplushiramsynapse-dominicks_oj_train-20211111010118-Best_/model.pkl\"\r\n",
 					"RETURN_TYPES = \"float\" \r\n",
 					"RUNTIME = \"mlflow\""
 				],
-				"execution_count": 2
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -139,7 +139,7 @@
 					"    model_uri=ADLS_MODEL_URI\r\n",
 					"    ).register()"
 				],
-				"execution_count": 5
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
