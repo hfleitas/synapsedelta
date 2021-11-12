@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "96ed7de4-d769-426f-aa6f-6f779364d62e"
+				"spark.autotune.trackingId": "ece1d6b4-62ee-4b54-ba10-e10ff07142ac"
 			}
 		},
 		"metadata": {
@@ -57,7 +57,7 @@
 					"import azure.synapse.ml.predict as pcontext\r\n",
 					"import azure.synapse.ml.predict.utils._logger as synapse_predict_logger"
 				],
-				"execution_count": 1
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -77,9 +77,9 @@
 					"AML_MODEL_URI = \"https://ml.azure.com/model/wplushiramsynapse-dominicks_oj_train-20211111125807-Best:1\" \r\n",
 					"ADLS_MODEL_URI = \"https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/wplushiramsynapse-dominicks_oj_train-20211111010118-Best_/model.pkl\"\r\n",
 					"RETURN_TYPES = \"double\" \r\n",
-					"RUNTIME = \"mlflow\""
+					"RUNTIME = \"sklearn\""
 				],
-				"execution_count": 8
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -98,25 +98,7 @@
 					"from notebookutils.mssparkutils import azureML\r\n",
 					"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\")"
 				],
-				"execution_count": 3
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"spark.conf.get(\"spark.synapse.ml.predict.enabled\")"
-				],
-				"execution_count": 23
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -134,7 +116,31 @@
 				"source": [
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"execution_count": 24
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"model = pcontext.bind_model(\r\n",
+					"    return_types=RETURN_TYPES, \r\n",
+					"    runtime=RUNTIME, \r\n",
+					"    model_alias=\"oj_forecast\", \r\n",
+					"    model_uri=AML_MODEL_URI, \r\n",
+					"    aml_workspace=ws \r\n",
+					"    ).register()"
+				],
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -157,7 +163,7 @@
 					"    model_uri=ADLS_MODEL_URI\r\n",
 					"    ).register()"
 				],
-				"execution_count": 9
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -181,7 +187,7 @@
 					"    inferSchema=True)\r\n",
 					"df.createOrReplaceTempView('datafile')"
 				],
-				"execution_count": 10
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +210,7 @@
 					"%%sql \r\n",
 					"select * from datafile"
 				],
-				"execution_count": 12
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -226,7 +232,7 @@
 					"%%sql\r\n",
 					"SELECT PREDICT(oj_forecast, Quantity) AS predict FROM datafile"
 				],
-				"execution_count": 15
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
