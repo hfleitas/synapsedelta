@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "5baf5350-a686-4a84-bac1-ce7bb04114c0"
+				"spark.autotune.trackingId": "370458b7-531d-4641-b97f-619f5358a3e5"
 			}
 		},
 		"metadata": {
@@ -51,7 +51,6 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"#Import libraries\r\n",
 					"from pyspark.sql.functions import col, pandas_udf,udf,lit\r\n",
 					"from azureml.core import Workspace\r\n",
 					"from azureml.core.authentication import ServicePrincipalAuthentication\r\n",
@@ -74,24 +73,13 @@
 					}
 				},
 				"source": [
-					"#Set input data path\r\n",
 					"DATA_FILE = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/dominicks_OJ_train.csv\"\r\n",
-					"\r\n",
-					"#Set model URI\r\n",
-					"    #Set AML URI, if trained model is registered in AML\r\n",
 					"AML_MODEL_URI = \"https://ml.azure.com/model/wplushiramsynapse-dominicks_oj_train-20211111125807-Best:1\" \r\n",
-					"#In URI \":x\" signifies model version in AML. You can   choose which model version you want to run. If \":x\" is not provided then by default   latest version will be picked.\r\n",
-					"\r\n",
-					"    #Set ADLS URI, if trained model is uploaded in ADLS\r\n",
 					"ADLS_MODEL_URI = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapse-dominicks_oj_train-20211111010118-Best_/model.pkl\"\r\n",
-					"\r\n",
-					"#Define model return type\r\n",
-					"RETURN_TYPES = \"double\" # for ex: int, float etc. PySpark data types are supported\r\n",
-					"\r\n",
-					"#Define model runtime. This supports only mlflow\r\n",
+					"RETURN_TYPES = \"float\" \r\n",
 					"RUNTIME = \"mlflow\""
 				],
-				"execution_count": 60
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -107,11 +95,10 @@
 					}
 				},
 				"source": [
-					"#AML workspace authentication using linked service\r\n",
 					"from notebookutils.mssparkutils import azureML\r\n",
-					"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\") # \"<linked_service_name>\" is the linked service name, not AML workspace name. Also, linked service supports MSI and service principal both"
+					"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\")"
 				],
-				"execution_count": 48
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -127,10 +114,9 @@
 					}
 				},
 				"source": [
-					"#Enable SynapseML predict\r\n",
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"execution_count": 56
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -146,15 +132,14 @@
 					}
 				},
 				"source": [
-					"#Bind model within Spark session\r\n",
 					"model = pcontext.bind_model(\r\n",
 					"    return_types=RETURN_TYPES, \r\n",
 					"    runtime=RUNTIME, \r\n",
-					"    model_alias=\"model\", \r\n",
+					"    model_alias=\"oj_forecast\", \r\n",
 					"    model_uri=ADLS_MODEL_URI\r\n",
 					"    ).register()"
 				],
-				"execution_count": 61
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -178,7 +163,7 @@
 					"    inferSchema=True)\r\n",
 					"df.createOrReplaceTempView('datafile')"
 				],
-				"execution_count": 19
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -241,7 +226,7 @@
 					"with fsspec_handle.open() as f:\r\n",
 					"       train_df = pandas.read_csv(f)"
 				],
-				"execution_count": 44
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
