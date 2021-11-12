@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "4170895e-5ae5-44a6-922a-d8c124d9a72e"
+				"spark.autotune.trackingId": "333af99c-911b-49df-8e10-2ba3e72a8088"
 			}
 		},
 		"metadata": {
@@ -76,8 +76,6 @@
 					}
 				},
 				"source": [
-					"# Train model and generate mlflow artifacts\r\n",
-					"\r\n",
 					"import os\r\n",
 					"import shutil\r\n",
 					"import mlflow\r\n",
