@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "2e0cc0e2-02a5-488b-8b59-2c424940f710"
+				"spark.autotune.trackingId": "cace457d-2033-4add-8cf3-4a903283f6e6"
 			}
 		},
 		"metadata": {
@@ -114,9 +114,9 @@
 					}
 				},
 				"source": [
-					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
+					"spark.conf.get(\"spark.synapse.ml.predict.enabled\")"
 				],
-				"execution_count": 16
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -132,9 +132,9 @@
 					}
 				},
 				"source": [
-					"spark.conf.get(\"spark.synapse.ml.predict.enabled\")"
+					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"execution_count": 20
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
