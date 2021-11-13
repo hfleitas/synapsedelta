@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "ece1d6b4-62ee-4b54-ba10-e10ff07142ac"
+				"spark.autotune.trackingId": "2e0b732f-32ef-4ce2-8c5f-c3f06b831d37"
 			}
 		},
 		"metadata": {
@@ -57,7 +57,7 @@
 					"import azure.synapse.ml.predict as pcontext\r\n",
 					"import azure.synapse.ml.predict.utils._logger as synapse_predict_logger"
 				],
-				"execution_count": 13
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -75,11 +75,11 @@
 				"source": [
 					"DATA_FILE = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/dominicks_OJ_train.csv\"\r\n",
 					"AML_MODEL_URI = \"https://ml.azure.com/model/wplushiramsynapse-dominicks_oj_train-20211111125807-Best:1\" \r\n",
-					"ADLS_MODEL_URI = \"https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/wplushiramsynapse-dominicks_oj_train-20211111010118-Best_/model.pkl\"\r\n",
+					"ADLS_MODEL_URI = \"abfss://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/wplushiramsynapse-dominicks_oj_train-20211111010118-Best_/\"\r\n",
 					"RETURN_TYPES = \"double\" \r\n",
-					"RUNTIME = \"sklearn\""
+					"RUNTIME = \"mlflow\""
 				],
-				"execution_count": 14
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -96,9 +96,10 @@
 				},
 				"source": [
 					"from notebookutils.mssparkutils import azureML\r\n",
-					"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\")"
+					"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\")\r\n",
+					"ws"
 				],
-				"execution_count": 19
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -116,7 +117,7 @@
 				"source": [
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"execution_count": 16
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -140,7 +141,7 @@
 					"    aml_workspace=ws \r\n",
 					"    ).register()"
 				],
-				"execution_count": 20
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
