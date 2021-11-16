@@ -112,5 +112,6 @@
     <Build Include="dbo\Tables\Character.sql" />
     <Build Include="dbo\StoredProcedures\DeltaDropTarget.sql" />
     <Build Include="dbo\Security\PortalPolicy.sql" />
+    <Build Include="dbo\StoredProcedures\MergeLatest.sql" />
   </ItemGroup>
 </Project>
