@@ -1,7 +1,10 @@
-Create PROC [dbo].[MegreLatest] AS 
+Create PROC [dbo].[MegreLatest] 
+AS 
 
-    merge into [ReportTarget] as t
-    using (select * from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])
+
+merge into [ReportTarget] as t
+    using (select *
+from [lastchanges]) as lc ([key], [time], [newvalue], [deleted])
     on lc.[key] = t.[key]
     when matched and lc.[deleted] = 1 
         then delete
