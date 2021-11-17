@@ -45,9 +45,6 @@ My Demo URLs:
 
 
 #### RESOURCES:
-
-![img](https://docs.microsoft.com/en-us/azure/data-factory/media/continuous-integration-delivery/continuous-integration-image12.png)
-
 * [Source Control](docs.microsoft.com/azure/synapse-analytics/cicd/source-control)
 * [Synapse DevOps](docs.microsoft.com/azure/synapse-analytics/cicd/continuous-integration-delivery)
 * Best practices: 
@@ -55,3 +52,5 @@ My Demo URLs:
   * [ADF](docs.microsoft.com/azure/data-factory/continuous-integration-delivery#best-practices-for-cicd)
 * [Bradley's post](techcommunity.microsoft.com/t5/data-architecture-blog/ci-cd-in-azure-synapse-analytics-part-4-the-release-pipeline/ba-p/2034434)
 * [Database Projects](docs.microsoft.com/sql/azure-data-studio/extensions/sql-database-project-extension)
+
+![img](https://docs.microsoft.com/en-us/azure/data-factory/media/continuous-integration-delivery/continuous-integration-image12.png)
