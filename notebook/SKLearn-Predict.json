@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "1245d709-27b3-4001-85ed-6dc2a3169226"
+				"spark.autotune.trackingId": "a6667202-486b-420d-973e-7fbb5b2d7fe0"
 			}
 		},
 		"metadata": {
@@ -55,12 +55,16 @@
 					"import pandas\r\n",
 					"from fsspec.core import split_protocol\r\n",
 					"\r\n",
+					"adls_account_name = 'wplushiramsynapseadlsv2' #Provide exact ADLS account name\r\n",
+					"adls_account_key = 'xyz' #Provide exact ADLS account key\r\n",
 					"fsspec_handle = fsspec.open('abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/dominicks_OJ_train.csv')\r\n",
+					"\r\n",
+					"#account_name=adls_account_name, account_key=adls_account_key)\r\n",
 					"\r\n",
 					"with fsspec_handle.open() as f:\r\n",
 					"    train_df = pandas.read_csv(f)"
 				],
-				"execution_count": 3
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -150,7 +154,7 @@
 					"train(train_df, './artifacts/output')\r\n",
 					""
 				],
-				"execution_count": 35
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
