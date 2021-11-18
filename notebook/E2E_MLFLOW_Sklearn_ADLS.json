@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c7bcaeb4-2e59-4ca6-9058-8ed76ab3579c"
+				"spark.autotune.trackingId": "5e248695-ea7c-4a81-8f9e-41257c7db610"
 			}
 		},
 		"metadata": {
@@ -81,7 +81,6 @@
 					"import fsspec\r\n",
 					"import pandas\r\n",
 					"\r\n",
-					"# fsspec_handle = fsspec.open('abfs://ajagarwfs/predict/dataset/LengthOfStay_cooked_small.csv', account_name=adls_account_name, account_key=adls_account_key)\r\n",
 					"fsspec_handle = fsspec.open('abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/LengthOfStay_cooked_small.csv')\r\n",
 					"\r\n",
 					"with fsspec_handle.open() as f:\r\n",
@@ -508,24 +507,6 @@
 					"              ).show()"
 				],
 				"execution_count": 19
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					""
-				],
-				"execution_count": null
 			}
 		]
 	}
