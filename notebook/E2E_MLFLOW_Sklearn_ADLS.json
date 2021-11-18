@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6101e4e3-77d7-41a3-a166-444f5943234e"
+				"spark.autotune.trackingId": "234f6ef6-1f98-42ed-8973-500b0f412bd2"
 			}
 		},
 		"metadata": {
@@ -337,7 +337,7 @@
 				},
 				"source": [
 					"# Set some input parameters\r\n",
-					"Model and Data are both stored on ADLS\r\n",
+					"Model and Data are both stored on ADLS. Must use full abfss path, not the mount.\r\n",
 					"\r\n",
 					"Return type is int"
 				]
@@ -356,11 +356,11 @@
 					}
 				},
 				"source": [
-					"DATA_FILE = \"abfss://wplushiramsynapsefs/LengthOfStay_cooked_small.csv\"\r\n",
-					"ADLS_MODEL_URI_SKLEARN = \"abfss://wplushiramsynapsefs/predict/models/mlflow/sklearn/e2e_linear_regression/\"\r\n",
+					"DATA_FILE = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/LengthOfStay_cooked_small.csv\"\r\n",
+					"ADLS_MODEL_URI_SKLEARN = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/predict/models/mlflow/sklearn/e2e_linear_regression/\"\r\n",
 					"RETURN_TYPES = \"INT\""
 				],
-				"execution_count": 10
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
@@ -392,7 +392,38 @@
 				"source": [
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"execution_count": 11
+				"execution_count": 15
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Bind Model"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"model = pcontext.bind_model(RETURN_TYPES, \"mlflow\", \"sklearn_linear_regression\", ADLS_MODEL_URI_SKLEARN).register()"
+				],
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
