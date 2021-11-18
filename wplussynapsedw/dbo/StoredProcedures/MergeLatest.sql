@@ -1,7 +1,7 @@
 Create PROC [dbo].[MegreLatest] 
 as  
 
-merge into [ReportTarget] as t
+merge into [ReportTarget2] as t
     using ( select * 
             from [lastchanges]
           ) as lc ([key], [time], [newvalue], [deleted])
