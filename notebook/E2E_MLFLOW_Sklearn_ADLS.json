@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "234f6ef6-1f98-42ed-8973-500b0f412bd2"
+				"spark.autotune.trackingId": "c7bcaeb4-2e59-4ca6-9058-8ed76ab3579c"
 			}
 		},
 		"metadata": {
@@ -424,6 +424,90 @@
 					"model = pcontext.bind_model(RETURN_TYPES, \"mlflow\", \"sklearn_linear_regression\", ADLS_MODEL_URI_SKLEARN).register()"
 				],
 				"execution_count": 16
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Load Data"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df = spark.read \\\r\n",
+					"    .format(\"csv\") \\\r\n",
+					"    .option(\"header\", \"true\") \\\r\n",
+					"    .csv(DATA_FILE,\r\n",
+					"        inferSchema=True)\r\n",
+					"df = df.select(df.columns[:9])\r\n",
+					"df.createOrReplaceTempView('data')\r\n",
+					"df.show(10)\r\n",
+					"df"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql \r\n",
+					"select * from data"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"predictions = spark.sql(\r\n",
+					"                  \"\"\"\r\n",
+					"                      SELECT PREDICT('sklearn_linear_regression', *) AS predict FROM data\r\n",
+					"                  \"\"\"\r\n",
+					"              ).show()"
+				],
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
