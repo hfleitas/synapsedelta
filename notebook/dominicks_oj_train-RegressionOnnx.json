@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "307feff0-0ea9-45d7-83a5-88beb825b2ae"
+				"spark.autotune.trackingId": "bd4e6d7a-bd02-45a2-9573-258ccff193fd"
 			}
 		},
 		"metadata": {
@@ -25,7 +25,7 @@
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
-				"display_name": "python"
+				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "python"
@@ -58,7 +58,7 @@
 					"from notebookutils import mssparkutils\n",
 					"from azureml.data.dataset_factory import TabularDatasetFactory"
 				],
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -89,7 +89,7 @@
 					"                             training_data = dataset,\n",
 					"                             label_column_name = \"Quantity\",\n",
 					"                             primary_metric = \"normalized_root_mean_squared_error\",\n",
-					"                             experiment_timeout_hours = 3,\n",
+					"                             experiment_timeout_hours = 0.25,\n",
 					"                             max_concurrent_iterations = 2,\n",
 					"                             enable_onnx_compatible_models = True)"
 				],
