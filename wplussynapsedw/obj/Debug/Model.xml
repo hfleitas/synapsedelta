@@ -1089,7 +1089,7 @@
 			<Property Name="BodyScript">
 				<Value><![CDATA[  
 
-merge into [ReportTarget2] as t
+merge into [ReportTarget] as t
     using ( select * 
             from [lastchanges]
           ) as lc ([key], [time], [newvalue], [deleted])
@@ -1119,7 +1119,7 @@ merge into [ReportTarget2] as t
 				</Entry>
 			</Relationship>
 			<Annotation Type="SysCommentsObjectAnnotation">
-				<Property Name="Length" Value="490" />
+				<Property Name="Length" Value="489" />
 				<Property Name="StartLine" Value="1" />
 				<Property Name="StartColumn" Value="1" />
 				<Property Name="HeaderContents" Value="Create PROC [dbo].[MegreLatest] &#xA;as" />
