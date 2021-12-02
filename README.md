@@ -2,6 +2,8 @@
 
 Contains delta format stuff, plus more stuff.
 
+[Dec 2021 Update](https://techcommunity.microsoft.com/t5/azure-synapse-analytics-blog/azure-synapse-analytics-november-2021-update/ba-p/3020740)
+
 # DevOps 
 
 My Demo URLs:
