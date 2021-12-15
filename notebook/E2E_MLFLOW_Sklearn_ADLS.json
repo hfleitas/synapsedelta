@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7d8a6040-8fd3-40e5-bc1c-0cb0a2a09144"
+				"spark.autotune.trackingId": "d09a5535-2b95-4ec7-83fc-332b9608acdb"
 			}
 		},
 		"metadata": {
@@ -86,7 +86,7 @@
 					"with fsspec_handle.open() as f:\r\n",
 					"    train_df = pandas.read_csv(f)"
 				],
-				"execution_count": 21
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -104,7 +104,7 @@
 				"source": [
 					"train_df.head()"
 				],
-				"execution_count": 41
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -131,7 +131,7 @@
 					"\r\n",
 					"from sklearn.linear_model import LinearRegression"
 				],
-				"execution_count": 23
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
@@ -202,7 +202,7 @@
 					"      args = self.get_args()\r\n",
 					"      json.dump(args, f)"
 				],
-				"execution_count": 24
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -235,7 +235,7 @@
 					"    model_class.save(output_model_path)\r\n",
 					"    print(model_class.predict(datasets))"
 				],
-				"execution_count": 25
+				"execution_count": 46
 			},
 			{
 				"cell_type": "code",
@@ -253,7 +253,7 @@
 				"source": [
 					"train(train_df, './artifacts/output')"
 				],
-				"execution_count": 26
+				"execution_count": 47
 			},
 			{
 				"cell_type": "markdown",
@@ -290,19 +290,14 @@
 					"\r\n",
 					"protocol, _ = split_protocol(STORAGE_PATH)\r\n",
 					"print (protocol)\r\n",
-					"# adls_account_name = 'ajagarwdemoadlsg2' #Provide exact ADLS account name\r\n",
-					"# adls_account_key = '####' #Provide exact ADLS account key\r\n",
-					"# storage_options = {\r\n",
-					"#     'account_name': adls_account_name,\r\n",
-					"#     'account_key': adls_account_key\r\n",
-					"# }\r\n",
+					"\r\n",
 					"fs = fsspec.filesystem(protocol)\r\n",
 					"fs.put(\r\n",
 					"    './artifacts/output',\r\n",
 					"    STORAGE_PATH, \r\n",
 					"    recursive=True, overwrite=True)"
 				],
-				"execution_count": 27
+				"execution_count": 48
 			},
 			{
 				"cell_type": "markdown",
@@ -341,7 +336,7 @@
 					"\r\n",
 					"print(pcontext.__version__)"
 				],
-				"execution_count": 28
+				"execution_count": 49
 			},
 			{
 				"cell_type": "markdown",
@@ -377,7 +372,7 @@
 					"ADLS_MODEL_URI_SKLEARN = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/predict/models/mlflow/sklearn/e2e_linear_regression/\"\r\n",
 					"RETURN_TYPES = \"INT\""
 				],
-				"execution_count": 29
+				"execution_count": 50
 			},
 			{
 				"cell_type": "markdown",
@@ -409,7 +404,7 @@
 				"source": [
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"execution_count": 30
+				"execution_count": 51
 			},
 			{
 				"cell_type": "markdown",
@@ -440,7 +435,7 @@
 				"source": [
 					"model = pcontext.bind_model(RETURN_TYPES, \"mlflow\", \"sklearn_linear_regression\", ADLS_MODEL_URI_SKLEARN).register()"
 				],
-				"execution_count": 31
+				"execution_count": 52
 			},
 			{
 				"cell_type": "markdown",
@@ -479,7 +474,7 @@
 					"df.show(10)\r\n",
 					"df"
 				],
-				"execution_count": 32
+				"execution_count": 53
 			},
 			{
 				"cell_type": "code",
@@ -502,7 +497,7 @@
 					"%%sql \r\n",
 					"select * from data"
 				],
-				"execution_count": 33
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -524,7 +519,7 @@
 					"                  \"\"\"\r\n",
 					"              ).show()"
 				],
-				"execution_count": 34
+				"execution_count": null
 			}
 		]
 	}
