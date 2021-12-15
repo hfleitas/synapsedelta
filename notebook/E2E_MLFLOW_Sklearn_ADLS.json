@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d09a5535-2b95-4ec7-83fc-332b9608acdb"
+				"spark.autotune.trackingId": "8a4c1c6d-588a-4eb2-b9dc-9a6fa9d98229"
 			}
 		},
 		"metadata": {
@@ -86,7 +86,7 @@
 					"with fsspec_handle.open() as f:\r\n",
 					"    train_df = pandas.read_csv(f)"
 				],
-				"execution_count": 42
+				"execution_count": 56
 			},
 			{
 				"cell_type": "code",
@@ -104,7 +104,7 @@
 				"source": [
 					"train_df.head()"
 				],
-				"execution_count": 43
+				"execution_count": 57
 			},
 			{
 				"cell_type": "code",
@@ -131,7 +131,7 @@
 					"\r\n",
 					"from sklearn.linear_model import LinearRegression"
 				],
-				"execution_count": 44
+				"execution_count": 58
 			},
 			{
 				"cell_type": "code",
@@ -202,7 +202,7 @@
 					"      args = self.get_args()\r\n",
 					"      json.dump(args, f)"
 				],
-				"execution_count": 45
+				"execution_count": 59
 			},
 			{
 				"cell_type": "code",
@@ -235,7 +235,7 @@
 					"    model_class.save(output_model_path)\r\n",
 					"    print(model_class.predict(datasets))"
 				],
-				"execution_count": 46
+				"execution_count": 60
 			},
 			{
 				"cell_type": "code",
@@ -253,7 +253,7 @@
 				"source": [
 					"train(train_df, './artifacts/output')"
 				],
-				"execution_count": 47
+				"execution_count": 61
 			},
 			{
 				"cell_type": "markdown",
@@ -297,7 +297,7 @@
 					"    STORAGE_PATH, \r\n",
 					"    recursive=True, overwrite=True)"
 				],
-				"execution_count": 48
+				"execution_count": 62
 			},
 			{
 				"cell_type": "markdown",
@@ -336,7 +336,7 @@
 					"\r\n",
 					"print(pcontext.__version__)"
 				],
-				"execution_count": 49
+				"execution_count": 63
 			},
 			{
 				"cell_type": "markdown",
@@ -372,7 +372,7 @@
 					"ADLS_MODEL_URI_SKLEARN = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/predict/models/mlflow/sklearn/e2e_linear_regression/\"\r\n",
 					"RETURN_TYPES = \"INT\""
 				],
-				"execution_count": 50
+				"execution_count": 64
 			},
 			{
 				"cell_type": "markdown",
@@ -404,7 +404,7 @@
 				"source": [
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"execution_count": 51
+				"execution_count": 65
 			},
 			{
 				"cell_type": "markdown",
@@ -435,7 +435,7 @@
 				"source": [
 					"model = pcontext.bind_model(RETURN_TYPES, \"mlflow\", \"sklearn_linear_regression\", ADLS_MODEL_URI_SKLEARN).register()"
 				],
-				"execution_count": 52
+				"execution_count": 66
 			},
 			{
 				"cell_type": "markdown",
@@ -474,7 +474,7 @@
 					"df.show(10)\r\n",
 					"df"
 				],
-				"execution_count": 53
+				"execution_count": 67
 			},
 			{
 				"cell_type": "code",
@@ -497,7 +497,7 @@
 					"%%sql \r\n",
 					"select * from data"
 				],
-				"execution_count": null
+				"execution_count": 68
 			},
 			{
 				"cell_type": "code",
@@ -519,7 +519,23 @@
 					"                  \"\"\"\r\n",
 					"              ).show()"
 				],
-				"execution_count": null
+				"execution_count": 69
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Special Thanks\r\n",
+					"* Ajay Agarwal\r\n",
+					"* Tian Wei\r\n",
+					"* Nellie Gustafsson"
+				]
 			}
 		]
 	}
