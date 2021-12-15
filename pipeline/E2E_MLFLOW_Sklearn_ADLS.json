@@ -1,0 +1,28 @@
+{
+	"name": "E2E_MLFLOW_Sklearn_ADLS",
+	"properties": {
+		"activities": [
+			{
+				"name": "E2E_MLFLOW_Sklearn_ADLS",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "E2E_MLFLOW_Sklearn_ADLS",
+						"type": "NotebookReference"
+					},
+					"snapshot": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}

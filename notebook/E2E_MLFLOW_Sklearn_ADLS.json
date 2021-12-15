@@ -42,10 +42,8 @@
 				"sparkVersion": "3.1",
 				"nodeCount": 5,
 				"cores": 8,
-				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"memory": 56
+			}
 		},
 		"cells": [
 			{
