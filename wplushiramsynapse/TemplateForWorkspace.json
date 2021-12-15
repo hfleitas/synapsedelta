@@ -4664,7 +4664,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "5536fc9b-cab8-40ca-bc8a-750488d45761"
+						"spark.autotune.trackingId": "0949437a-8bf0-4773-89a4-796ba6d0f1af"
 					}
 				},
 				"metadata": {
@@ -4707,7 +4707,7 @@
 						"source": [
 							"# Linear Regression (Sklearn)\r\n",
 							"This tutorial shows how to use Predict on a Sklearn model.\r\n",
-							"\r\n",
+							"Duration 00:02:38\r\n",
 							"# Train SKLearn Model"
 						]
 					},
@@ -4734,7 +4734,27 @@
 							"    train_df = pandas.read_csv(f)"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 56
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {}
+						},
+						"source": [
+							"train_df.head()"
+						],
+						"outputs": [],
+						"execution_count": 57
 					},
 					{
 						"cell_type": "code",
@@ -4762,7 +4782,7 @@
 							"from sklearn.linear_model import LinearRegression"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 58
 					},
 					{
 						"cell_type": "code",
@@ -4834,7 +4854,7 @@
 							"      json.dump(args, f)"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 59
 					},
 					{
 						"cell_type": "code",
@@ -4868,7 +4888,7 @@
 							"    print(model_class.predict(datasets))"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 60
 					},
 					{
 						"cell_type": "code",
@@ -4887,7 +4907,7 @@
 							"train(train_df, './artifacts/output')"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 61
 					},
 					{
 						"cell_type": "markdown",
@@ -4924,12 +4944,7 @@
 							"\r\n",
 							"protocol, _ = split_protocol(STORAGE_PATH)\r\n",
 							"print (protocol)\r\n",
-							"# adls_account_name = 'ajagarwdemoadlsg2' #Provide exact ADLS account name\r\n",
-							"# adls_account_key = '####' #Provide exact ADLS account key\r\n",
-							"# storage_options = {\r\n",
-							"#     'account_name': adls_account_name,\r\n",
-							"#     'account_key': adls_account_key\r\n",
-							"# }\r\n",
+							"\r\n",
 							"fs = fsspec.filesystem(protocol)\r\n",
 							"fs.put(\r\n",
 							"    './artifacts/output',\r\n",
@@ -4937,7 +4952,7 @@
 							"    recursive=True, overwrite=True)"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 62
 					},
 					{
 						"cell_type": "markdown",
@@ -4977,7 +4992,7 @@
 							"print(pcontext.__version__)"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 63
 					},
 					{
 						"cell_type": "markdown",
@@ -5014,7 +5029,7 @@
 							"RETURN_TYPES = \"INT\""
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 64
 					},
 					{
 						"cell_type": "markdown",
@@ -5047,7 +5062,7 @@
 							"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 65
 					},
 					{
 						"cell_type": "markdown",
@@ -5079,7 +5094,7 @@
 							"model = pcontext.bind_model(RETURN_TYPES, \"mlflow\", \"sklearn_linear_regression\", ADLS_MODEL_URI_SKLEARN).register()"
 						],
 						"outputs": [],
-						"execution_count": 12
+						"execution_count": 66
 					},
 					{
 						"cell_type": "markdown",
@@ -5119,7 +5134,7 @@
 							"df"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 67
 					},
 					{
 						"cell_type": "code",
@@ -5143,7 +5158,7 @@
 							"select * from data"
 						],
 						"outputs": [],
-						"execution_count": 14
+						"execution_count": 68
 					},
 					{
 						"cell_type": "code",
@@ -5166,7 +5181,23 @@
 							"              ).show()"
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 69
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Special Thanks\r\n",
+							"* Ajay Agarwal\r\n",
+							"* Tian Wei\r\n",
+							"* Nellie Gustafsson"
+						]
 					}
 				]
 			},
