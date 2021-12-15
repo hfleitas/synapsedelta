@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5e248695-ea7c-4a81-8f9e-41257c7db610"
+				"spark.autotune.trackingId": "b9fa2be1-b605-4187-b085-50c8bbece4b9"
 			}
 		},
 		"metadata": {
@@ -42,8 +42,10 @@
 				"sparkVersion": "3.1",
 				"nodeCount": 5,
 				"cores": 8,
-				"memory": 56
-			}
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -58,7 +60,7 @@
 				"source": [
 					"# Linear Regression (Sklearn)\r\n",
 					"This tutorial shows how to use Predict on a Sklearn model.\r\n",
-					"\r\n",
+					"Duration 00:02:38\r\n",
 					"# Train SKLearn Model"
 				]
 			},
@@ -84,7 +86,7 @@
 					"with fsspec_handle.open() as f:\r\n",
 					"    train_df = pandas.read_csv(f)"
 				],
-				"execution_count": 1
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +113,7 @@
 					"\r\n",
 					"from sklearn.linear_model import LinearRegression"
 				],
-				"execution_count": 2
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -182,7 +184,7 @@
 					"      args = self.get_args()\r\n",
 					"      json.dump(args, f)"
 				],
-				"execution_count": 3
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -215,7 +217,7 @@
 					"    model_class.save(output_model_path)\r\n",
 					"    print(model_class.predict(datasets))"
 				],
-				"execution_count": 4
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -233,7 +235,7 @@
 				"source": [
 					"train(train_df, './artifacts/output')"
 				],
-				"execution_count": 5
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -357,7 +359,7 @@
 					"ADLS_MODEL_URI_SKLEARN = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/predict/models/mlflow/sklearn/e2e_linear_regression/\"\r\n",
 					"RETURN_TYPES = \"INT\""
 				],
-				"execution_count": 14
+				"execution_count": 10
 			},
 			{
 				"cell_type": "markdown",
@@ -389,7 +391,7 @@
 				"source": [
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"execution_count": 15
+				"execution_count": 11
 			},
 			{
 				"cell_type": "markdown",
@@ -420,7 +422,7 @@
 				"source": [
 					"model = pcontext.bind_model(RETURN_TYPES, \"mlflow\", \"sklearn_linear_regression\", ADLS_MODEL_URI_SKLEARN).register()"
 				],
-				"execution_count": 16
+				"execution_count": 12
 			},
 			{
 				"cell_type": "markdown",
@@ -459,7 +461,7 @@
 					"df.show(10)\r\n",
 					"df"
 				],
-				"execution_count": 17
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -482,7 +484,7 @@
 					"%%sql \r\n",
 					"select * from data"
 				],
-				"execution_count": 18
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -504,7 +506,7 @@
 					"                  \"\"\"\r\n",
 					"              ).show()"
 				],
-				"execution_count": 19
+				"execution_count": 15
 			}
 		]
 	}
