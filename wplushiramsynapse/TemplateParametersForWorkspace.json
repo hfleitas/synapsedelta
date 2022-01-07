@@ -3,52 +3,358 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"workspaceName": {
-			"value": "wplushiramsynapse"
+			"value": "diitworkspace"
 		},
-		"LaptopFact_password": {
+		"AzureSqlOnDemand_connectionString": {
 			"value": ""
 		},
-		"SQLOnDemand_connectionString": {
+		"DIITAnalytics_rdl_read_connectionString": {
 			"value": ""
 		},
-		"adbhf_accessToken": {
+		"Dynamics365_sandbox_servicePrincipalCredential": {
 			"value": ""
 		},
-		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
+		"DynamicsCrm_sandbox_servicePrincipalCredential": {
 			"value": ""
 		},
-		"wplushiramsynapseLoaderXL_connectionString": {
+		"FunctionApp_Gsuite_Parachute_Coursework_functionKey": {
 			"value": ""
 		},
-		"AzureKeyVault1_properties_typeProperties_baseUrl": {
-			"value": "https://synapseAKV.vault.azure.net/"
-		},
-		"LabFilesZip_properties_typeProperties_url": {
-			"value": "https://pbiworkshoplabsgvw.blob.core.windows.net/synapse/LabFiles.zip"
-		},
-		"LaptopFact_properties_typeProperties_host": {
-			"value": "C:/hiram-msft/ws-SynapseSQLPools"
-		},
-		"LaptopFact_properties_typeProperties_userId": {
-			"value": "LAPTOP-RRU3V9OS\\dwloader"
-		},
-		"PublicDataset_sasUri": {
+		"LS_SQLSERVER_SBSDATA_connectionString": {
 			"value": ""
 		},
-		"powerapps_properties_typeProperties_connectionString_secretName": {
-			"value": "powerappssqlconnectionstring"
+		"LS_StagingAccount_connectionString": {
+			"value": ""
 		},
-		"sqldbedgeoulvzyml_properties_typeProperties_subscriptionId": {
-			"value": "e4e06275-58d1-4081-8f1b-be12462eb701"
+		"OFNS_Prod_SQLserver_connectionString": {
+			"value": ""
 		},
-		"sqldbedgeoulvzyml_properties_typeProperties_resourceGroupName": {
-			"value": "wind"
+		"SqlServer_Devices_dev_connectionString": {
+			"value": ""
 		},
-		"wplushiramsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
-			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net"
+		"Staging_linkedService_accountKey": {
+			"value": ""
 		},
-		"Daily_properties_DevOpsCICD_parameters_environment": {
-			"value": "dev"
+		"diitworkspace-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"diitworkspace_Synapse_LS_connectionString": {
+			"value": ""
+		},
+		"dimstg_nycenet_privateKeyContent": {
+			"value": ""
+		},
+		"dimstg_nycenet_passPhrase": {
+			"value": ""
+		},
+		"snow_uat_uname_pwd_password": {
+			"value": ""
+		},
+		"API_SF_Hotspot_properties_typeProperties_url": {
+			"value": "https://nycdoedev2.service-now.com/api/now/table/cmdb_ci_net_app_server?sysparm_query=u_assettypeSTARTSWITHHot&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_funded"
+		},
+		"ATSSqlServer_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-atsdemo-sql-constrg"
+		},
+		"ATS_DEMO_Prod_petuser_properties_typeProperties_connectionString_secretName": {
+			"value": "Atsdemo-petuser-sqlconstrng"
+		},
+		"ATS_SIF_SQLServer_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-sif-sql-constrg"
+		},
+		"AZLControllerLinkedService_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-adlcontroller-sql-constrg"
+		},
+		"AzureKeyVaultSTARS_properties_typeProperties_baseUrl": {
+			"value": "https://dev-daap.vault.azure.net/"
+		},
+		"Covid19SqlServer_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-covid19-sql-constrg"
+		},
+		"D2LHttp_properties_typeProperties_url": {
+			"value": "https://platform.ilearnnyc.net/"
+		},
+		"DAAP_LMI_AzureFunction_DEV_properties_typeProperties_functionAppUrl": {
+			"value": "https://dev-lmi-f1.azurewebsites.net"
+		},
+		"DAAP_LMI_AzureFunction_Prod_properties_typeProperties_functionAppUrl": {
+			"value": "https://prd-lmi-f1.azurewebsites.net"
+		},
+		"DAAP_LMI_AzureFunction_QA_properties_typeProperties_functionAppUrl": {
+			"value": "https://qa-lmi-f1.azurewebsites.net"
+		},
+		"DB2_HRHUB_properties_typeProperties_connectionString_secretName": {
+			"value": "HRHUB-DEV-db2constrg"
+		},
+		"DB2_HRHUB_PROD_properties_typeProperties_connectionString_secretName": {
+			"value": "HRHUB-db2constrg"
+		},
+		"DMR_INTSQLServer_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-dmrint-sql-constrg"
+		},
+		"DcodsOracleNew_properties_typeProperties_connectionString_secretName": {
+			"value": "Dcods-oraclesqlconstrg"
+		},
+		"Devices_Dev_Admin_properties_typeProperties_connectionString_secretName": {
+			"value": "Devices-dev-admin-sqlconstrng"
+		},
+		"Dynamics365_prod_properties_typeProperties_servicePrincipalId": {
+			"value": "24246368-b2cb-42ec-820f-39f90f2e4e90"
+		},
+		"Dynamics365_sandbox_properties_typeProperties_servicePrincipalId": {
+			"value": "24246368-b2cb-42ec-820f-39f90f2e4e90"
+		},
+		"DynamicsCrm_sandbox_properties_typeProperties_servicePrincipalId": {
+			"value": "24246368-b2cb-42ec-820f-39f90f2e4e90"
+		},
+		"FunctionApp_D2L_properties_typeProperties_functionAppUrl": {
+			"value": "https://unzipalld2lfiles.azurewebsites.net"
+		},
+		"FunctionApp_Gsuite_AdminSDK_properties_typeProperties_functionAppUrl": {
+			"value": "https://gsuiteadminsdk.azurewebsites.net"
+		},
+		"FunctionApp_Gsuite_Central_Courses_properties_typeProperties_functionAppUrl": {
+			"value": "https://centralcourses.azurewebsites.net"
+		},
+		"FunctionApp_Gsuite_Central_Students_properties_typeProperties_functionAppUrl": {
+			"value": "https://centralstudents.azurewebsites.net"
+		},
+		"FunctionApp_Gsuite_Central_Teachers_properties_typeProperties_functionAppUrl": {
+			"value": "https://centralteachers.azurewebsites.net"
+		},
+		"FunctionApp_Gsuite_Parachute_AdminSdk_properties_typeProperties_functionAppUrl": {
+			"value": "https://parachuteadminsdk.azurewebsites.net"
+		},
+		"FunctionApp_Gsuite_Parachute_Courses_properties_typeProperties_functionAppUrl": {
+			"value": "https://parachutecourses.azurewebsites.net"
+		},
+		"FunctionApp_Gsuite_Parachute_Coursework_properties_typeProperties_functionAppUrl": {
+			"value": "https://parachutecoursework.azurewebsites.net"
+		},
+		"FunctionApp_Gsuite_Parachute_Students_properties_typeProperties_functionAppUrl": {
+			"value": "https://parachutestudents.azurewebsites.net"
+		},
+		"FunctionApp_Gsuite_Parachute_Teachers_properties_typeProperties_functionAppUrl": {
+			"value": "https://parachuteteachers.azurewebsites.net"
+		},
+		"FunctionApp_SharedFunctions_properties_typeProperties_functionAppUrl": {
+			"value": "https://gsuitewatch.nycenet.edu"
+		},
+		"Galaxy_SqlServer_properties_typeProperties_connectionString_secretName": {
+			"value": "Galaxy-finance360-sqlconstrg"
+		},
+		"Galaxy_views_read_properties_typeProperties_connectionString_secretName": {
+			"value": "Diitanalytics-rdl-read-sqlconstrg"
+		},
+		"LMI_DataCore_properties_typeProperties_host": {
+			"value": "10.2.121.98"
+		},
+		"LMI_DataCore_properties_typeProperties_userName": {
+			"value": "datacoressh"
+		},
+		"LMI_databae4_PROD_properties_typeProperties_connectionString_secretName": {
+			"value": "daaplmi-sql-connectionstring"
+		},
+		"LMI_databae4_QA_properties_typeProperties_connectionString_secretName": {
+			"value": "qa-lmi-sql-constrg"
+		},
+		"LS_DataLoad_SFTP_NewVision_properties_typeProperties_host": {
+			"value": "nvftp.newvisions.org"
+		},
+		"LS_DataLoad_SFTP_NewVision_properties_typeProperties_userName": {
+			"value": "doesummerschool"
+		},
+		"LS_SQLSERVER_DRSATTDIM_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-DRSATTDIM-sql-constrg"
+		},
+		"LS_SQLSERVER_SIF_properties_typeProperties_connectionString_secretName": {
+			"value": "datastage-sif-sqlconstrng"
+		},
+		"LS_SQLSERVER_STARS_properties_typeProperties_connectionString_secretName": {
+			"value": "datastage-stars-sqlconstrng"
+		},
+		"NycMangedServiceFTP_properties_typeProperties_host": {
+			"value": "managedservices.nycenet.edu"
+		},
+		"NycMangedServiceFTP_properties_typeProperties_userName": {
+			"value": "Ats2Lake_Atten"
+		},
+		"RBAC_EXT_Prod_Read_properties_typeProperties_connectionString_secretName": {
+			"value": "RBAC-EXT-readuser-sqlconstrg"
+		},
+		"STARSSQLSERVER_PROD_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-stars-sql-constrg"
+		},
+		"STARSSqlServer_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-starsint-sql-constrg"
+		},
+		"STARS_DL_STAGE_SqlServer_properties_typeProperties_connectionString_secretName": {
+			"value": "stg-stars-sql-constrg"
+		},
+		"SqlServer1_properties_typeProperties_connectionString_secretName": {
+			"value": "dev-stars-sql-constrg"
+		},
+		"SqlServerADL_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-adlcontroller-sql-constrg"
+		},
+		"SqlServerDataHub_properties_typeProperties_connectionString_secretName": {
+			"value": "dev-datahub-sql-constrg"
+		},
+		"SqlServerDataHub_PRD_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-datahub-sql-constrg"
+		},
+		"SqlServerDataHub_STG_properties_typeProperties_connectionString_secretName": {
+			"value": "stg-datahub-sql-constrg"
+		},
+		"SqlServer_DataHub_PRD_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-datahub-sql-constrg"
+		},
+		"SqlServer_LCGMS_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-lcgms-sql-constrg"
+		},
+		"Sqlpool_test_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-diitanalytics-sql-constrg"
+		},
+		"Staging_linkedService_properties_typeProperties_url": {
+			"value": "https://diitfpe.dfs.core.windows.net"
+		},
+		"SuperTable_SqlServer_Prod_properties_typeProperties_connectionString_secretName": {
+			"value": "prd-supertable-sql-constrg"
+		},
+		"devdaapkeyvault_properties_typeProperties_baseUrl": {
+			"value": "https://dev-daap.vault.azure.net/"
+		},
+		"diitworkspace-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://diitfpe.dfs.core.windows.net"
+		},
+		"dimstg_nycenet_properties_typeProperties_host": {
+			"value": "dimstg.nycenet.edu"
+		},
+		"dimstg_nycenet_properties_typeProperties_userName": {
+			"value": "daapuser"
+		},
+		"itsm_integration_prod_properties_typeProperties_connectionString_secretName": {
+			"value": "itsm-integration-rdlintegration-sqlconstrg"
+		},
+		"ls_API_SNOW_Chromebook_properties_typeProperties_url": {
+			"value": "https://nycdoedev2.service-now.com/api/now/table/cmdb_ci_computer?sysparm_query=asset_tagSTARTSWITHDOE-DELL%5Eu_project_name%3D150kChromebooks%5ENQu_assettype%3DLaptop%5Emanufacturer.name%3DACER&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_funded"
+		},
+		"ls_api_snow_hotspot_dev_properties_typeProperties_url": {
+			"value": "https://nycdoedev1.service-now.com/api/now/table/cmdb_ci_net_app_server?sysparm_query=u_assettypeSTARTSWITHHot&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_located"
+		},
+		"ls_snow_api_chromebook_dev_properties_typeProperties_url": {
+			"value": "https://nycdoedev1.service-now.com/api/now/table/cmdb_ci_computer?sysparm_query=asset_tagSTARTSWITHDOE-DELL%5Eu_project_name%3D150kChromebooks%5ENQu_assettype%3DLaptop%5Emanufacturer.name%3DACER&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_located"
+		},
+		"ls_snow_api_chromebook_prod_properties_typeProperties_url": {
+			"value": "https://supportadmin.schools.nyc/api/now/table/cmdb_ci_computer?sysparm_query=discovery_source!=^asset_tagSTARTSWITHDOE-DELL^u_project_name=150kChromebooks^NQdiscovery_source!=^u_assettype=Laptop^manufacturer=8989f7221bd081908f8ea8aa234bcb20&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_funded"
+		},
+		"ls_snow_api_hotspot_prod_properties_typeProperties_url": {
+			"value": "https://supportadmin.schools.nyc/api/now/table/cmdb_ci_net_app_server?sysparm_query=discovery_source!=^u_assettypeSTARTSWITHHot&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_funded"
+		},
+		"ls_snow_api_ipad_properties_typeProperties_url": {
+			"value": "https://nycdoedev2.service-now.com/api/now/table/cmdb_ci_comm?sysparm_query=u_project_nameLIKEcovi&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_funded"
+		},
+		"ls_snow_api_ipad_dev_properties_typeProperties_url": {
+			"value": "https://nycdoedev1.service-now.com/api/now/table/cmdb_ci_comm?sysparm_query=u_project_nameLIKEcovi&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_located"
+		},
+		"ls_snow_api_ipad_prod_properties_typeProperties_url": {
+			"value": "https://supportadmin.schools.nyc/api/now/table/cmdb_ci_comm?sysparm_query=discovery_source!=^u_project_nameLIKEcovi&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_funded"
+		},
+		"snow_uat_uname_pwd_properties_typeProperties_url": {
+			"value": "https://nycdoedev2.service-now.com/api/now/table/cmdb_ci_comm?sysparm_query=u_project_nameLIKEcovi&sysparm_display_value=true&sysparm_exclude_reference_link=true&sysparm_fields=asset_tag%2Cu_assettype%2Cu_floor%2Cu_iccid%2Cu_imei%2Cu_ldacode%2Cu_locationcode%2Cmanufacturer%2Cu_phone_number%2Cmodel_number%2Cu_ny_purchaseorderdate%2Cu_ny_purchase_order_number%2Cu_ny_purchasetrackingdate%2Cu_ny_purchasetrackingid%2Cu_project_name%2Cu_room%2Cu_roomtype%2Cserial_number%2Cu_shipping_delivery_date%2Cu_carrier%2Cu_usagecode%2Cu_warrantystdenddate%2Cu_warrantystdstartdate%2Cu_centrally_located&sysparm_limit=1000000&sysparm_offset=0"
+		},
+		"snow_uat_uname_pwd_properties_typeProperties_userName": {
+			"value": "RLD.Integration"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_DynamicsCRM_url": {
+			"value": "https://nycdoe.crm.dynamics.com"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_DynamicsCRM_clientId": {
+			"value": "24246368-b2cb-42ec-820f-39f90f2e4e90"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_DynamicsCRM_secret": {
+			"value": "ao_.qanMrG55Rc~la~-yjx_s_J34HYusD."
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_DIITAnalytics_serverName": {
+			"value": "diitworkspace.sql.azuresynapse.net"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_DIITAnalytics_dbName": {
+			"value": "DIITAnalytics"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_DIITAnalytics_userName": {
+			"value": "rdl_read"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_DIITAnalytics_password": {
+			"value": "E2romami!"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_Devices_serverName": {
+			"value": "dev-devices.database.windows.net"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_Devices_dbName": {
+			"value": "devices"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_Devices_userName": {
+			"value": "Devices_admin"
+		},
+		"DynamicsCRM_update_pcarrole_properties_DynamicsCRM_update_pcarrole_parameters_Devices_password": {
+			"value": "ykavoxoc!000"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_Device_server": {
+			"value": "dev-devices.database.windows.net"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_Device_db": {
+			"value": "devices"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_Device_user": {
+			"value": "Devices_admin"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_Device_pwd": {
+			"value": "ykavoxoc!000"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_oauth_url": {
+			"value": "https://supportadmin.schools.nyc/oauth_token.do"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_grant_type": {
+			"value": "refresh_token"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_client_id": {
+			"value": "8fd49ae414008110ec7b4979c0860174"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_client_secret": {
+			"value": "FomkhhJS%7Bp"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_refresh_token": {
+			"value": "ewKPz4nZrYvZOULvqLdSTpazpreFmGKq4mhPUinsz4vxTsjGBrSrtB97l-9Bp_8Y2Zaej3Zg1Ub0acVlT2SwxQ"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_loop": {
+			"value": [
+				0,
+				100000,
+				200000,
+				300000,
+				400000,
+				500000,
+				600000,
+				700000,
+				800000,
+				900000,
+				1000000
+			]
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_covid19server": {
+			"value": "prd-covid19.database.windows.net"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_covid19db": {
+			"value": "covid19"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_covid19user": {
+			"value": "covid19admin"
+		},
+		"RLD_SNOW_Integration_Daily_Refresh_properties_getDataFromSalesforce_PROD_covid19_parameters_covid19pwd": {
+			"value": "c0v@335!.718*pr!"
+		},
+		"Trigger_parachute_submission_properties_typeProperties_scope": {
+			"value": "/subscriptions/f0e95eb7-7915-4a13-863d-aa035bfb701a/resourceGroups/DIIT-ProductEngineering/providers/Microsoft.Storage/storageAccounts/diitfpe"
 		}
 	}
 }
