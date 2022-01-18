@@ -1,5 +1,5 @@
 {
-	"name": "notebookutilsdemo",
+	"name": "notebookutilsdemoR",
 	"properties": {
 		"folder": {
 			"name": "SparkR"
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a94eb462-d0c0-4e7a-9d61-12b9f04ceb82"
+				"spark.autotune.trackingId": "28859e58-85b4-4afb-8ed3-778aceda44a0"
 			}
 		},
 		"metadata": {
@@ -100,7 +100,7 @@
 				"source": [
 					"library(notebookutils)"
 				],
-				"execution_count": 1
+				"execution_count": 37
 			},
 			{
 				"cell_type": "markdown",
@@ -131,7 +131,7 @@
 				"source": [
 					"mssparkutils.fs.help()"
 				],
-				"execution_count": 2
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -495,9 +495,9 @@
 				},
 				"source": [
 					"# Reference a notebook\r\n",
-					"mssparkutils.notebook.run(\"/SparkR/TmpShakespeare\", 360)"
+					"mssparkutils.notebook.run(\"helloworld\", 360)"
 				],
-				"execution_count": 35
+				"execution_count": 41
 			},
 			{
 				"cell_type": "code",
@@ -516,7 +516,7 @@
 					"# Exit a notebook\r\n",
 					"#mssparkutils.notebook.exit(\"value string\")"
 				],
-				"execution_count": 27
+				"execution_count": 42
 			},
 			{
 				"cell_type": "markdown",
