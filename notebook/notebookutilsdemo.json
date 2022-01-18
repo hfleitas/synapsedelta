@@ -1,0 +1,1031 @@
+{
+	"name": "notebookutilsdemo",
+	"properties": {
+		"folder": {
+			"name": "SparkR"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "threemid",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "dca81349-5a81-429d-9d57-e78241ef394d"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "r"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threemid",
+				"name": "threemid",
+				"type": "Spark",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threemid",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Requirements\r\n",
+					"- Join the AAD group `MSSparkUtils R Users` to get access to this workspace and the associated storage account\r\n",
+					"- To enable R support, please add feature request parameter `feature.rlanguage=true` to the site URL. e.g. `https://ms.web.azuresynapse.net/en-us/authoring/analyze/...?feature.rlanguage=true`\r\n",
+					"- R support is only available in Spark 3.1 or above. We don't support this feature in Spark 2.4\r\n",
+					"- `library(notebookutils)` has to be executed first to load the library. We will remove this constraint in the next release.\r\n",
+					"\r\n",
+					"## Known issue\r\n",
+					"- Notebook reference run is not supported temporarily for now. It will be supported in the next release. If urgent, we can provide some workaround"
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Loading notebookutils library"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"library(notebookutils)"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## File System Utilities"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.fs.help()"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# List files\r\n",
+					"mssparkutils.fs.ls(\"/\")"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# View file properties\r\n",
+					"files <- mssparkutils.fs.ls(\"/\")\r\n",
+					"for (file in files) {\r\n",
+					"    writeLines(paste(file$name, file$isDir, file$isFile, file$size))\r\n",
+					"}"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create new directory\r\n",
+					"mssparkutils.fs.mkdirs(\"/tmp/a/b/c\")"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Copy file\r\n",
+					"mssparkutils.fs.cp(\"/shakespeare.txt\", \"/tmp/a/b/c/shakespeare.txt\", TRUE) # Set the third parameter as True to copy all files and directories recursively\r\n",
+					"mssparkutils.fs.cp(\"/tmp/a/b/c/shakespeare.txt\", \"/tmp/a/b/c/shakespeare1.txt\", TRUE)"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Preview file content\r\n",
+					"print(mssparkutils.fs.head(\"/tmp/a/b/c/shakespeare.txt\", 1024))"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Rename by Move file\r\n",
+					"mssparkutils.fs.mv(\"/tmp/a/b/c/shakespeare1.txt\", \"/tmp/a/b/c/shakespeare2.txt\", TRUE) # Set the last parameter as True to firstly create the parent directory if it does not exist"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Write file\r\n",
+					"mssparkutils.fs.put(\"/tmp/a/b/c/test.txt\",\"Hello world\", TRUE)"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Append content to a file\r\n",
+					"mssparkutils.fs.append(\"/tmp/a/b/c/test.txt\",\" from mssparkutils\", TRUE)\r\n",
+					"#mssparkutils.fs.head(\"/tmp/a/b/c/test.txt\")"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Delete file or directory\r\n",
+					"mssparkutils.fs.rm(\"/tmp\", TRUE) # Set the last parameter as True to remove all files and directories recursively"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### File mount/unmount"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Via Linked Service (recommend):\r\n",
+					"mssparkutils.fs.mount( \r\n",
+					"    \"abfss://nbutilsfs@nbutilsstorage.dfs.core.windows.net\", \r\n",
+					"    \"/testR\", \r\n",
+					"    list(\"linkedService\" = \"nbutilsmssparkutils\")\r\n",
+					") "
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# How to access files under mount point via local file system API\r\n",
+					"jobId <- mssparkutils.env.getJobId()\r\n",
+					"f <- sprintf(\"/synfs/%s/testR/myFile.txt\", jobId)\r\n",
+					"cat(\"Hello world.\\n\", file = f, sep = \"\", append = TRUE)"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# How to access files under mount point using mssparktuils fs API\r\n",
+					"# List dirs:\r\n",
+					"jobId <- mssparkutils.env.getJobId()\r\n",
+					"directory <- sprintf(\"synfs:/%s/testR\", jobId)\r\n",
+					"mssparkutils.fs.ls(directory)"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Read file content:\r\n",
+					"jobId <- mssparkutils.env.getJobId()\r\n",
+					"file <- sprintf(\"synfs:/%s/testR/myFile.txt\", jobId)\r\n",
+					"mssparkutils.fs.head(file)"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create directory:\r\n",
+					"jobId <- mssparkutils.env.getJobId()\r\n",
+					"directory <- sprintf(\"synfs:/%s/testR/newdir\", jobId)\r\n",
+					"mssparkutils.fs.mkdirs(directory)"
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# How to unmount the mount point\r\n",
+					"mssparkutils.fs.unmount(\"/testR\")"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Notebook utilities"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.notebook.help()"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Reference a notebook\r\n",
+					"mssparkutils.notebook.run(\"UPR/Read API demo\", 360)"
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Exit a notebook\r\n",
+					"#mssparkutils.notebook.exit(\"value string\")"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Credentials utilities"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.credentials.help()"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get token\r\n",
+					"mssparkutils.credentials.getToken(\"Synapse\")"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Validate token\r\n",
+					"token <- mssparkutils.credentials.getToken(\"Synapse\")\r\n",
+					"mssparkutils.credentials.isValidToken(token)"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get connection string or credentials for linked service\r\n",
+					"mssparkutils.credentials.getConnectionStringOrCreds(\"nbutilsmssparkutils\")"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get secret using workspace identity\r\n",
+					"mssparkutils.credentials.getSecret(\"nbutilskv\",\"mytestSecret\",\"nbutilskvlinkedservice\")"
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get secret using user credentials\r\n",
+					"mssparkutils.credentials.getSecret(\"nbutilskv\",\"mytestSecret\")"
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Put secret using workspace identity\r\n",
+					"mssparkutils.credentials.putSecret(\"nbutilskv\", \"mytestSecret\",\"secretvaluewithmsi\",\"nbutilskvlinkedservice\")"
+				],
+				"execution_count": 35
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Put secret using user credentials\r\n",
+					"mssparkutils.credentials.putSecret(\"nbutilskv\", \"mytestSecret\",\"secretvaluewithusercred\")"
+				],
+				"execution_count": 36
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Environment utilities"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.env.help()"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get user name\r\n",
+					"mssparkutils.env.getUserName()"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get user ID\r\n",
+					"mssparkutils.env.getUserId()"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get job ID\r\n",
+					"mssparkutils.env.getJobId()"
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get workspace name\r\n",
+					"mssparkutils.env.getWorkspaceName()"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get pool name\r\n",
+					"mssparkutils.env.getPoolName()"
+				],
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Get cluster ID\r\n",
+					"mssparkutils.env.getClusterId()"
+				],
+				"execution_count": 26
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Runtime Context"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ctx <- mssparkutils.runtime.context()\r\n",
+					"for (key in ls(ctx)) {\r\n",
+					"    writeLines(paste(key, ctx[[key]], sep = \"\\t\"))\r\n",
+					"}"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Visualization"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"df <- read.df('abfss://users@contosolake.dfs.core.windows.net/NYCTripSmall.parquet', format='parquet')\r\n",
+					"display(limit(df, 10))"
+				],
+				"execution_count": 28
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"displayHTML('<!DOCTYPE html>\r\n",
+					"<meta charset=\"utf-8\">\r\n",
+					"\r\n",
+					"<!-- Load d3.js -->\r\n",
+					"<script src=\"https://d3js.org/d3.v4.js\"></script>\r\n",
+					"\r\n",
+					"<!-- Create a div where the graph will take place -->\r\n",
+					"<div id=\"my_dataviz\"></div>\r\n",
+					"<script>\r\n",
+					"\r\n",
+					"// set the dimensions and margins of the graph\r\n",
+					"var margin = {top: 10, right: 30, bottom: 30, left: 40},\r\n",
+					"  width = 400 - margin.left - margin.right,\r\n",
+					"  height = 400 - margin.top - margin.bottom;\r\n",
+					"\r\n",
+					"// append the svg object to the body of the page\r\n",
+					"var svg = d3.select(\"#my_dataviz\")\r\n",
+					".append(\"svg\")\r\n",
+					"  .attr(\"width\", width + margin.left + margin.right)\r\n",
+					"  .attr(\"height\", height + margin.top + margin.bottom)\r\n",
+					".append(\"g\")\r\n",
+					"  .attr(\"transform\",\r\n",
+					"        \"translate(\" + margin.left + \",\" + margin.top + \")\");\r\n",
+					"\r\n",
+					"// Create Data\r\n",
+					"var data = [12,19,11,13,12,22,13,4,15,16,18,19,20,12,11,9]\r\n",
+					"\r\n",
+					"// Compute summary statistics used for the box:\r\n",
+					"var data_sorted = data.sort(d3.ascending)\r\n",
+					"var q1 = d3.quantile(data_sorted, .25)\r\n",
+					"var median = d3.quantile(data_sorted, .5)\r\n",
+					"var q3 = d3.quantile(data_sorted, .75)\r\n",
+					"var interQuantileRange = q3 - q1\r\n",
+					"var min = q1 - 1.5 * interQuantileRange\r\n",
+					"var max = q1 + 1.5 * interQuantileRange\r\n",
+					"\r\n",
+					"// Show the Y scale\r\n",
+					"var y = d3.scaleLinear()\r\n",
+					"  .domain([0,24])\r\n",
+					"  .range([height, 0]);\r\n",
+					"svg.call(d3.axisLeft(y))\r\n",
+					"\r\n",
+					"// a few features for the box\r\n",
+					"var center = 200\r\n",
+					"var width = 100\r\n",
+					"\r\n",
+					"// Show the main vertical line\r\n",
+					"svg\r\n",
+					".append(\"line\")\r\n",
+					"  .attr(\"x1\", center)\r\n",
+					"  .attr(\"x2\", center)\r\n",
+					"  .attr(\"y1\", y(min) )\r\n",
+					"  .attr(\"y2\", y(max) )\r\n",
+					"  .attr(\"stroke\", \"black\")\r\n",
+					"\r\n",
+					"// Show the box\r\n",
+					"svg\r\n",
+					".append(\"rect\")\r\n",
+					"  .attr(\"x\", center - width/2)\r\n",
+					"  .attr(\"y\", y(q3) )\r\n",
+					"  .attr(\"height\", (y(q1)-y(q3)) )\r\n",
+					"  .attr(\"width\", width )\r\n",
+					"  .attr(\"stroke\", \"black\")\r\n",
+					"  .style(\"fill\", \"#69b3a2\")\r\n",
+					"\r\n",
+					"// show median, min and max horizontal \r\n",
+					"svg\r\n",
+					".selectAll(\"toto\")\r\n",
+					".data([min, median, max])\r\n",
+					".enter()\r\n",
+					".append(\"line\")\r\n",
+					"  .attr(\"x1\", center-width/2)\r\n",
+					"  .attr(\"x2\", center+width/2)\r\n",
+					"  .attr(\"y1\", function(d){ return(y(d))} )\r\n",
+					"  .attr(\"y2\", function(d){ return(y(d))} )\r\n",
+					"  .attr(\"stroke\", \"black\")\r\n",
+					"</script>')"
+				],
+				"execution_count": 29
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Magic command"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "r"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sparkr\r\n",
+					"df <- read.df('abfss://users@contosolake.dfs.core.windows.net/NYCTripSmall.parquet', format='parquet')\r\n",
+					"display(limit(df, 10))"
+				],
+				"execution_count": 47
+			}
+		]
+	}
+}
