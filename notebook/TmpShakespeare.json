@@ -20,15 +20,15 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "cefc7ad3-d413-43c0-ac99-6e37947c7710"
+				"spark.autotune.trackingId": "288f2ff5-b427-45aa-b000-948f549c47d7"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
 			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "python"
+				"name": "synapse_sparkr",
+				"display_name": "Synapse SparkR"
 			},
 			"language_info": {
 				"name": "r"
@@ -56,26 +56,7 @@
 				"source": [
 					"library(notebookutils)"
 				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# List files\r\n",
-					"mssparkutils.fs.ls(\"/\")"
-				],
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -94,7 +75,7 @@
 					"# Create new directory\r\n",
 					"mssparkutils.fs.mkdirs(\"/tmp/a/b/c\")"
 				],
-				"execution_count": null
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -114,7 +95,7 @@
 					"mssparkutils.fs.cp(\"/shakespeare.txt\", \"/tmp/a/b/c/shakespeare.txt\", TRUE) # Set the third parameter as True to copy all files and directories recursively\r\n",
 					"mssparkutils.fs.cp(\"/tmp/a/b/c/shakespeare.txt\", \"/tmp/a/b/c/shakespeare1.txt\", TRUE)"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -132,7 +113,7 @@
 				"source": [
 					"print(mssparkutils.fs.head(\"/tmp/a/b/c/shakespeare.txt\", 1024))"
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -150,7 +131,7 @@
 				"source": [
 					"mssparkutils.fs.mv(\"/tmp/a/b/c/shakespeare1.txt\", \"/tmp/a/b/c/shakespeare2.txt\", TRUE) # Set the last parameter as True to firstly create the parent directory if it does not exist"
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -170,7 +151,7 @@
 					"mssparkutils.fs.append(\"/tmp/a/b/c/test.txt\",\" from mssparkutils\", TRUE)\r\n",
 					"#mssparkutils.fs.head(\"/tmp/a/b/c/test.txt\")"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -188,7 +169,7 @@
 				"source": [
 					"mssparkutils.fs.rm(\"/tmp\", TRUE) # Set the last parameter as True to remove all files and directories recursively"
 				],
-				"execution_count": null
+				"execution_count": 8
 			}
 		]
 	}
