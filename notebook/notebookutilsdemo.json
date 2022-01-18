@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "dca81349-5a81-429d-9d57-e78241ef394d"
+				"spark.autotune.trackingId": "a94eb462-d0c0-4e7a-9d61-12b9f04ceb82"
 			}
 		},
 		"metadata": {
@@ -495,9 +495,9 @@
 				},
 				"source": [
 					"# Reference a notebook\r\n",
-					"mssparkutils.notebook.run(\"UPR/Read API demo\", 360)"
+					"mssparkutils.notebook.run(\"/SparkR/TmpShakespeare\", 360)"
 				],
-				"execution_count": 33
+				"execution_count": 35
 			},
 			{
 				"cell_type": "code",
