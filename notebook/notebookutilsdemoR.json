@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "28859e58-85b4-4afb-8ed3-778aceda44a0"
+				"spark.autotune.trackingId": "cfa49810-e3f0-4b80-8dae-d44536833b06"
 			}
 		},
 		"metadata": {
@@ -100,7 +100,7 @@
 				"source": [
 					"library(notebookutils)"
 				],
-				"execution_count": 37
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -478,7 +478,7 @@
 				"source": [
 					"mssparkutils.notebook.help()"
 				],
-				"execution_count": 14
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -495,9 +495,9 @@
 				},
 				"source": [
 					"# Reference a notebook\r\n",
-					"mssparkutils.notebook.run(\"helloworld\", 360)"
+					"mssparkutils.notebook.run(\"SparkR/TmpShakespeare\", 360)"
 				],
-				"execution_count": 41
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
