@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d4737ffe-e756-4e92-a364-1d4354d9eee5"
+				"spark.autotune.trackingId": "f6075caf-d2d2-4dc6-b86b-71992ef2b4e3"
 			}
 		},
 		"metadata": {
@@ -74,12 +74,12 @@
 				"source": [
 					"# Via Linked Service (recommend):\r\n",
 					"mssparkutils.fs.mount( \r\n",
-					"    \"abfss://nyctaxistaging@wplushiramsynapseadlsv2.dfs.core.windows.net/\", \r\n",
+					"    \"abfss://nyctaxistaging@wplushiramsynapseadlsv2.dfs.core.windows.net\", \r\n",
 					"    \"/Dimension\", \r\n",
-					"    list(\"linkedService\" = \"nyctaxistagingmssparkutils\")\r\n",
+					"    list(\"linkedService\" = \"nyctaxistaging\")\r\n",
 					") "
 				],
-				"execution_count": null
+				"execution_count": 6
 			}
 		]
 	}
