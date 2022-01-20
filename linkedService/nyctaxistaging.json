@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
-			"url": "https://wplushiramsynapseadlsv2.dfs.core.windows.net/nyctaxistaging/"
+			"url": "https://wplushiramsynapseadlsv2.dfs.core.windows.net/"
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
