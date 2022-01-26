@@ -874,7 +874,7 @@
 										"value": "@pipeline().parameters.p1",
 										"type": "Expression"
 									},
-									"type": "string"
+									"type": "int"
 								}
 							},
 							"snapshot": true
@@ -887,8 +887,8 @@
 				},
 				"parameters": {
 					"p1": {
-						"type": "string",
-						"defaultValue": "3"
+						"type": "int",
+						"defaultValue": 3
 					}
 				},
 				"annotations": [],
@@ -5494,7 +5494,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "23f04fd1-d9d1-461f-85a3-75f11dc51945"
+						"spark.autotune.trackingId": "b40e8703-535f-4311-ab54-532964a93eac"
 					}
 				},
 				"metadata": {
