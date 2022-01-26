@@ -25,7 +25,7 @@
 								"value": "@pipeline().parameters.p1",
 								"type": "Expression"
 							},
-							"type": "string"
+							"type": "int"
 						}
 					},
 					"snapshot": true
@@ -34,8 +34,8 @@
 		],
 		"parameters": {
 			"p1": {
-				"type": "string",
-				"defaultValue": "3"
+				"type": "int",
+				"defaultValue": 3
 			}
 		},
 		"annotations": [],
