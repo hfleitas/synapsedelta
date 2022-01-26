@@ -35,6 +35,9 @@
 		"PublicDataset_sasUri": {
 			"value": ""
 		},
+		"nyctaxistaging_properties_typeProperties_url": {
+			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net/"
+		},
 		"powerapps_properties_typeProperties_connectionString_secretName": {
 			"value": "powerappssqlconnectionstring"
 		},
