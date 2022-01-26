@@ -21,7 +21,10 @@
 					},
 					"parameters": {
 						"p1": {
-							"value": "3",
+							"value": {
+								"value": "@pipeline().parameters.p1",
+								"type": "Expression"
+							},
 							"type": "int"
 						}
 					},
@@ -29,6 +32,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"p1": {
+				"type": "string",
+				"defaultValue": "3"
+			}
+		},
 		"annotations": [],
 		"lastPublishTime": "2021-09-13T01:54:17Z"
 	},

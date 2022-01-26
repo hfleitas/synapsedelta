@@ -16,11 +16,13 @@
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "fb136941-229a-44ef-8f71-9457d6c12e5b"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
 				"display_name": "Synapse PySpark"
@@ -41,8 +43,9 @@
 				"nodeCount": 10,
 				"cores": 64,
 				"memory": 400,
-				"extraHeader": null
-			}
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -55,8 +58,7 @@
 				"source": [
 					"p1 = 5"
 				],
-				"attachments": null,
-				"execution_count": 42
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -75,8 +77,7 @@
 					"p=p1\r\n",
 					"print(p)"
 				],
-				"attachments": null,
-				"execution_count": 48
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -104,8 +105,7 @@
 					"hol = PublicHolidays(start_date=start_date, end_date=end_date)\r\n",
 					"hol_df = hol.to_spark_dataframe()"
 				],
-				"attachments": null,
-				"execution_count": 44
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -123,8 +123,7 @@
 				"source": [
 					"hol = hol_df.limit(p)"
 				],
-				"attachments": null,
-				"execution_count": 59
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -143,8 +142,7 @@
 					"csv_path = \"hol.csv\"\r\n",
 					"hol.write.csv(csv_path, mode = 'overwrite', header = 'true')"
 				],
-				"attachments": null,
-				"execution_count": 61
+				"execution_count": 5
 			}
 		]
 	}
