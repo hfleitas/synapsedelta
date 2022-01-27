@@ -1,0 +1,176 @@
+{
+	"name": "TmpShakespeare",
+	"properties": {
+		"folder": {
+			"name": "SparkR"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "threemid",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "288f2ff5-b427-45aa-b000-948f549c47d7"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_sparkr",
+				"display_name": "Synapse SparkR"
+			},
+			"language_info": {
+				"name": "r"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threemid",
+				"name": "threemid",
+				"type": "Spark",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threemid",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"library(notebookutils)"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create new directory\r\n",
+					"mssparkutils.fs.mkdirs(\"/tmp/a/b/c\")"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Copy file\r\n",
+					"mssparkutils.fs.cp(\"/shakespeare.txt\", \"/tmp/a/b/c/shakespeare.txt\", TRUE) # Set the third parameter as True to copy all files and directories recursively\r\n",
+					"mssparkutils.fs.cp(\"/tmp/a/b/c/shakespeare.txt\", \"/tmp/a/b/c/shakespeare1.txt\", TRUE)"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"print(mssparkutils.fs.head(\"/tmp/a/b/c/shakespeare.txt\", 1024))"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.fs.mv(\"/tmp/a/b/c/shakespeare1.txt\", \"/tmp/a/b/c/shakespeare2.txt\", TRUE) # Set the last parameter as True to firstly create the parent directory if it does not exist"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Append content to a file\r\n",
+					"mssparkutils.fs.append(\"/tmp/a/b/c/test.txt\",\" from mssparkutils\", TRUE)\r\n",
+					"#mssparkutils.fs.head(\"/tmp/a/b/c/test.txt\")"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.fs.rm(\"/tmp\", TRUE) # Set the last parameter as True to remove all files and directories recursively"
+				],
+				"execution_count": 8
+			}
+		]
+	}
+}

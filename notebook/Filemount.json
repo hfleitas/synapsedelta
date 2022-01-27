@@ -1,6 +1,9 @@
 {
-	"name": "SparkSQLCTE",
+	"name": "Filemount",
 	"properties": {
+		"folder": {
+			"name": "SparkR"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
@@ -17,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e4c012c5-114f-4cbe-b190-cab25014c948"
+				"spark.autotune.trackingId": "3fed4520-48f9-47b2-93d4-84db471cc14e"
 			}
 		},
 		"metadata": {
@@ -28,7 +31,7 @@
 				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
-				"name": "python"
+				"name": "r"
 			},
 			"a365ComputeOptions": {
 				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threemid",
@@ -51,92 +54,30 @@
 			{
 				"cell_type": "code",
 				"metadata": {
-					"microsoft": {
-						"language": "python"
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
 					}
 				},
 				"source": [
-					"%%pyspark\n",
-					"df = spark.sql(\"SELECT * FROM `default`.`lastchanges`\")\n",
-					"# df.show(10)"
+					"library(notebookutils)"
 				],
-				"execution_count": 1
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
 				"source": [
-					"%%sql\r\n",
-					"select * from default.lastchanges"
-				],
-				"execution_count": 2
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%sql \r\n",
-					"with t as (\r\n",
-					"    SELECT 'a' as x,'b' as y\r\n",
-					") \r\n",
-					"select * from t\r\n",
-					""
-				],
-				"execution_count": 24
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%sql\r\n",
-					"\r\n",
-					"WITH CTE \r\n",
-					"AS \r\n",
-					"    (SELECT key as x, time, deleted FROM default.lastchanges)\r\n",
-					"\r\n",
-					"SELECT * FROM CTE"
+					"# Via Linked Service (recommend):\r\n",
+					"mssparkutils.fs.mount( \r\n",
+					"    \"abfss://nyctaxistaging@wplushiramsynapseadlsv2.dfs.core.windows.net\", \r\n",
+					"    \"/Dimension\", \r\n",
+					"    list(\"linkedService\" = \"nyctaxistaging\")\r\n",
+					") "
 				],
 				"execution_count": 6
 			}
