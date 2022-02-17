@@ -1,0 +1,15 @@
+{
+	"name": "freeadx",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataExplorer",
+		"typeProperties": {
+			"endpoint": "https://kvc43f0ee6600e24ef2b0e.southcentralus.kusto.windows.net",
+			"database": "MyDatabase"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
