@@ -1,0 +1,12 @@
+{
+	"name": "freeadx",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "freeadx",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureDataExplorerTable",
+		"schema": []
+	}
+}
