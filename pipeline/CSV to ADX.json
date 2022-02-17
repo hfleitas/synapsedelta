@@ -1,5 +1,5 @@
 {
-	"name": "SQL to ADX",
+	"name": "CSV to ADX",
 	"properties": {
 		"activities": [
 			{
