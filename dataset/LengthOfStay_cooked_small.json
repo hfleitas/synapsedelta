@@ -1,0 +1,124 @@
+{
+	"name": "LengthOfStay_cooked_small",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "LengthOfStay_cooked_small.csv",
+				"fileSystem": "wplushiramsynapsefs"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "hematocrit",
+				"type": "String"
+			},
+			{
+				"name": "neutrophils",
+				"type": "String"
+			},
+			{
+				"name": "sodium",
+				"type": "String"
+			},
+			{
+				"name": "glucose",
+				"type": "String"
+			},
+			{
+				"name": "bloodureanitro",
+				"type": "String"
+			},
+			{
+				"name": "creatinine",
+				"type": "String"
+			},
+			{
+				"name": "bmi",
+				"type": "String"
+			},
+			{
+				"name": "pulse",
+				"type": "String"
+			},
+			{
+				"name": "respiration",
+				"type": "String"
+			},
+			{
+				"name": "number_of_issues",
+				"type": "String"
+			},
+			{
+				"name": "asthma",
+				"type": "String"
+			},
+			{
+				"name": "depress",
+				"type": "String"
+			},
+			{
+				"name": "dialysisrenalendstage",
+				"type": "String"
+			},
+			{
+				"name": "fibrosisandother",
+				"type": "String"
+			},
+			{
+				"name": "gender",
+				"type": "String"
+			},
+			{
+				"name": "hemo",
+				"type": "String"
+			},
+			{
+				"name": "irondef",
+				"type": "String"
+			},
+			{
+				"name": "malnutrition",
+				"type": "String"
+			},
+			{
+				"name": "pneum",
+				"type": "String"
+			},
+			{
+				"name": "psychologicaldisordermajor",
+				"type": "String"
+			},
+			{
+				"name": "psychother",
+				"type": "String"
+			},
+			{
+				"name": "secondarydiagnosisnonicd9",
+				"type": "String"
+			},
+			{
+				"name": "substancedependence",
+				"type": "String"
+			},
+			{
+				"name": "rcount",
+				"type": "String"
+			},
+			{
+				"name": "lengthofstay",
+				"type": "String"
+			}
+		]
+	}
+}
