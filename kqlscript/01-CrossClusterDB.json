@@ -1,5 +1,5 @@
 {
-	"name": "CrossClusterDB",
+	"name": "01-CrossClusterDB",
 	"properties": {
 		"content": {
 			"query": "cluster(\"help\").database(\"Samples\").StormEvents\n| count",
