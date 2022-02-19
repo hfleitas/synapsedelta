@@ -1,0 +1,16 @@
+{
+	"name": "03-Thermostat",
+	"properties": {
+		"content": {
+			"query": "StageIoTRawData\n| count ",
+			"metadata": {
+				"language": "kql"
+			},
+			"currentConnection": {
+				"poolName": "codesmall1",
+				"databaseName": "db1"
+			}
+		},
+		"type": "KqlQuery"
+	}
+}
