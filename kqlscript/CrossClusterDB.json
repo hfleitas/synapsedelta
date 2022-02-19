@@ -1,0 +1,16 @@
+{
+	"name": "CrossClusterDB",
+	"properties": {
+		"content": {
+			"query": "cluster(\"help\").database(\"Samples\").StormEvents\n| count",
+			"metadata": {
+				"language": "kql"
+			},
+			"currentConnection": {
+				"poolName": "codesmall1",
+				"databaseName": "db1"
+			}
+		},
+		"type": "KqlQuery"
+	}
+}
