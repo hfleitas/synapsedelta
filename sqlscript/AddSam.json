@@ -1,0 +1,17 @@
+{
+	"name": "AddSam",
+	"properties": {
+		"content": {
+			"query": "create user [samerc@microsoft.com] from EXTERNAL PROVIDER ",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "samdemo",
+				"poolName": "samdemo"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
