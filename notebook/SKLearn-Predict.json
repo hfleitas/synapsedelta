@@ -43,7 +43,7 @@
 				"nodeCount": 5,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -60,6 +60,7 @@
 					"with fsspec_handle.open() as f:\r\n",
 					"    train_df = pandas.read_csv(f)"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -74,7 +75,8 @@
 				"source": [
 					"# LinearRegresssion\r\n",
 					"fails due to schema of dataset"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -164,6 +166,7 @@
 					"train(train_df, './artifacts/output')\r\n",
 					""
 				],
+				"attachments": null,
 				"execution_count": 6
 			}
 		]

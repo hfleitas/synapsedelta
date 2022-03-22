@@ -43,7 +43,7 @@
 				"nodeCount": 10,
 				"cores": 64,
 				"memory": 400,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -87,6 +87,7 @@
 					"\r\n",
 					"df.write.mode(\"overwrite\").saveAsTable(\"dominicks_OJ_train\")"
 				],
+				"attachments": null,
 				"execution_count": 17
 			}
 		]

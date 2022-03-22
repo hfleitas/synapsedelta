@@ -42,7 +42,7 @@
 				"nodeCount": 10,
 				"cores": 64,
 				"memory": 400,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -52,6 +52,7 @@
 				"source": [
 					"print('hello world')"
 				],
+				"attachments": null,
 				"execution_count": null
 			}
 		]

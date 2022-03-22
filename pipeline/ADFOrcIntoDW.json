@@ -52,6 +52,8 @@
 				]
 			}
 		],
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2022-03-22T22:22:30Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

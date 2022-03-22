@@ -46,7 +46,7 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -67,6 +67,7 @@
 				"source": [
 					"library(notebookutils)"
 				],
+				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -79,6 +80,7 @@
 					"    list(\"linkedService\" = \"nyctaxistaging\")\r\n",
 					") "
 				],
+				"attachments": null,
 				"execution_count": 6
 			}
 		]

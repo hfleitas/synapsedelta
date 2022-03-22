@@ -46,7 +46,7 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -69,7 +69,8 @@
 					"\r\n",
 					"## Known issue\r\n",
 					"- Notebook reference run is not supported temporarily for now. It will be supported in the next release. If urgent, we can provide some workaround"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -82,7 +83,8 @@
 				},
 				"source": [
 					"## Loading notebookutils library"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -100,6 +102,7 @@
 				"source": [
 					"library(notebookutils)"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -113,7 +116,8 @@
 				},
 				"source": [
 					"## File System Utilities"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -131,6 +135,7 @@
 				"source": [
 					"mssparkutils.fs.help()"
 				],
+				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -150,6 +155,7 @@
 					"# List files\r\n",
 					"mssparkutils.fs.ls(\"/\")"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -172,6 +178,7 @@
 					"    writeLines(paste(file$name, file$isDir, file$isFile, file$size))\r\n",
 					"}"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -191,6 +198,7 @@
 					"# Create new directory\r\n",
 					"mssparkutils.fs.mkdirs(\"/tmp/a/b/c\")"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -211,6 +219,7 @@
 					"mssparkutils.fs.cp(\"/shakespeare.txt\", \"/tmp/a/b/c/shakespeare.txt\", TRUE) # Set the third parameter as True to copy all files and directories recursively\r\n",
 					"mssparkutils.fs.cp(\"/tmp/a/b/c/shakespeare.txt\", \"/tmp/a/b/c/shakespeare1.txt\", TRUE)"
 				],
+				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -230,6 +239,7 @@
 					"# Preview file content\r\n",
 					"print(mssparkutils.fs.head(\"/tmp/a/b/c/shakespeare.txt\", 1024))"
 				],
+				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -249,6 +259,7 @@
 					"# Rename by Move file\r\n",
 					"mssparkutils.fs.mv(\"/tmp/a/b/c/shakespeare1.txt\", \"/tmp/a/b/c/shakespeare2.txt\", TRUE) # Set the last parameter as True to firstly create the parent directory if it does not exist"
 				],
+				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -268,6 +279,7 @@
 					"# Write file\r\n",
 					"mssparkutils.fs.put(\"/tmp/a/b/c/test.txt\",\"Hello world\", TRUE)"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -288,6 +300,7 @@
 					"mssparkutils.fs.append(\"/tmp/a/b/c/test.txt\",\" from mssparkutils\", TRUE)\r\n",
 					"#mssparkutils.fs.head(\"/tmp/a/b/c/test.txt\")"
 				],
+				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -307,6 +320,7 @@
 					"# Delete file or directory\r\n",
 					"mssparkutils.fs.rm(\"/tmp\", TRUE) # Set the last parameter as True to remove all files and directories recursively"
 				],
+				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -320,7 +334,8 @@
 				},
 				"source": [
 					"### File mount/unmount"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -343,6 +358,7 @@
 					"    list(\"linkedService\" = \"nbutilsmssparkutils\")\r\n",
 					") "
 				],
+				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -364,6 +380,7 @@
 					"f <- sprintf(\"/synfs/%s/testR/myFile.txt\", jobId)\r\n",
 					"cat(\"Hello world.\\n\", file = f, sep = \"\", append = TRUE)"
 				],
+				"attachments": null,
 				"execution_count": 20
 			},
 			{
@@ -386,6 +403,7 @@
 					"directory <- sprintf(\"synfs:/%s/testR\", jobId)\r\n",
 					"mssparkutils.fs.ls(directory)"
 				],
+				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -407,6 +425,7 @@
 					"file <- sprintf(\"synfs:/%s/testR/myFile.txt\", jobId)\r\n",
 					"mssparkutils.fs.head(file)"
 				],
+				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -428,6 +447,7 @@
 					"directory <- sprintf(\"synfs:/%s/testR/newdir\", jobId)\r\n",
 					"mssparkutils.fs.mkdirs(directory)"
 				],
+				"attachments": null,
 				"execution_count": 23
 			},
 			{
@@ -447,6 +467,7 @@
 					"# How to unmount the mount point\r\n",
 					"mssparkutils.fs.unmount(\"/testR\")"
 				],
+				"attachments": null,
 				"execution_count": 24
 			},
 			{
@@ -460,7 +481,8 @@
 				},
 				"source": [
 					"## Notebook utilities"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -478,6 +500,7 @@
 				"source": [
 					"mssparkutils.notebook.help()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -497,6 +520,7 @@
 					"# Reference a notebook\r\n",
 					"mssparkutils.notebook.run(\"SparkSQLCTE\", 360)"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -516,6 +540,7 @@
 					"# Exit a notebook\r\n",
 					"#mssparkutils.notebook.exit(\"value string\")"
 				],
+				"attachments": null,
 				"execution_count": 42
 			},
 			{
@@ -529,7 +554,8 @@
 				},
 				"source": [
 					"## Credentials utilities"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -547,6 +573,7 @@
 				"source": [
 					"mssparkutils.credentials.help()"
 				],
+				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -566,6 +593,7 @@
 					"# Get token\r\n",
 					"mssparkutils.credentials.getToken(\"Synapse\")"
 				],
+				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -586,6 +614,7 @@
 					"token <- mssparkutils.credentials.getToken(\"Synapse\")\r\n",
 					"mssparkutils.credentials.isValidToken(token)"
 				],
+				"attachments": null,
 				"execution_count": 18
 			},
 			{
@@ -605,6 +634,7 @@
 					"# Get connection string or credentials for linked service\r\n",
 					"mssparkutils.credentials.getConnectionStringOrCreds(\"nbutilsmssparkutils\")"
 				],
+				"attachments": null,
 				"execution_count": 19
 			},
 			{
@@ -624,6 +654,7 @@
 					"# Get secret using workspace identity\r\n",
 					"mssparkutils.credentials.getSecret(\"nbutilskv\",\"mytestSecret\",\"nbutilskvlinkedservice\")"
 				],
+				"attachments": null,
 				"execution_count": 33
 			},
 			{
@@ -643,6 +674,7 @@
 					"# Get secret using user credentials\r\n",
 					"mssparkutils.credentials.getSecret(\"nbutilskv\",\"mytestSecret\")"
 				],
+				"attachments": null,
 				"execution_count": 34
 			},
 			{
@@ -662,6 +694,7 @@
 					"# Put secret using workspace identity\r\n",
 					"mssparkutils.credentials.putSecret(\"nbutilskv\", \"mytestSecret\",\"secretvaluewithmsi\",\"nbutilskvlinkedservice\")"
 				],
+				"attachments": null,
 				"execution_count": 35
 			},
 			{
@@ -681,6 +714,7 @@
 					"# Put secret using user credentials\r\n",
 					"mssparkutils.credentials.putSecret(\"nbutilskv\", \"mytestSecret\",\"secretvaluewithusercred\")"
 				],
+				"attachments": null,
 				"execution_count": 36
 			},
 			{
@@ -694,7 +728,8 @@
 				},
 				"source": [
 					"## Environment utilities"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -712,6 +747,7 @@
 				"source": [
 					"mssparkutils.env.help()"
 				],
+				"attachments": null,
 				"execution_count": 20
 			},
 			{
@@ -731,6 +767,7 @@
 					"# Get user name\r\n",
 					"mssparkutils.env.getUserName()"
 				],
+				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -750,6 +787,7 @@
 					"# Get user ID\r\n",
 					"mssparkutils.env.getUserId()"
 				],
+				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -769,6 +807,7 @@
 					"# Get job ID\r\n",
 					"mssparkutils.env.getJobId()"
 				],
+				"attachments": null,
 				"execution_count": 23
 			},
 			{
@@ -788,6 +827,7 @@
 					"# Get workspace name\r\n",
 					"mssparkutils.env.getWorkspaceName()"
 				],
+				"attachments": null,
 				"execution_count": 24
 			},
 			{
@@ -807,6 +847,7 @@
 					"# Get pool name\r\n",
 					"mssparkutils.env.getPoolName()"
 				],
+				"attachments": null,
 				"execution_count": 25
 			},
 			{
@@ -826,6 +867,7 @@
 					"# Get cluster ID\r\n",
 					"mssparkutils.env.getClusterId()"
 				],
+				"attachments": null,
 				"execution_count": 26
 			},
 			{
@@ -839,7 +881,8 @@
 				},
 				"source": [
 					"## Runtime Context"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -860,6 +903,7 @@
 					"    writeLines(paste(key, ctx[[key]], sep = \"\\t\"))\r\n",
 					"}"
 				],
+				"attachments": null,
 				"execution_count": 27
 			},
 			{
@@ -873,7 +917,8 @@
 				},
 				"source": [
 					"## Visualization"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -893,6 +938,7 @@
 					"df <- read.df('abfss://users@contosolake.dfs.core.windows.net/NYCTripSmall.parquet', format='parquet')\r\n",
 					"display(limit(df, 10))"
 				],
+				"attachments": null,
 				"execution_count": 28
 			},
 			{
@@ -987,6 +1033,7 @@
 					"  .attr(\"stroke\", \"black\")\r\n",
 					"</script>')"
 				],
+				"attachments": null,
 				"execution_count": 29
 			},
 			{
@@ -1000,7 +1047,8 @@
 				},
 				"source": [
 					"## Magic command"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -1024,6 +1072,7 @@
 					"df <- read.df('abfss://users@contosolake.dfs.core.windows.net/NYCTripSmall.parquet', format='parquet')\r\n",
 					"display(limit(df, 10))"
 				],
+				"attachments": null,
 				"execution_count": 47
 			}
 		]

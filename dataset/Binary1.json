@@ -15,5 +15,6 @@
 				"fileSystem": "wplushiramsynapsefs"
 			}
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

@@ -43,7 +43,7 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -60,6 +60,7 @@
 					"df = spark.sql(\"SELECT * FROM `default`.`lastchanges`\")\n",
 					"# df.show(10)"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -83,6 +84,7 @@
 					"%%sql\r\n",
 					"select * from default.lastchanges"
 				],
+				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -110,6 +112,7 @@
 					"select * from t\r\n",
 					""
 				],
+				"attachments": null,
 				"execution_count": 24
 			},
 			{
@@ -138,6 +141,7 @@
 					"\r\n",
 					"SELECT * FROM CTE"
 				],
+				"attachments": null,
 				"execution_count": 6
 			}
 		]

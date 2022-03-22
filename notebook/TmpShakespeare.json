@@ -46,7 +46,7 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -56,6 +56,7 @@
 				"source": [
 					"library(notebookutils)"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -75,6 +76,7 @@
 					"# Create new directory\r\n",
 					"mssparkutils.fs.mkdirs(\"/tmp/a/b/c\")"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -95,6 +97,7 @@
 					"mssparkutils.fs.cp(\"/shakespeare.txt\", \"/tmp/a/b/c/shakespeare.txt\", TRUE) # Set the third parameter as True to copy all files and directories recursively\r\n",
 					"mssparkutils.fs.cp(\"/tmp/a/b/c/shakespeare.txt\", \"/tmp/a/b/c/shakespeare1.txt\", TRUE)"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -113,6 +116,7 @@
 				"source": [
 					"print(mssparkutils.fs.head(\"/tmp/a/b/c/shakespeare.txt\", 1024))"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -131,6 +135,7 @@
 				"source": [
 					"mssparkutils.fs.mv(\"/tmp/a/b/c/shakespeare1.txt\", \"/tmp/a/b/c/shakespeare2.txt\", TRUE) # Set the last parameter as True to firstly create the parent directory if it does not exist"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -151,6 +156,7 @@
 					"mssparkutils.fs.append(\"/tmp/a/b/c/test.txt\",\" from mssparkutils\", TRUE)\r\n",
 					"#mssparkutils.fs.head(\"/tmp/a/b/c/test.txt\")"
 				],
+				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -169,6 +175,7 @@
 				"source": [
 					"mssparkutils.fs.rm(\"/tmp\", TRUE) # Set the last parameter as True to remove all files and directories recursively"
 				],
+				"attachments": null,
 				"execution_count": 8
 			}
 		]

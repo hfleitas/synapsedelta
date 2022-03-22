@@ -43,7 +43,7 @@
 				"nodeCount": 10,
 				"cores": 64,
 				"memory": 400,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -60,6 +60,7 @@
 					"pickle.dump(numbers_list, list_pickle)\r\n",
 					"list_pickle.close()"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -83,6 +84,7 @@
 					"\r\n",
 					"print(numbers_list)"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -102,6 +104,7 @@
 					"loaded_model = pickle.load(open(list_pickle_path, 'rb'))\r\n",
 					"loaded_model"
 				],
+				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -120,6 +123,7 @@
 				"source": [
 					""
 				],
+				"attachments": null,
 				"execution_count": null
 			}
 		]

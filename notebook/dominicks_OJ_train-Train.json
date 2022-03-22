@@ -43,7 +43,7 @@
 				"nodeCount": 10,
 				"cores": 64,
 				"memory": 400,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -58,6 +58,7 @@
 					"from notebookutils import mssparkutils\n",
 					"from azureml.data.dataset_factory import TabularDatasetFactory"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -69,6 +70,7 @@
 					"ws = mssparkutils.azureML.getWorkspace(linkedService_name)\n",
 					"experiment = Experiment(ws, experiment_name)"
 				],
+				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -79,6 +81,7 @@
 					"datastore = Datastore.get_default(ws)\n",
 					"dataset = TabularDatasetFactory.register_spark_dataframe(df, datastore, name = experiment_name + \"-dataset\")"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -102,6 +105,7 @@
 					"                             n_cross_validations = 5,\n",
 					"                             forecasting_parameters = forecasting_parameters)"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -109,6 +113,7 @@
 				"source": [
 					"run = experiment.submit(automl_config)"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -116,6 +121,7 @@
 				"source": [
 					"displayHTML(\"<a href={} target='_blank'>Your experiment in Azure Machine Learning portal: {}</a>\".format(run.get_portal_url(), run.id))"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -140,6 +146,7 @@
 					"    # Register the model to AML model registry\n",
 					"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"wplushiramsynapse-dominicks_oj_train-20211111125807-Best\")"
 				],
+				"attachments": null,
 				"execution_count": 7
 			}
 		]

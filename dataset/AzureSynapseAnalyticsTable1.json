@@ -12,5 +12,6 @@
 			"schema": "staging",
 			"table": "orcsample"
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

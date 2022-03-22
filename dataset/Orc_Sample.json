@@ -17,5 +17,6 @@
 			"enablePhysicalSchema": true
 		},
 		"schema": []
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

@@ -11,5 +11,6 @@
 		"typeProperties": {
 			"table": "LengthOfStay_cooked_small"
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

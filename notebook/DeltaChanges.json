@@ -46,7 +46,7 @@
 				"nodeCount": 10,
 				"cores": 64,
 				"memory": 400,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -62,7 +62,8 @@
 				},
 				"source": [
 					"## 0. Create the class"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -73,6 +74,7 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
+				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -86,7 +88,8 @@
 				},
 				"source": [
 					"## 1. Add sequence of changes"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -122,6 +125,7 @@
 					"//   ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
 					"// ).toDF().createOrReplaceTempView(\"changes\")"
 				],
+				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -135,7 +139,8 @@
 				},
 				"source": [
 					"## 2. Read changes into DF"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -154,6 +159,7 @@
 				"source": [
 					"val changesDF = spark.sql(\"select * from changes\")"
 				],
+				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -167,7 +173,8 @@
 				},
 				"source": [
 					"## 3. Expression for only latest changes"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -187,6 +194,7 @@
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestChangeForEachKey.show()"
 				],
+				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -200,7 +208,8 @@
 				},
 				"source": [
 					"## 4. Temp view of latest changes"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -219,6 +228,7 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
+				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -232,7 +242,8 @@
 				},
 				"source": [
 					"## 5. Save delta table"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -251,6 +262,7 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
+				"attachments": null,
 				"execution_count": null
 			}
 		]

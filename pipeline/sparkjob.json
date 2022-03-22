@@ -18,7 +18,13 @@
 					"sparkJob": {
 						"referenceName": "wordcount",
 						"type": "SparkJobDefinitionReference"
-					}
+					},
+					"conf": {
+						"spark.dynamicAllocation.enabled": null,
+						"spark.dynamicAllocation.minExecutors": null,
+						"spark.dynamicAllocation.maxExecutors": null
+					},
+					"numExecutors": null
 				}
 			},
 			{
@@ -114,6 +120,8 @@
 				]
 			}
 		],
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2022-03-22T22:23:10Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }
