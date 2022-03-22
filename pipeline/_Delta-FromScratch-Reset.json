@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "delete",
+				"name": "Reset-delete",
 				"description": "clear tables",
 				"type": "Script",
 				"dependsOn": [],
@@ -33,7 +33,7 @@
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
-						"activity": "delete",
+						"activity": "Reset-delete",
 						"dependencyConditions": [
 							"Succeeded"
 						]
