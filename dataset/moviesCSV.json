@@ -10,9 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "moviesDB.csv",
-				"folderPath": "SampleData",
-				"container": "mycontainer"
+				"fileName": "moviesDB.csv"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
