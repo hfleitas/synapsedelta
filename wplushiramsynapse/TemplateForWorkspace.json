@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'adbhf'"
 		},
+		"iotmonitoringsa10774_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'iotmonitoringsa10774'"
+		},
 		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'wplushiramsynapse-WorkspaceDefaultSqlServer'"
@@ -46,6 +50,10 @@
 		"PublicDataset_sasUri": {
 			"type": "secureString",
 			"metadata": "Secure string for 'sasUri' of 'PublicDataset'"
+		},
+		"freeadx_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "MyDatabase"
 		},
 		"nyctaxistaging_properties_typeProperties_url": {
 			"type": "string",
@@ -77,6 +85,42 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/wplushiramspark')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/threedot0')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/XXL')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/threemid')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/13456789123456789123456789123456789123456789')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -96,7 +140,8 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2022-03-22T22:16:26Z"
 			},
 			"dependsOn": []
 		},
@@ -162,11 +207,86 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2022-03-22T22:22:30Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/Orc_Sample')]",
 				"[concat(variables('workspaceId'), '/datasets/OrcSample')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/CSV to ADX')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureDataExplorerSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": false,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "LengthOfStay_cooked_small",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "freeadx",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Kusto"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-22T22:23:40Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/LengthOfStay_cooked_small')]",
+				"[concat(variables('workspaceId'), '/datasets/freeadx')]"
 			]
 		},
 		{
@@ -320,7 +440,7 @@
 					}
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-09-13T01:54:04Z"
+				"lastPublishTime": "2022-03-22T22:22:33Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/PublicDataset')]",
@@ -593,7 +713,7 @@
 					"name": "Delta"
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-09-13T01:54:11Z"
+				"lastPublishTime": "2022-03-22T22:22:35Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/vDeltaTarget')]",
@@ -603,56 +723,6 @@
 				"[concat(variables('workspaceId'), '/datasets/LoaderXLLastChanges')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]",
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/DeltaPipeline')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "DeltaUpdates",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DeltaLake1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Delta"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/dataflows/DeltaLake1')]"
 			]
 		},
 		{
@@ -697,7 +767,7 @@
 					}
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-09-13T01:49:52Z"
+				"lastPublishTime": "2022-03-22T22:16:29Z"
 			},
 			"dependsOn": []
 		},
@@ -732,7 +802,8 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2022-03-22T22:22:38Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/notebooks/E2E_MLFLOW_Sklearn_ADLS')]"
@@ -801,7 +872,7 @@
 				"annotations": [
 					"Workshop"
 				],
-				"lastPublishTime": "2021-09-13T01:54:54Z"
+				"lastPublishTime": "2022-03-22T22:23:44Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/HTTPLabFilesZip')]",
@@ -841,7 +912,7 @@
 					"name": "M01L05Lab01"
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-09-13T01:49:58Z"
+				"lastPublishTime": "2022-03-22T22:16:33Z"
 			},
 			"dependsOn": []
 		},
@@ -892,7 +963,7 @@
 					}
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-09-13T01:54:17Z"
+				"lastPublishTime": "2022-03-22T22:22:45Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/notebooks/Params')]"
@@ -1284,7 +1355,7 @@
 					}
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-09-13T01:55:02Z"
+				"lastPublishTime": "2022-03-22T22:23:47Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
@@ -1452,7 +1523,7 @@
 					"name": "Delta"
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-09-13T01:54:24Z"
+				"lastPublishTime": "2022-03-22T22:22:49Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/adbhf')]",
@@ -1630,7 +1701,7 @@
 					"name": "Delta"
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-09-13T01:54:29Z"
+				"lastPublishTime": "2022-03-22T22:22:55Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
@@ -1705,7 +1776,7 @@
 				"annotations": [
 					"workshop"
 				],
-				"lastPublishTime": "2021-09-13T01:54:34Z"
+				"lastPublishTime": "2022-03-22T22:23:01Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/blobLabFilesZip')]",
@@ -1743,7 +1814,8 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2022-03-22T22:23:06Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/notebooks/dominicks_oj_train-RegressionOnnx')]"
@@ -1879,7 +1951,8 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2022-03-22T22:23:10Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/sparkJobDefinitions/wordcount')]",
@@ -1915,7 +1988,7 @@
 					}
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-09-13T01:50:04Z"
+				"lastPublishTime": "2022-03-22T22:16:35Z"
 			},
 			"dependsOn": []
 		},
@@ -2085,6 +2158,135 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/LengthOfStay_cooked_small')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "LengthOfStay_cooked_small.csv",
+						"fileSystem": "wplushiramsynapsefs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "hematocrit",
+						"type": "String"
+					},
+					{
+						"name": "neutrophils",
+						"type": "String"
+					},
+					{
+						"name": "sodium",
+						"type": "String"
+					},
+					{
+						"name": "glucose",
+						"type": "String"
+					},
+					{
+						"name": "bloodureanitro",
+						"type": "String"
+					},
+					{
+						"name": "creatinine",
+						"type": "String"
+					},
+					{
+						"name": "bmi",
+						"type": "String"
+					},
+					{
+						"name": "pulse",
+						"type": "String"
+					},
+					{
+						"name": "respiration",
+						"type": "String"
+					},
+					{
+						"name": "number_of_issues",
+						"type": "String"
+					},
+					{
+						"name": "asthma",
+						"type": "String"
+					},
+					{
+						"name": "depress",
+						"type": "String"
+					},
+					{
+						"name": "dialysisrenalendstage",
+						"type": "String"
+					},
+					{
+						"name": "fibrosisandother",
+						"type": "String"
+					},
+					{
+						"name": "gender",
+						"type": "String"
+					},
+					{
+						"name": "hemo",
+						"type": "String"
+					},
+					{
+						"name": "irondef",
+						"type": "String"
+					},
+					{
+						"name": "malnutrition",
+						"type": "String"
+					},
+					{
+						"name": "pneum",
+						"type": "String"
+					},
+					{
+						"name": "psychologicaldisordermajor",
+						"type": "String"
+					},
+					{
+						"name": "psychother",
+						"type": "String"
+					},
+					{
+						"name": "secondarydiagnosisnonicd9",
+						"type": "String"
+					},
+					{
+						"name": "substancedependence",
+						"type": "String"
+					},
+					{
+						"name": "rcount",
+						"type": "String"
+					},
+					{
+						"name": "lengthofstay",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/LoaderXLLastChanges')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -2146,7 +2348,7 @@
 				],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "Target"
+					"table": "ReportTarget"
 				}
 			},
 			"dependsOn": [
@@ -2413,6 +2615,26 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/freeadx')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "freeadx",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureDataExplorerTable",
+				"schema": [],
+				"typeProperties": {
+					"table": "LengthOfStay_cooked_small"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/freeadx')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/moviesCSV')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -2671,6 +2893,45 @@
 						"value": "[parameters('adbhf_accessToken')]"
 					},
 					"existingClusterId": "0910-004205-suede164"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/freeadx')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDataExplorer",
+				"typeProperties": {
+					"endpoint": "https://kvc43f0ee6600e24ef2b0e.southcentralus.kusto.windows.net",
+					"database": "[parameters('freeadx_properties_typeProperties_database')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/iotmonitoringsa10774')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('iotmonitoringsa10774_connectionString')]"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -2948,6 +3209,16 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/IntegrationRuntime1')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Laptop')]",
 			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
 			"apiVersion": "2019-06-01-preview",
@@ -2968,56 +3239,32 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/DeltaLake1')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "moviesCSV",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"linkedService": {
-								"referenceName": "wplushiramsynapse-WorkspaceDefaultStorage",
-								"type": "LinkedServiceReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "DerivedColumn1"
-						},
-						{
-							"name": "AlterRow1"
-						},
-						{
-							"name": "Filter1"
-						}
-					],
-					"script": "source(output(\n\t\tmovie as integer,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as short,\n\t\tRating as short,\n\t\tRottenTomato as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nFilter1 derive(Rating = iif(year==1988,1,toInteger(Rating)),\n\t\tyear = iif(year==1960,2021,toInteger(year))) ~> DerivedColumn1\nDerivedColumn1 alterRow(updateIf(year==1988),\n\tinsertIf(year==2021),\n\tdeleteIf(year==1950)) ~> AlterRow1\nsource1 filter(year == 1988 || year == 1960 || year == 1950) ~> Filter1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delta',\n\tfileSystem: 'mycontainer',\n\tfolderPath: 'moviesdelta',\n\tmergeSchema: false,\n\tautoCompact: false,\n\toptimizedWrite: false,\n\tvacuum: 0,\n\tdeletable:true,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['movie','year'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/moviesCSV')]",
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultStorage')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
 			"type": "Microsoft.Synapse/workspaces/credentials",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"type": "ManagedIdentity",
 				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AddSam')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "create user [samerc@microsoft.com] from EXTERNAL PROVIDER ",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "samdemo",
+						"poolName": "samdemo"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
 			},
 			"dependsOn": []
 		},
@@ -3641,6 +3888,624 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/01-CrossClusterDB')]",
+			"type": "Microsoft.Synapse/workspaces/kqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "cluster(\"help\").database(\"Samples\").StormEvents\n| count",
+					"metadata": {
+						"language": "kql"
+					},
+					"currentConnection": {
+						"poolName": "codesmall1",
+						"databaseName": "db1"
+					}
+				},
+				"type": "KqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/02-configDB')]",
+			"type": "Microsoft.Synapse/workspaces/kqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": ".create table ['StageIoTRawData'] (['deviceId']:string, ['enqueuedTime']:datetime, ['messageProperties']:dynamic, ['messageSource']:string, ['telemetry']:dynamic, ['templateId']:string, ['schema']:string)\n\n.alter table StageIoTRawData policy ingestionbatching @'{\"MaximumBatchingTimeSpan\":\"00:00:30\"}'\n\n.create table ['StageIoTRawData'] ingestion json mapping 'StageIoTRawData_mapping' '[{\"column\":\"deviceId\", \"Properties\":{\"Path\":\"$[\\'deviceId\\']\"}},{\"column\":\"enqueuedTime\", \"Properties\":{\"Path\":\"$[\\'enqueuedTime\\']\"}},{\"column\":\"messageProperties\", \"Properties\":{\"Path\":\"$[\\'messageProperties\\']\"}},{\"column\":\"messageSource\", \"Properties\":{\"Path\":\"$[\\'messageSource\\']\"}},{\"column\":\"telemetry\", \"Properties\":{\"Path\":\"$[\\'telemetry\\']\"}},{\"column\":\"templateId\", \"Properties\":{\"Path\":\"$[\\'templateId\\']\"}},{\"column\":\"schema\", \"Properties\":{\"Path\":\"$[\\'schema\\']\"}}]'\n\n.create table Thermostats (EnqueuedTimeUTC: datetime, DeviceId: string, BatteryLevel: long, Temp: real, Humidity: real) \n\n.create table ['Thermostats'] ingestion csv mapping 'Thermostats_mapping' '[{\"column\":\"EnqueuedTimeUTC\", \"Properties\":{\"Ordinal\":\"0\"}},{\"column\":\"DeviceId\", \"Properties\":{\"Ordinal\":\"1\"}},{\"column\":\"BatteryLevel\", \"Properties\":{\"Ordinal\":\"2\"}},{\"column\":\"Temp\", \"Properties\":{\"Ordinal\":\"3\"}},{\"column\":\"Humidity\", \"Properties\":{\"Ordinal\":\"4\"}}]'\n\n.create-or-alter function with (docstring = \"Used for Thermostats Update Policy\",folder = \"Functions\") ExtractThermostatData {\n\tStageIoTRawData\n\t| where telemetry has 'temp'\n\t| project \n\tEnqueuedTimeUTC=enqueuedTime,\n\tDeviceId=deviceId,\n\tBatteryLevel = tolong(telemetry.['BatteryLevel']), \n\tTemp =  toreal(telemetry.['temp']),\n\tHumidity =  toreal(telemetry.['humidity'])\n}\n\n.create-or-alter function with (folder = \"Analytics/IoT\", skipvalidation = \"true\") GetDevicesbyStore(Office:string) {\n\tlet ADTendpoint = \"https://<dtURI>\";\n\tlet ADTquery = strcat(\"SELECT T.$dtId as Office, F.$dtId as Floor, D.$dtId as DeviceId FROM DIGITALTWINS T JOIN F RELATED T.officecontainsfloors JOIN D RELATED F.floorcontainsdevices where T.$dtId='\", Office, \"'\"); \n\tevaluate azure_digital_twins_query_request(ADTendpoint, ADTquery)\n    | project Office=tostring(Office), Floor=tostring(Floor), DeviceId=tostring(DeviceId)\n} \n\n// .create-or-alter function with (folder = \"Analytics/IoT\", skipvalidation = \"true\") GetDevicesbyStoreFloor(Office:string, Floor:string) {\n// \tlet ADTendpoint = \"https://<dtURI>\";\n// \tlet ADTquery = strcat(\"SELECT T.$dtId as Office, F.$dtId as Floor, D.$dtId as DeviceId FROM DIGITALTWINS T JOIN F RELATED T.officecontainsfloors JOIN D RELATED F.floorcontainsdevices where T.$dtId='\", Office, \"' AND F.$dtId = '\", Floor, \"'\"); \n// \tevaluate azure_digital_twins_query_request(ADTendpoint, ADTquery)\n//     | project Office=tostring(Office), Floor=tostring(Floor), DeviceId=tostring(DeviceId)\n// }\n\n.alter table Thermostats policy update \n@'[{ \"IsEnabled\": true, \"Source\": \"StageIoTRawData\", \"Query\": \"ExtractThermostatData()\", \"IsTransactional\": false, \"PropagateIngestionProperties\": false}]'\n\n",
+					"metadata": {
+						"language": "kql"
+					},
+					"currentConnection": {
+						"poolName": "codesmall1",
+						"databaseName": "db1"
+					}
+				},
+				"type": "KqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/03-Thermostat')]",
+			"type": "Microsoft.Synapse/workspaces/kqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "//setup data ingestion via portal\n\nStageIoTRawData | count \n\nStageIoTRawData | sample 10\n\n\nStageIoTRawData\n| project enqueuedTime, deviceId,\nBatteryLevel = tolong(telemetry.['BatteryLevel']), \nTemp =  toreal(telemetry.['temp']),\nHumidity =  toreal(telemetry.['humidity'])\n\n\n.create-or-alter function  ExtractThermostatData {\n//same here...\n}\n\n\nThermostats | sample 10\n\n//count of rows in table\nThermostats | count \n\n\n//What is the average temp every 1 min?\nThermostats\n| where EnqueuedTimeUTC > ago(7d)\n| where DeviceId == 'dd5f1451-9e9a-43a6-ad02-32bed6877f20'\n| summarize avg(Temp) by bin(EnqueuedTimeUTC,1m)\n| render timechart \n\n\n//Is there any missing data? \n//make-series\n//Create series of specified aggregated values along specified axis.\nThermostats\n| where EnqueuedTimeUTC > ago(6h)\n| where DeviceId == 'dd5f1451-9e9a-43a6-ad02-32bed6877f20'\n| make-series AvgTemp=avg(Temp) on EnqueuedTimeUTC from ago(6h) to now() step 1m   \n| render timechart \n\n\n//How can I fill the missing values?\n//series_fill_linear()\n//Performs linear interpolation of missing values in a series.\nThermostats\n| where EnqueuedTimeUTC > ago(6h)\n| where DeviceId == 'dd5f1451-9e9a-43a6-ad02-32bed6877f20'\n| make-series AvgTemp=avg(Temp) default=real(null) on EnqueuedTimeUTC from ago(6h) to now() step 1m   \n| extend NoGapsTemp=series_fill_linear(AvgTemp)\n| project EnqueuedTimeUTC, NoGapsTemp\n| render timechart \n\n\n\n//What will be the temprature for next one hour?\nThermostats\n| where EnqueuedTimeUTC > ago(2d)\n| where DeviceId == 'dd5f1451-9e9a-43a6-ad02-32bed6877f20'\n| make-series AvgTemp=avg(Temp) default=real(null) on EnqueuedTimeUTC from ago(2d) to now()+15m step 1m   \n| extend NoGapsTemp=series_fill_linear(AvgTemp)\n| project EnqueuedTimeUTC, NoGapsTemp\n| extend forecast = series_decompose_forecast(NoGapsTemp, 15)\n| render timechart with(title='Forecasting the next 15min by Time Series Decmposition')\n\n\n//Are there any anomalies for this device?\nThermostats\n| where EnqueuedTimeUTC > ago(3d)\n| where DeviceId == 'dd5f1451-9e9a-43a6-ad02-32bed6877f20'\n| make-series AvgTemp=avg(Temp) default=real(null) on EnqueuedTimeUTC from ago(3d) to now() step 1m   \n| extend NoGapsTemp=series_fill_linear(AvgTemp)\n| project EnqueuedTimeUTC, NoGapsTemp\n| extend anomalies = series_decompose_anomalies(NoGapsTemp,1) \n| render anomalychart with(anomalycolumns=anomalies)\n\n\n//What the anomalies I should focus on across all devices?\nThermostats\n| where EnqueuedTimeUTC > ago(3d)\n| make-series AvgTemp=avg(Temp) default=real(null) on EnqueuedTimeUTC from ago(3d) to now() step 1m by DeviceId\n| extend NoGapsTemp=series_fill_linear(AvgTemp)\n| project EnqueuedTimeUTC, DeviceId, NoGapsTemp\n| extend anomalies = series_decompose_anomalies(NoGapsTemp, 1)\n| mv-expand EnqueuedTimeUTC, anomalies, NoGapsTemp\n| where anomalies == 1\n\n//10 devices\nThermostats\n| summarize count(DeviceId) by DeviceId\n| count\n\n//Hilo & Axceta\n//30days of all devices in \nThermostats\n| where ingestion_time() > ago(30d)\n| project EnqueuedTimeUTC, ingestion_time(), latency=(ingestion_time()-EnqueuedTimeUTC) //get latency\n| summarize latency=percentile(latency, 95) by timewindow=bin(ingestion_time(), 15m) //get percentile by buckets\n| summarize timewindow=make_list(timewindow), latency=make_list(latency), anomaly=series_decompose_anomalies(make_list(latency)) //get anomalies\n| project timewindow, latency, anomaly //keep needed columns for chart\n| render anomalychart with(anomalycolumns = anomaly)\n\n.show materialized-views\n\n.create-or-alter materialized-view Hourly_Average_Mview on table Thermostats {\nThermostats | summarize avg_Battery_Level=avg(BatteryLevel),avg_Temp=avg(Temp), avg_Humidity=avg(Humidity) by DeviceId, bin(EnqueuedTimeUTC,1h)\n}\n\n.create-or-alter materialized-view Current_Mview on table Thermostats {\nThermostats | summarize (curr_Event_Time,curr_Battery_Level,curr_Temp, curr_Humidity)=arg_max(EnqueuedTimeUTC,BatteryLevel,Temp,Humidity) by DeviceId\n}\n\n//Materialized views\nHourly_Average_Mview\n| where EnqueuedTimeUTC > ago(1h)\n| take 1000 \n\nCurrent_Mview\n\n\n.show external tables\n\n\n\nexternal_table(\"ext_Thermostats\")\n| where EnqueuedTimeUTC between (datetime('03-01-2020 11:00 am') .. datetime('03-01-2020 01:00 pm')) and DeviceId == '637086754472373714'\n| project EnqueuedTimeUTC, BatteryLevel, Temp, Humidity",
+					"metadata": {
+						"language": "kql"
+					},
+					"currentConnection": {
+						"poolName": "codesmall1",
+						"databaseName": "db1"
+					}
+				},
+				"type": "KqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaChanges-Original')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "threedot0",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "4854e2f4-d58e-4aa8-ba48-7e310a94835d"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"synapse_widget": {
+						"version": "0.1"
+					},
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_spark",
+						"display_name": "scala"
+					},
+					"language_info": {
+						"name": "scala"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+						"name": "threedot0",
+						"type": "Spark",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 5,
+						"cores": 8,
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Delta Demo\r\n",
+							"\r\n",
+							"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/DeltaChanges3.json))\r\n",
+							"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
+							"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
+							"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
+						],
+						"attachments": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"spark.version"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"case class Data(key: String, value: String)\r\n",
+							"\r\n",
+							"case class ChangeData(key: String, newValue: String, deleted: Boolean, time: Long) {\r\n",
+							"  assert(newValue != null ^ deleted)\r\n",
+							"}"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val target = Seq(\r\n",
+							"  Data(\"a\", \"0\"),\r\n",
+							"  Data(\"b\", \"1\"),\r\n",
+							"  Data(\"c\", \"2\"),\r\n",
+							"  Data(\"d\", \"3\")\r\n",
+							").toDF()"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"sql(\"drop table if exists target\")\r\n",
+							"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"// import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+							"// import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+							"\r\n",
+							"val targetDF = spark.sqlContext.sql(\"select * from target\")"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"select * from target order by key"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"describe extended target"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# 🧂 Shake it up"
+						],
+						"attachments": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val changeDataSource = Seq(\r\n",
+							"  ChangeData(\"a\", \"10\", deleted = false, time = 0),\r\n",
+							"  ChangeData(\"a\", null, deleted = true, time = 1),   // a was updated and then deleted\r\n",
+							"  ChangeData(\"b\", null, deleted = true, time = 2),   // b was just deleted once\r\n",
+							"  ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\r\n",
+							"  ChangeData(\"c\", \"20\", deleted = false, time = 4),\r\n",
+							"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
+							").toDF().createOrReplaceTempView(\"changes\")"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 61
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### SQL Example"
+						],
+						"attachments": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql \r\n",
+							"MERGE INTO target t\r\n",
+							"USING (\r\n",
+							"  -- Find the latest change for each key based on the timestamp\r\n",
+							"  SELECT key, latest.newValue as newValue, latest.deleted as deleted FROM (    \r\n",
+							"    -- Note: For nested structs, max on struct is computed as \r\n",
+							"    -- max on first struct field, if equal fall back to second fields, and so on.\r\n",
+							"    SELECT key, max(struct(time, newValue, deleted)) as latest FROM changes GROUP BY key\r\n",
+							"  )\r\n",
+							") s\r\n",
+							"ON s.key = t.key\r\n",
+							"WHEN MATCHED AND s.deleted = true THEN DELETE\r\n",
+							"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
+							"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 62
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val changesDF = spark.sql(\"select * from changes\")\r\n",
+							"changesDF.head()"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 63
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val latestChangeForEachKey = changesDF.\r\n",
+							"selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").\r\n",
+							"groupBy(\"key\").\r\n",
+							"agg(max(\"otherCols\").\r\n",
+							"as(\"latest\")).\r\n",
+							"selectExpr(\"key\", \"latest.*\")"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 64
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"latestChangeForEachKey.show() // shows the latest change for each key"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 65
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 66
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"select * from lastchanges"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 67
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 68
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### SCALA Merge example (Skipped)"
+						],
+						"attachments": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"// deltaTable.as(\"t\")\r\n",
+							"//   .merge(\r\n",
+							"//     latestChangeForEachKey.as(\"s\"),\r\n",
+							"//     \"s.key = t.key\")\r\n",
+							"//   .whenMatched(\"s.deleted = true\")\r\n",
+							"//   .delete()\r\n",
+							"//   .whenMatched()\r\n",
+							"//   .updateExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+							"//   .whenNotMatched(\"s.deleted = false\")\r\n",
+							"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
+							"//   .execute()"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 16
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+							"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
+							"\r\n",
+							"val lastchangesDF = spark.sqlContext.sql(\"select * from lastchanges\")\r\n",
+							"\r\n",
+							"lastchangesDF.write.option(Constants.\r\n",
+							"SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").\r\n",
+							"synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 70
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Resources\r\n",
+							"* https://docs.databricks.com/_static/notebooks/merge-in-cdc.html\r\n",
+							"* https://techcommunity.microsoft.com/t5/azure-synapse-analytics/query-delta-lake-files-using-t-sql-language-in-azure-synapse/ba-p/2388398\r\n",
+							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/query-delta-lake-format\r\n",
+							"* https://databricks.com/blog/2019/03/19/efficient-upserts-into-data-lakes-databricks-delta.html\r\n",
+							"* https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=azure-sqldw-latest\r\n",
+							"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
+							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas\r\n",
+							"* https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example-part-2/"
+						],
+						"attachments": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/DeltaChanges')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -3651,46 +4516,51 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "XXL",
+					"referenceName": "threedot0",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "400g",
-					"driverCores": 64,
-					"executorMemory": "400g",
-					"executorCores": 64,
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2786881f-b91b-4e62-94bf-a32da2a89940"
+						"spark.autotune.trackingId": "368becb0-5b0b-4473-a402-184c080913fa"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
+					"synapse_widget": {
+						"version": "0.1"
+					},
 					"enableDebugMode": false,
 					"kernelspec": {
-						"name": "synapse_pyspark",
-						"display_name": "Synapse PySpark"
+						"name": "synapse_spark",
+						"display_name": "scala"
 					},
 					"language_info": {
 						"name": "scala"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
-						"name": "XXL",
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+						"name": "threedot0",
 						"type": "Spark",
-						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "2.4",
-						"nodeCount": 10,
-						"cores": 64,
-						"memory": 400
-					}
+						"sparkVersion": "3.1",
+						"nodeCount": 5,
+						"cores": 8,
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -3704,7 +4574,8 @@
 						},
 						"source": [
 							"## 0. Create the class"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -3715,6 +4586,7 @@
 							"  assert(newValue != null ^ deleted)\r\n",
 							"}"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -3729,7 +4601,8 @@
 						},
 						"source": [
 							"## 1. Add sequence of changes"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -3765,6 +4638,7 @@
 							"//   ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
 							"// ).toDF().createOrReplaceTempView(\"changes\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -3779,7 +4653,8 @@
 						},
 						"source": [
 							"## 2. Read changes into DF"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -3798,6 +4673,7 @@
 						"source": [
 							"val changesDF = spark.sql(\"select * from changes\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -3812,7 +4688,8 @@
 						},
 						"source": [
 							"## 3. Expression for only latest changes"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -3832,6 +4709,7 @@
 							"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 							"latestChangeForEachKey.show()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -3846,7 +4724,8 @@
 						},
 						"source": [
 							"## 4. Temp view of latest changes"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -3865,6 +4744,7 @@
 						"source": [
 							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -3879,7 +4759,8 @@
 						},
 						"source": [
 							"## 5. Save delta table"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -3898,6 +4779,7 @@
 						"source": [
 							"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4257,8 +5139,10 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 5,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -4277,7 +5161,8 @@
 							"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
 							"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
 							"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -4296,6 +5181,7 @@
 						"source": [
 							"spark.version"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 16
 					},
@@ -4308,6 +5194,7 @@
 							"  assert(newValue != null ^ deleted)\r\n",
 							"}"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 55
 					},
@@ -4333,6 +5220,7 @@
 							"  Data(\"d\", \"3\")\r\n",
 							").toDF()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 56
 					},
@@ -4354,6 +5242,7 @@
 							"sql(\"drop table if exists target\")\r\n",
 							"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 57
 					},
@@ -4377,6 +5266,7 @@
 							"\r\n",
 							"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 58
 					},
@@ -4401,6 +5291,7 @@
 							"%%sql\r\n",
 							"select * from target order by key"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 59
 					},
@@ -4425,6 +5316,7 @@
 							"%%sql\r\n",
 							"describe extended target"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 60
 					},
@@ -4439,7 +5331,8 @@
 						},
 						"source": [
 							"# 🧂 Shake it up"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -4465,6 +5358,7 @@
 							"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
 							").toDF().createOrReplaceTempView(\"changes\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 61
 					},
@@ -4479,7 +5373,8 @@
 						},
 						"source": [
 							"### SQL Example"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -4514,6 +5409,7 @@
 							"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 							"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 62
 					},
@@ -4535,6 +5431,7 @@
 							"val changesDF = spark.sql(\"select * from changes\")\r\n",
 							"changesDF.head()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 63
 					},
@@ -4560,6 +5457,7 @@
 							"as(\"latest\")).\r\n",
 							"selectExpr(\"key\", \"latest.*\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 64
 					},
@@ -4580,6 +5478,7 @@
 						"source": [
 							"latestChangeForEachKey.show() // shows the latest change for each key"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 65
 					},
@@ -4600,6 +5499,7 @@
 						"source": [
 							"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 66
 					},
@@ -4624,6 +5524,7 @@
 							"%%sql\r\n",
 							"select * from lastchanges"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 67
 					},
@@ -4644,6 +5545,7 @@
 						"source": [
 							"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 68
 					},
@@ -4658,7 +5560,8 @@
 						},
 						"source": [
 							"### SCALA Merge example (Skipped)"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -4687,6 +5590,7 @@
 							"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
 							"//   .execute()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 16
 					},
@@ -4714,6 +5618,7 @@
 							"SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").\r\n",
 							"synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 70
 					},
@@ -4736,7 +5641,360 @@
 							"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
 							"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas\r\n",
 							"* https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example-part-2/"
-						]
+						],
+						"attachments": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DeltaTarget-New')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Delta"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "threedot0",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "b4d27511-1dd3-4ca2-8ebf-c467bdc87db4"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"synapse_widget": {
+						"version": "0.1"
+					},
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "scala"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+						"name": "threedot0",
+						"type": "Spark",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 5,
+						"cores": 8,
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Delta Demo\r\n",
+							"\r\n",
+							"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/DeltaChanges3.json))\r\n",
+							"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
+							"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
+							"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
+						],
+						"attachments": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"spark.version"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"case class Data(key: String, value: String)\r\n",
+							"\r\n",
+							"case class ChangeData(key: String, newValue: String, deleted: Boolean, time: Long) {\r\n",
+							"  assert(newValue != null ^ deleted)\r\n",
+							"}"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val target = Seq(\r\n",
+							"  Data(\"a\", \"0\"),\r\n",
+							"  Data(\"b\", \"1\"),\r\n",
+							"  Data(\"c\", \"2\"),\r\n",
+							"  Data(\"d\", \"3\")\r\n",
+							").toDF()"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"sql(\"drop table if exists target\")\r\n",
+							"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val targetDF = spark.sqlContext.sql(\"select * from target\")"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"select * from target order by key"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"describe extended target"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"//Add required imports\r\n",
+							"import org.apache.spark.sql.DataFrame\r\n",
+							"import org.apache.spark.sql.SaveMode\r\n",
+							"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+							"import org.apache.spark.sql.SqlAnalyticsConnector._"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/synapse-spark-sql-pool-import-export"
+						],
+						"attachments": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"//new write options\r\n",
+							"val writeOptions:Map[String, String] = Map(Constants.SERVER -> \"wplushiramsynapse.sql.azuresynapse.net\", \r\n",
+							"Constants.TEMP_FOLDER -> \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/temp\")"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"//Set up optional callback/feedback function that can receive post write metrics of the job performed.\r\n",
+							"var errorDuringWrite:Option[Throwable] = None\r\n",
+							"val callBackFunctionToReceivePostWriteMetrics: (Map[String, Any], Option[Throwable]) => Unit =\r\n",
+							"    (feedback: Map[String, Any], errorState: Option[Throwable]) => {\r\n",
+							"    println(s\"Feedback map - ${feedback.map{case(key, value) => s\"$key -> $value\"}.mkString(\"{\",\",\\n\",\"}\")}\")\r\n",
+							"    errorDuringWrite = errorState\r\n",
+							"}"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 11
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"//write to Synapse Dedicated SQL Pool (note - default SaveMode is set to ErrorIfExists)\r\n",
+							"targetDF.\r\n",
+							"    write.\r\n",
+							"    options(writeOptions).\r\n",
+							"    mode(SaveMode.Overwrite).\r\n",
+							"    synapsesql(tableName = \"wplussynapsedw.dbo.target\", \r\n",
+							"                tableType = Constants.INTERNAL, //For external table type value is Constants.EXTERNAL\r\n",
+							"                location = None, //Not required for writing to an internal table\r\n",
+							"                callBackHandle = Some(callBackFunctionToReceivePostWriteMetrics))\r\n",
+							"\r\n",
+							"//If write request has failed, raise an error and fail the Cell's execution.\r\n",
+							"if(errorDuringWrite.isDefined) throw errorDuringWrite.get   "
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 13
 					}
 				]
 			},
@@ -4788,8 +6046,10 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -4806,7 +6066,8 @@
 							"This tutorial shows how to use Predict on a Sklearn model.\r\n",
 							"Duration 00:02:38\r\n",
 							"# Train SKLearn Model"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -4830,6 +6091,7 @@
 							"with fsspec_handle.open() as f:\r\n",
 							"    train_df = pandas.read_csv(f)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 56
 					},
@@ -4849,6 +6111,7 @@
 						"source": [
 							"train_df.head()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 57
 					},
@@ -4877,6 +6140,7 @@
 							"\r\n",
 							"from sklearn.linear_model import LinearRegression"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 58
 					},
@@ -4949,6 +6213,7 @@
 							"      args = self.get_args()\r\n",
 							"      json.dump(args, f)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 59
 					},
@@ -4983,6 +6248,7 @@
 							"    model_class.save(output_model_path)\r\n",
 							"    print(model_class.predict(datasets))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 60
 					},
@@ -5002,6 +6268,7 @@
 						"source": [
 							"train(train_df, './artifacts/output')"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 61
 					},
@@ -5016,7 +6283,8 @@
 						},
 						"source": [
 							"# Upload to ADLS"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -5047,6 +6315,7 @@
 							"    STORAGE_PATH, \r\n",
 							"    recursive=True, overwrite=True)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 62
 					},
@@ -5061,7 +6330,8 @@
 						},
 						"source": [
 							"# Import SynapseML Predict"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -5087,6 +6357,7 @@
 							"\r\n",
 							"print(pcontext.__version__)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 63
 					},
@@ -5104,7 +6375,8 @@
 							"Model and Data are both stored on ADLS. Must use full abfss path, not the mount.\r\n",
 							"\r\n",
 							"Return type is int"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -5124,6 +6396,7 @@
 							"ADLS_MODEL_URI_SKLEARN = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/predict/models/mlflow/sklearn/e2e_linear_regression/\"\r\n",
 							"RETURN_TYPES = \"INT\""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 64
 					},
@@ -5139,7 +6412,8 @@
 						"source": [
 							"# Enable SynapseML predict\r\n",
 							"Set the spark conf spark.synapse.ml.predict.enabled as true to enable the library."
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -5157,6 +6431,7 @@
 						"source": [
 							"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 65
 					},
@@ -5171,7 +6446,8 @@
 						},
 						"source": [
 							"# Bind Model"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -5189,6 +6465,7 @@
 						"source": [
 							"model = pcontext.bind_model(RETURN_TYPES, \"mlflow\", \"sklearn_linear_regression\", ADLS_MODEL_URI_SKLEARN).register()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 66
 					},
@@ -5203,7 +6480,8 @@
 						},
 						"source": [
 							"# Load Data"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -5229,6 +6507,7 @@
 							"df.show(10)\r\n",
 							"df"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 67
 					},
@@ -5253,6 +6532,7 @@
 							"%%sql \r\n",
 							"select * from data"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 68
 					},
@@ -5276,6 +6556,7 @@
 							"                  \"\"\"\r\n",
 							"              ).show()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 69
 					},
@@ -5293,7 +6574,8 @@
 							"* Ajay Agarwal\r\n",
 							"* Tian Wei\r\n",
 							"* Nellie Gustafsson"
-						]
+						],
+						"attachments": null
 					}
 				]
 			},
@@ -5348,8 +6630,10 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -5368,6 +6652,7 @@
 						"source": [
 							"library(notebookutils)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 22
 					},
@@ -5381,6 +6666,7 @@
 							"    list(\"linkedService\" = \"nyctaxistaging\")\r\n",
 							") "
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 6
 					}
@@ -5494,7 +6780,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b40e8703-535f-4311-ab54-532964a93eac"
+						"spark.autotune.trackingId": "fb136941-229a-44ef-8f71-9457d6c12e5b"
 					}
 				},
 				"metadata": {
@@ -5520,7 +6806,7 @@
 						"nodeCount": 10,
 						"cores": 64,
 						"memory": 400,
-						"automaticScaleJobs": false
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5535,6 +6821,7 @@
 						"source": [
 							"p1 = 5"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -5555,6 +6842,7 @@
 							"p=p1\r\n",
 							"print(p)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
@@ -5584,6 +6872,7 @@
 							"hol = PublicHolidays(start_date=start_date, end_date=end_date)\r\n",
 							"hol_df = hol.to_spark_dataframe()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -5603,6 +6892,7 @@
 						"source": [
 							"hol = hol_df.limit(p)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 4
 					},
@@ -5623,6 +6913,7 @@
 							"csv_path = \"hol.csv\"\r\n",
 							"hol.write.csv(csv_path, mode = 'overwrite', header = 'true')"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 5
 					}
@@ -5679,8 +6970,10 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -5694,13 +6987,15 @@
 						},
 						"source": [
 							"Ref: https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/synapse-spark-sql-pool-import-export#usage"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
 						"source": [
 							"val df = spark.read.synapsesql(\"wplussynapsedw.staging.orcsample\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
@@ -5720,6 +7015,7 @@
 						"source": [
 							"df"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -5739,6 +7035,7 @@
 						"source": [
 							"df.createOrReplaceTempView(\"demo\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 4
 					},
@@ -5764,6 +7061,7 @@
 							"\r\n",
 							"select * from demo"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 5
 					}
@@ -5782,23 +7080,28 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "XXL",
+					"referenceName": "threedot0",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "400g",
-					"driverCores": 64,
-					"executorMemory": "400g",
-					"executorCores": 64,
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2"
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "a5ab7432-6ae2-446c-9615-24cfd98b1f8e"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
+					"synapse_widget": {
+						"version": "0.1"
+					},
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_spark",
 						"display_name": "Synapse Spark"
@@ -5807,20 +7110,21 @@
 						"name": "scala"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
-						"name": "XXL",
+						"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+						"name": "threedot0",
 						"type": "Spark",
-						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
+						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "2.4",
-						"nodeCount": 10,
-						"cores": 64,
-						"memory": 400,
+						"sparkVersion": "3.1",
+						"nodeCount": 5,
+						"cores": 8,
+						"memory": 56,
 						"extraHeader": null
-					}
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -6034,8 +7338,10 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 5,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -6050,6 +7356,7 @@
 							"with fsspec_handle.open() as f:\r\n",
 							"    train_df = pandas.read_csv(f)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -6065,7 +7372,8 @@
 						"source": [
 							"# LinearRegresssion\r\n",
 							"fails due to schema of dataset"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -6155,6 +7463,7 @@
 							"train(train_df, './artifacts/output')\r\n",
 							""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 6
 					}
@@ -6208,8 +7517,10 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -6224,6 +7535,7 @@
 							"df = spark.sql(\"SELECT * FROM `default`.`lastchanges`\")\n",
 							"# df.show(10)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -6248,6 +7560,7 @@
 							"%%sql\r\n",
 							"select * from default.lastchanges"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
@@ -6276,6 +7589,7 @@
 							"select * from t\r\n",
 							""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 24
 					},
@@ -6305,6 +7619,7 @@
 							"\r\n",
 							"SELECT * FROM CTE"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 6
 					}
@@ -7404,8 +8719,10 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -7413,6 +8730,7 @@
 						"source": [
 							"library(notebookutils)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -7433,6 +8751,7 @@
 							"# Create new directory\r\n",
 							"mssparkutils.fs.mkdirs(\"/tmp/a/b/c\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -7454,6 +8773,7 @@
 							"mssparkutils.fs.cp(\"/shakespeare.txt\", \"/tmp/a/b/c/shakespeare.txt\", TRUE) # Set the third parameter as True to copy all files and directories recursively\r\n",
 							"mssparkutils.fs.cp(\"/tmp/a/b/c/shakespeare.txt\", \"/tmp/a/b/c/shakespeare1.txt\", TRUE)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 4
 					},
@@ -7473,6 +8793,7 @@
 						"source": [
 							"print(mssparkutils.fs.head(\"/tmp/a/b/c/shakespeare.txt\", 1024))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 5
 					},
@@ -7492,6 +8813,7 @@
 						"source": [
 							"mssparkutils.fs.mv(\"/tmp/a/b/c/shakespeare1.txt\", \"/tmp/a/b/c/shakespeare2.txt\", TRUE) # Set the last parameter as True to firstly create the parent directory if it does not exist"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 6
 					},
@@ -7513,6 +8835,7 @@
 							"mssparkutils.fs.append(\"/tmp/a/b/c/test.txt\",\" from mssparkutils\", TRUE)\r\n",
 							"#mssparkutils.fs.head(\"/tmp/a/b/c/test.txt\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 7
 					},
@@ -7532,6 +8855,7 @@
 						"source": [
 							"mssparkutils.fs.rm(\"/tmp\", TRUE) # Set the last parameter as True to remove all files and directories recursively"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 8
 					}
@@ -7572,7 +8896,8 @@
 					},
 					"language_info": {
 						"name": "r"
-					}
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -7593,7 +8918,8 @@
 							"\r\n",
 							"## Known issue\r\n",
 							"- Notebook reference run is not supported temporarily for now. It will be supported in the next release. If urgent, we can provide some workaround"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "markdown",
@@ -7606,7 +8932,8 @@
 						},
 						"source": [
 							"## Loading notebookutils library"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -7624,6 +8951,7 @@
 						"source": [
 							"library(notebookutils)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -7638,7 +8966,8 @@
 						},
 						"source": [
 							"## File System Utilities"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -7656,6 +8985,7 @@
 						"source": [
 							"mssparkutils.fs.help()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 9
 					},
@@ -7676,6 +9006,7 @@
 							"# List files\r\n",
 							"mssparkutils.fs.ls(\"/\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 10
 					},
@@ -7699,6 +9030,7 @@
 							"    writeLines(paste(file$name, file$isDir, file$isFile, file$size))\r\n",
 							"}"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 11
 					},
@@ -7719,6 +9051,7 @@
 							"# Create new directory\r\n",
 							"mssparkutils.fs.mkdirs(\"/tmp/a/b/c\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 12
 					},
@@ -7740,6 +9073,7 @@
 							"mssparkutils.fs.cp(\"/samples/python/shakespeare.txt\", \"/tmp/a/b/c/shakespeare.txt\", TRUE) # Set the third parameter as True to copy all files and directories recursively\r\n",
 							"mssparkutils.fs.cp(\"/tmp/a/b/c/shakespeare.txt\", \"/tmp/a/b/c/shakespeare1.txt\", TRUE)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 13
 					},
@@ -7760,6 +9094,7 @@
 							"# Preview file content\r\n",
 							"print(mssparkutils.fs.head(\"/tmp/a/b/c/shakespeare.txt\", 1024))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 14
 					},
@@ -7780,6 +9115,7 @@
 							"# Move file\r\n",
 							"mssparkutils.fs.mv(\"/tmp/a/b/c/shakespeare1.txt\", \"/tmp/a/b/c/shakespeare2.txt\", TRUE) # Set the last parameter as True to firstly create the parent directory if it does not exist"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 15
 					},
@@ -7800,6 +9136,7 @@
 							"# Write file\r\n",
 							"mssparkutils.fs.put(\"/tmp/a/b/c/test.txt\",\"Hello world\", TRUE)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 16
 					},
@@ -7821,6 +9158,7 @@
 							"mssparkutils.fs.append(\"/tmp/a/b/c/test.txt\",\" from mssparkutils\", TRUE)\r\n",
 							"#mssparkutils.fs.head(\"/tmp/a/b/c/test.txt\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 17
 					},
@@ -7841,6 +9179,7 @@
 							"# Delete file or directory\r\n",
 							"mssparkutils.fs.rm(\"/tmp\", TRUE) # Set the last parameter as True to remove all files and directories recursively"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 18
 					},
@@ -7855,7 +9194,8 @@
 						},
 						"source": [
 							"### File mount/unmount"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -7878,6 +9218,7 @@
 							"    list(\"linkedService\" = \"nbutilsmssparkutils\")\r\n",
 							") "
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 19
 					},
@@ -7900,6 +9241,7 @@
 							"f <- sprintf(\"/synfs/%s/testR/myFile.txt\", jobId)\r\n",
 							"cat(\"Hello world.\\n\", file = f, sep = \"\", append = TRUE)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 20
 					},
@@ -7923,6 +9265,7 @@
 							"directory <- sprintf(\"synfs:/%s/testR\", jobId)\r\n",
 							"mssparkutils.fs.ls(directory)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 21
 					},
@@ -7945,6 +9288,7 @@
 							"file <- sprintf(\"synfs:/%s/testR/myFile.txt\", jobId)\r\n",
 							"mssparkutils.fs.head(file)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 22
 					},
@@ -7967,6 +9311,7 @@
 							"directory <- sprintf(\"synfs:/%s/testR/newdir\", jobId)\r\n",
 							"mssparkutils.fs.mkdirs(directory)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 23
 					},
@@ -7987,6 +9332,7 @@
 							"# How to unmount the mount point\r\n",
 							"mssparkutils.fs.unmount(\"/testR\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 24
 					},
@@ -8001,7 +9347,8 @@
 						},
 						"source": [
 							"## Notebook utilities"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -8019,6 +9366,7 @@
 						"source": [
 							"mssparkutils.notebook.help()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 25
 					},
@@ -8039,6 +9387,7 @@
 							"# Reference a notebook\r\n",
 							"mssparkutils.notebook.run(\"/folder/Sample1\", 90, list(\"input\" = 20))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
@@ -8059,6 +9408,7 @@
 							"# Exit a notebook\r\n",
 							"#mssparkutils.notebook.exit(\"value string\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 27
 					},
@@ -8073,7 +9423,8 @@
 						},
 						"source": [
 							"## Credentials utilities"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -8091,6 +9442,7 @@
 						"source": [
 							"mssparkutils.credentials.help()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 28
 					},
@@ -8111,6 +9463,7 @@
 							"# Get token\r\n",
 							"mssparkutils.credentials.getToken(\"Synapse\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -8132,6 +9485,7 @@
 							"token <- mssparkutils.credentials.getToken(\"Synapse\")\r\n",
 							"mssparkutils.credentials.isValidToken(token)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 30
 					},
@@ -8152,6 +9506,7 @@
 							"# Get connection string or credentials for linked service\r\n",
 							"mssparkutils.credentials.getConnectionStringOrCreds(\"nbutilsmssparkutils\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -8172,6 +9527,7 @@
 							"# Get secret using workspace identity\r\n",
 							"mssparkutils.credentials.getSecret(\"nbutilskv\",\"mytestSecret\",\"nbutilskvlinkedservice\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 33
 					},
@@ -8192,6 +9548,7 @@
 							"# Get secret using user credentials\r\n",
 							"mssparkutils.credentials.getSecret(\"nbutilskv\",\"mytestSecret\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 34
 					},
@@ -8212,6 +9569,7 @@
 							"# Put secret using workspace identity\r\n",
 							"mssparkutils.credentials.putSecret(\"nbutilskv\", \"mytestSecret\",\"secretvaluewithmsi\",\"nbutilskvlinkedservice\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 35
 					},
@@ -8232,6 +9590,7 @@
 							"# Put secret using user credentials\r\n",
 							"mssparkutils.credentials.putSecret(\"nbutilskv\", \"mytestSecret\",\"secretvaluewithusercred\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 36
 					},
@@ -8246,7 +9605,8 @@
 						},
 						"source": [
 							"## Environment utilities"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -8264,6 +9624,7 @@
 						"source": [
 							"mssparkutils.env.help()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 37
 					},
@@ -8284,6 +9645,7 @@
 							"# Get user name\r\n",
 							"mssparkutils.env.getUserName()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 38
 					},
@@ -8304,6 +9666,7 @@
 							"# Get user ID\r\n",
 							"mssparkutils.env.getUserId()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 39
 					},
@@ -8324,6 +9687,7 @@
 							"# Get job ID\r\n",
 							"mssparkutils.env.getJobId()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 40
 					},
@@ -8344,6 +9708,7 @@
 							"# Get workspace name\r\n",
 							"mssparkutils.env.getWorkspaceName()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 41
 					},
@@ -8364,6 +9729,7 @@
 							"# Get pool name\r\n",
 							"mssparkutils.env.getPoolName()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 42
 					},
@@ -8384,6 +9750,7 @@
 							"# Get cluster ID\r\n",
 							"mssparkutils.env.getClusterId()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 43
 					},
@@ -8398,7 +9765,8 @@
 						},
 						"source": [
 							"## Runtime Context"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -8419,6 +9787,7 @@
 							"    writeLines(paste(key, ctx[[key]], sep = \"\\t\"))\r\n",
 							"}"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 44
 					},
@@ -8433,7 +9802,8 @@
 						},
 						"source": [
 							"## Visualization"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -8453,6 +9823,7 @@
 							"df <- read.df('abfss://users@contosolake.dfs.core.windows.net/NYCTripSmall.parquet', format='parquet')\r\n",
 							"display(limit(df, 10))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 45
 					},
@@ -8548,6 +9919,7 @@
 							"  .attr(\"stroke\", \"black\")\r\n",
 							"</script>')"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 46
 					},
@@ -8562,7 +9934,8 @@
 						},
 						"source": [
 							"## Magic command"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -8586,6 +9959,7 @@
 							"df <- read.df('abfss://users@contosolake.dfs.core.windows.net/NYCTripSmall.parquet', format='parquet')\r\n",
 							"display(limit(df, 10))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 47
 					}
@@ -8639,8 +10013,10 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 5,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -8652,6 +10028,7 @@
 							"import azure.synapse.ml.predict as pcontext\r\n",
 							"import azure.synapse.ml.predict.utils._logger as synapse_predict_logger"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -8675,6 +10052,7 @@
 							"RETURN_TYPES = \"double\" \r\n",
 							"RUNTIME = \"mlflow\""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 25
 					},
@@ -8696,6 +10074,7 @@
 							"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\")\r\n",
 							"ws"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 26
 					},
@@ -8715,6 +10094,7 @@
 						"source": [
 							"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 13
 					},
@@ -8740,6 +10120,7 @@
 							"    aml_workspace=ws \r\n",
 							"    ).register()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 24
 					},
@@ -8764,6 +10145,7 @@
 							"    model_uri=ADLS_MODEL_URI\r\n",
 							"    ).register()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 17
 					},
@@ -8789,6 +10171,7 @@
 							"    inferSchema=True)\r\n",
 							"df.createOrReplaceTempView('datafile')"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -8813,6 +10196,7 @@
 							"%%sql \r\n",
 							"select * from datafile"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -8836,6 +10220,7 @@
 							"%%sql\r\n",
 							"SELECT PREDICT(oj_forecast, Quantity) AS predict FROM datafile"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -8850,7 +10235,8 @@
 						},
 						"source": [
 							"# Round 2 "
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -8880,6 +10266,7 @@
 							"with fsspec_handle.open() as f:\r\n",
 							"       train_df = pandas.read_csv(f)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -8899,6 +10286,7 @@
 						"source": [
 							""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -8952,8 +10340,10 @@
 						"sparkVersion": "2.4",
 						"nodeCount": 10,
 						"cores": 64,
-						"memory": 400
-					}
+						"memory": 400,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -8966,6 +10356,7 @@
 							"from notebookutils import mssparkutils\n",
 							"from azureml.data.dataset_factory import TabularDatasetFactory"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -8978,6 +10369,7 @@
 							"ws = mssparkutils.azureML.getWorkspace(linkedService_name)\n",
 							"experiment = Experiment(ws, experiment_name)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
@@ -8989,6 +10381,7 @@
 							"datastore = Datastore.get_default(ws)\n",
 							"dataset = TabularDatasetFactory.register_spark_dataframe(df, datastore, name = experiment_name + \"-dataset\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -9013,6 +10406,7 @@
 							"                             n_cross_validations = 5,\n",
 							"                             forecasting_parameters = forecasting_parameters)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 4
 					},
@@ -9021,6 +10415,7 @@
 						"source": [
 							"run = experiment.submit(automl_config)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 5
 					},
@@ -9029,6 +10424,7 @@
 						"source": [
 							"displayHTML(\"<a href={} target='_blank'>Your experiment in Azure Machine Learning portal: {}</a>\".format(run.get_portal_url(), run.id))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 6
 					},
@@ -9054,6 +10450,7 @@
 							"    # Register the model to AML model registry\n",
 							"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"wplushiramsynapse-dominicks_oj_train-20211111125807-Best\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 7
 					}
@@ -9107,8 +10504,10 @@
 						"sparkVersion": "2.4",
 						"nodeCount": 10,
 						"cores": 64,
-						"memory": 400
-					}
+						"memory": 400,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -9150,6 +10549,7 @@
 							"\r\n",
 							"df.write.mode(\"overwrite\").saveAsTable(\"dominicks_OJ_train\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 17
 					}
@@ -9203,8 +10603,10 @@
 						"sparkVersion": "2.4",
 						"nodeCount": 10,
 						"cores": 64,
-						"memory": 400
-					}
+						"memory": 400,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -9217,6 +10619,7 @@
 							"from notebookutils import mssparkutils\n",
 							"from azureml.data.dataset_factory import TabularDatasetFactory"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -9229,6 +10632,7 @@
 							"ws = mssparkutils.azureML.getWorkspace(linkedService_name)\n",
 							"experiment = Experiment(ws, experiment_name)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -9240,6 +10644,7 @@
 							"datastore = Datastore.get_default(ws)\n",
 							"dataset = TabularDatasetFactory.register_spark_dataframe(df, datastore, name = experiment_name + \"-dataset\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -9255,6 +10660,7 @@
 							"                             max_concurrent_iterations = 2,\n",
 							"                             enable_onnx_compatible_models = True)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -9263,6 +10669,7 @@
 						"source": [
 							"run = experiment.submit(automl_config)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -9271,6 +10678,7 @@
 						"source": [
 							"displayHTML(\"<a href={} target='_blank'>Your experiment in Azure Machine Learning portal: {}</a>\".format(run.get_portal_url(), run.id))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -9333,6 +10741,7 @@
 							"    # Register the model to AML model registry\n",
 							"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"wplushiramsynapse-dominicks_oj_train-20211118120913-Best\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -9385,8 +10794,10 @@
 						"sparkVersion": "2.4",
 						"nodeCount": 10,
 						"cores": 64,
-						"memory": 400
-					}
+						"memory": 400,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -9394,6 +10805,7 @@
 						"source": [
 							"print('hello world')"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -9450,8 +10862,10 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
-					}
+						"memory": 56,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -9472,7 +10886,8 @@
 							"\r\n",
 							"## Known issue\r\n",
 							"- Notebook reference run is not supported temporarily for now. It will be supported in the next release. If urgent, we can provide some workaround"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "markdown",
@@ -9485,7 +10900,8 @@
 						},
 						"source": [
 							"## Loading notebookutils library"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -9503,6 +10919,7 @@
 						"source": [
 							"library(notebookutils)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -9517,7 +10934,8 @@
 						},
 						"source": [
 							"## File System Utilities"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -9535,6 +10953,7 @@
 						"source": [
 							"mssparkutils.fs.help()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
@@ -9555,6 +10974,7 @@
 							"# List files\r\n",
 							"mssparkutils.fs.ls(\"/\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -9578,6 +10998,7 @@
 							"    writeLines(paste(file$name, file$isDir, file$isFile, file$size))\r\n",
 							"}"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 4
 					},
@@ -9598,6 +11019,7 @@
 							"# Create new directory\r\n",
 							"mssparkutils.fs.mkdirs(\"/tmp/a/b/c\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 5
 					},
@@ -9619,6 +11041,7 @@
 							"mssparkutils.fs.cp(\"/shakespeare.txt\", \"/tmp/a/b/c/shakespeare.txt\", TRUE) # Set the third parameter as True to copy all files and directories recursively\r\n",
 							"mssparkutils.fs.cp(\"/tmp/a/b/c/shakespeare.txt\", \"/tmp/a/b/c/shakespeare1.txt\", TRUE)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 7
 					},
@@ -9639,6 +11062,7 @@
 							"# Preview file content\r\n",
 							"print(mssparkutils.fs.head(\"/tmp/a/b/c/shakespeare.txt\", 1024))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 8
 					},
@@ -9659,6 +11083,7 @@
 							"# Rename by Move file\r\n",
 							"mssparkutils.fs.mv(\"/tmp/a/b/c/shakespeare1.txt\", \"/tmp/a/b/c/shakespeare2.txt\", TRUE) # Set the last parameter as True to firstly create the parent directory if it does not exist"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 9
 					},
@@ -9679,6 +11104,7 @@
 							"# Write file\r\n",
 							"mssparkutils.fs.put(\"/tmp/a/b/c/test.txt\",\"Hello world\", TRUE)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 10
 					},
@@ -9700,6 +11126,7 @@
 							"mssparkutils.fs.append(\"/tmp/a/b/c/test.txt\",\" from mssparkutils\", TRUE)\r\n",
 							"#mssparkutils.fs.head(\"/tmp/a/b/c/test.txt\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 11
 					},
@@ -9720,6 +11147,7 @@
 							"# Delete file or directory\r\n",
 							"mssparkutils.fs.rm(\"/tmp\", TRUE) # Set the last parameter as True to remove all files and directories recursively"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 12
 					},
@@ -9734,7 +11162,8 @@
 						},
 						"source": [
 							"### File mount/unmount"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -9757,6 +11186,7 @@
 							"    list(\"linkedService\" = \"nbutilsmssparkutils\")\r\n",
 							") "
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 13
 					},
@@ -9779,6 +11209,7 @@
 							"f <- sprintf(\"/synfs/%s/testR/myFile.txt\", jobId)\r\n",
 							"cat(\"Hello world.\\n\", file = f, sep = \"\", append = TRUE)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 20
 					},
@@ -9802,6 +11233,7 @@
 							"directory <- sprintf(\"synfs:/%s/testR\", jobId)\r\n",
 							"mssparkutils.fs.ls(directory)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 21
 					},
@@ -9824,6 +11256,7 @@
 							"file <- sprintf(\"synfs:/%s/testR/myFile.txt\", jobId)\r\n",
 							"mssparkutils.fs.head(file)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 22
 					},
@@ -9846,6 +11279,7 @@
 							"directory <- sprintf(\"synfs:/%s/testR/newdir\", jobId)\r\n",
 							"mssparkutils.fs.mkdirs(directory)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 23
 					},
@@ -9866,6 +11300,7 @@
 							"# How to unmount the mount point\r\n",
 							"mssparkutils.fs.unmount(\"/testR\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 24
 					},
@@ -9880,7 +11315,8 @@
 						},
 						"source": [
 							"## Notebook utilities"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -9898,6 +11334,7 @@
 						"source": [
 							"mssparkutils.notebook.help()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -9918,6 +11355,7 @@
 							"# Reference a notebook\r\n",
 							"mssparkutils.notebook.run(\"SparkSQLCTE\", 360)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -9938,6 +11376,7 @@
 							"# Exit a notebook\r\n",
 							"#mssparkutils.notebook.exit(\"value string\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 42
 					},
@@ -9952,7 +11391,8 @@
 						},
 						"source": [
 							"## Credentials utilities"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -9970,6 +11410,7 @@
 						"source": [
 							"mssparkutils.credentials.help()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 15
 					},
@@ -9990,6 +11431,7 @@
 							"# Get token\r\n",
 							"mssparkutils.credentials.getToken(\"Synapse\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 17
 					},
@@ -10011,6 +11453,7 @@
 							"token <- mssparkutils.credentials.getToken(\"Synapse\")\r\n",
 							"mssparkutils.credentials.isValidToken(token)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 18
 					},
@@ -10031,6 +11474,7 @@
 							"# Get connection string or credentials for linked service\r\n",
 							"mssparkutils.credentials.getConnectionStringOrCreds(\"nbutilsmssparkutils\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 19
 					},
@@ -10051,6 +11495,7 @@
 							"# Get secret using workspace identity\r\n",
 							"mssparkutils.credentials.getSecret(\"nbutilskv\",\"mytestSecret\",\"nbutilskvlinkedservice\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 33
 					},
@@ -10071,6 +11516,7 @@
 							"# Get secret using user credentials\r\n",
 							"mssparkutils.credentials.getSecret(\"nbutilskv\",\"mytestSecret\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 34
 					},
@@ -10091,6 +11537,7 @@
 							"# Put secret using workspace identity\r\n",
 							"mssparkutils.credentials.putSecret(\"nbutilskv\", \"mytestSecret\",\"secretvaluewithmsi\",\"nbutilskvlinkedservice\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 35
 					},
@@ -10111,6 +11558,7 @@
 							"# Put secret using user credentials\r\n",
 							"mssparkutils.credentials.putSecret(\"nbutilskv\", \"mytestSecret\",\"secretvaluewithusercred\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 36
 					},
@@ -10125,7 +11573,8 @@
 						},
 						"source": [
 							"## Environment utilities"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -10143,6 +11592,7 @@
 						"source": [
 							"mssparkutils.env.help()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 20
 					},
@@ -10163,6 +11613,7 @@
 							"# Get user name\r\n",
 							"mssparkutils.env.getUserName()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 21
 					},
@@ -10183,6 +11634,7 @@
 							"# Get user ID\r\n",
 							"mssparkutils.env.getUserId()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 22
 					},
@@ -10203,6 +11655,7 @@
 							"# Get job ID\r\n",
 							"mssparkutils.env.getJobId()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 23
 					},
@@ -10223,6 +11676,7 @@
 							"# Get workspace name\r\n",
 							"mssparkutils.env.getWorkspaceName()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 24
 					},
@@ -10243,6 +11697,7 @@
 							"# Get pool name\r\n",
 							"mssparkutils.env.getPoolName()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 25
 					},
@@ -10263,6 +11718,7 @@
 							"# Get cluster ID\r\n",
 							"mssparkutils.env.getClusterId()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 26
 					},
@@ -10277,7 +11733,8 @@
 						},
 						"source": [
 							"## Runtime Context"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -10298,6 +11755,7 @@
 							"    writeLines(paste(key, ctx[[key]], sep = \"\\t\"))\r\n",
 							"}"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 27
 					},
@@ -10312,7 +11770,8 @@
 						},
 						"source": [
 							"## Visualization"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -10332,6 +11791,7 @@
 							"df <- read.df('abfss://users@contosolake.dfs.core.windows.net/NYCTripSmall.parquet', format='parquet')\r\n",
 							"display(limit(df, 10))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 28
 					},
@@ -10427,6 +11887,7 @@
 							"  .attr(\"stroke\", \"black\")\r\n",
 							"</script>')"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 29
 					},
@@ -10441,7 +11902,8 @@
 						},
 						"source": [
 							"## Magic command"
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
@@ -10465,6 +11927,7 @@
 							"df <- read.df('abfss://users@contosolake.dfs.core.windows.net/NYCTripSmall.parquet', format='parquet')\r\n",
 							"display(limit(df, 10))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 47
 					}
@@ -10518,8 +11981,10 @@
 						"sparkVersion": "2.4",
 						"nodeCount": 10,
 						"cores": 64,
-						"memory": 400
-					}
+						"memory": 400,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -10534,6 +11999,7 @@
 							"pickle.dump(numbers_list, list_pickle)\r\n",
 							"list_pickle.close()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -10558,6 +12024,7 @@
 							"\r\n",
 							"print(numbers_list)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -10578,6 +12045,7 @@
 							"loaded_model = pickle.load(open(list_pickle_path, 'rb'))\r\n",
 							"loaded_model"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 17
 					},
@@ -10597,6 +12065,7 @@
 						"source": [
 							""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -10640,6 +12109,118 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/wplushiramspark')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 5
+				},
+				"autoScale": {
+					"enabled": false,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 3,
+				"nodeSize": "Medium",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "2.4",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": true,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/threedot0')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 45
+				},
+				"autoScale": {
+					"enabled": false,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 5,
+				"nodeSize": "Medium",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.1",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": true,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/XXL')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 45
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 10,
+				"nodeSize": "XXLarge",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "2.4",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/threemid')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 30
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 10,
+					"minNodeCount": 5
+				},
+				"nodeCount": 10,
+				"nodeSize": "Medium",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.1",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": true,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/samdemo')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/wplussynapsedw')]",
 			"type": "Microsoft.Synapse/workspaces/sqlPools",
 			"apiVersion": "2019-06-01-preview",
@@ -10652,37 +12233,28 @@
 			"location": "eastus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/wplushiramspark')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"name": "[concat(parameters('workspaceName'), '/_Delta-FromScratch-Reset')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/threedot0')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/XXL')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/threemid')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Delta"
+				},
 				"annotations": []
 			},
 			"dependsOn": []

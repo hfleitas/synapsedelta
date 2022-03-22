@@ -14,6 +14,9 @@
 		"adbhf_accessToken": {
 			"value": ""
 		},
+		"iotmonitoringsa10774_connectionString": {
+			"value": ""
+		},
 		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},
@@ -34,6 +37,9 @@
 		},
 		"PublicDataset_sasUri": {
 			"value": ""
+		},
+		"freeadx_properties_typeProperties_database": {
+			"value": "MyDatabase"
 		},
 		"nyctaxistaging_properties_typeProperties_url": {
 			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net/"
