@@ -1,5 +1,5 @@
 {
-	"name": "DeltaPipeline",
+	"name": "DataFlow-Delta",
 	"properties": {
 		"activities": [
 			{
