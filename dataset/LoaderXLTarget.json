@@ -19,7 +19,7 @@
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "Target"
+			"table": "ReportTarget"
 		}
 	},
 	"type": "Microsoft.Synapse/workspaces/datasets"
