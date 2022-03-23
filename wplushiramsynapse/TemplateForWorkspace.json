@@ -1767,9 +1767,8 @@
 						},
 						"userProperties": [],
 						"linkedServiceName": {
-							"referenceName": "wplushiramsynapse-WorkspaceDefaultSqlServer",
-							"type": "LinkedServiceReference",
-							"parameters": {}
+							"referenceName": "wplushiramsynapseLoaderXL",
+							"type": "LinkedServiceReference"
 						},
 						"typeProperties": {
 							"scripts": [
@@ -1883,9 +1882,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapse-WorkspaceDefaultSqlServer')]",
-				"[concat(variables('workspaceId'), '/notebooks/DeltaTarget-New')]",
-				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]"
+				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]",
+				"[concat(variables('workspaceId'), '/notebooks/DeltaTarget-New')]"
 			]
 		},
 		{
