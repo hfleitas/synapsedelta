@@ -33,6 +33,9 @@
 				"defaultValue": "dev"
 			}
 		},
+		"folder": {
+			"name": "_adhoc"
+		},
 		"annotations": [],
 		"lastPublishTime": "2022-03-22T22:16:29Z"
 	},
