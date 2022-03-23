@@ -20,18 +20,15 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "368becb0-5b0b-4473-a402-184c080913fa"
+				"spark.autotune.trackingId": "823b5ae9-69e1-4b92-970c-2a9c5e2a4c56"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_spark",
-				"display_name": "scala"
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "scala"
@@ -49,7 +46,7 @@
 				"nodeCount": 5,
 				"cores": 8,
 				"memory": 56,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -65,8 +62,7 @@
 				},
 				"source": [
 					"## 0. Create the class"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -74,11 +70,10 @@
 					"case class Data(key: String, value: String)\r\n",
 					"\r\n",
 					"case class ChangeData(key: String, newValue: String, deleted: Boolean, time: Long) {\r\n",
-					"  assert(newValue != null ^ deleted)\r\n",
+					"assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"attachments": null,
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "markdown",
@@ -91,8 +86,7 @@
 				},
 				"source": [
 					"## 1. Add sequence of changes"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -116,20 +110,9 @@
 					"  ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\n",
 					"  ChangeData(\"c\", \"20\", deleted = false, time = 4),\n",
 					"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\n",
-					").toDF().createOrReplaceTempView(\"changes\")\n",
-					"\n",
-					"// read from last checkpoint \n",
-					"\n",
-					"// val changeDataSource = Seq(\n",
-					"//   ChangeData(\"d\", \"82\", deleted = false, time = 6),\n",
-					"//   ChangeData(\"e\", \"19\", deleted = false, time = 7),\n",
-					"//   ChangeData(\"f\", \"12\", deleted = false, time = 8),\n",
-					"//   ChangeData(\"g\", null, deleted = true, time = 9),\n",
-					"//   ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
-					"// ).toDF().createOrReplaceTempView(\"changes\")"
+					").toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"attachments": null,
-				"execution_count": null
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -142,8 +125,7 @@
 				},
 				"source": [
 					"## 2. Read changes into DF"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -162,8 +144,7 @@
 				"source": [
 					"val changesDF = spark.sql(\"select * from changes\")"
 				],
-				"attachments": null,
-				"execution_count": null
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
@@ -176,8 +157,7 @@
 				},
 				"source": [
 					"## 3. Expression for only latest changes"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -197,8 +177,7 @@
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestChangeForEachKey.show()"
 				],
-				"attachments": null,
-				"execution_count": null
+				"execution_count": 15
 			},
 			{
 				"cell_type": "markdown",
@@ -211,8 +190,7 @@
 				},
 				"source": [
 					"## 4. Temp view of latest changes"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -231,8 +209,7 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
-				"attachments": null,
-				"execution_count": null
+				"execution_count": 16
 			},
 			{
 				"cell_type": "markdown",
@@ -245,8 +222,7 @@
 				},
 				"source": [
 					"## 5. Save delta table"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -265,8 +241,7 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"attachments": null,
-				"execution_count": null
+				"execution_count": 17
 			}
 		]
 	}
