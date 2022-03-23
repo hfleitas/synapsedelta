@@ -1,5 +1,5 @@
 {
-	"name": "DeltaChanges-Synapse",
+	"name": "Delta-Changes",
 	"properties": {
 		"activities": [
 			{
@@ -102,7 +102,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "DeltaChanges",
+						"referenceName": "Delta-Changes",
 						"type": "NotebookReference"
 					},
 					"snapshot": true

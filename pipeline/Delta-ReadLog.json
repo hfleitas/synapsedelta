@@ -1,5 +1,5 @@
 {
-	"name": "ReadDeltaLog-Synapse",
+	"name": "Delta-ReadLog",
 	"properties": {
 		"activities": [
 			{
@@ -87,7 +87,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "ReadDeltaLog",
+						"referenceName": "Delta-ReadLog",
 						"type": "NotebookReference"
 					},
 					"parameters": {

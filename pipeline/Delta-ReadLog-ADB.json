@@ -1,5 +1,5 @@
 {
-	"name": "ReadDeltaLog-ADB",
+	"name": "Delta-ReadLog-ADB",
 	"properties": {
 		"activities": [
 			{

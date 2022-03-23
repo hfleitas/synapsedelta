@@ -1,5 +1,5 @@
 {
-	"name": "ReadDeltaLog",
+	"name": "Delta-ReadLog",
 	"properties": {
 		"folder": {
 			"name": "Delta"
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1b729806-1552-4f92-9b93-64e4ce314874"
+				"spark.autotune.trackingId": "d7670245-6d1c-4217-9ef5-fdc9c0d2c700"
 			}
 		},
 		"metadata": {

@@ -1,5 +1,5 @@
 {
-	"name": "_Delta-FromScratch-Reset",
+	"name": "Delta-FromScratch",
 	"properties": {
 		"activities": [
 			{
@@ -49,7 +49,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "DeltaTarget-New",
+						"referenceName": "Delta-FromScratch",
 						"type": "NotebookReference"
 					},
 					"snapshot": true

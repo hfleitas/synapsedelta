@@ -2,7 +2,7 @@
 	"name": "DeltaChanges-Original",
 	"properties": {
 		"folder": {
-			"name": "Delta"
+			"name": "Delta/Old"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -20,14 +20,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4854e2f4-d58e-4aa8-ba48-7e310a94835d"
+				"spark.autotune.trackingId": "84940fd6-b6a7-42d2-934c-6077e01ee298"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_spark",
@@ -49,7 +46,7 @@
 				"nodeCount": 5,
 				"cores": 8,
 				"memory": 56,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -70,8 +67,7 @@
 					"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
 					"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
 					"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -90,7 +86,6 @@
 				"source": [
 					"spark.version"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -102,7 +97,6 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -127,7 +121,6 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -148,7 +141,6 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -171,7 +163,6 @@
 					"\r\n",
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -195,7 +186,6 @@
 					"%%sql\r\n",
 					"select * from target order by key"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -219,7 +209,6 @@
 					"%%sql\r\n",
 					"describe extended target"
 				],
-				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -233,8 +222,7 @@
 				},
 				"source": [
 					"# 🧂 Shake it up"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -260,7 +248,6 @@
 					"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\r\n",
 					").toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"attachments": null,
 				"execution_count": 61
 			},
 			{
@@ -274,8 +261,7 @@
 				},
 				"source": [
 					"### SQL Example"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -310,7 +296,6 @@
 					"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 					"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 				],
-				"attachments": null,
 				"execution_count": 62
 			},
 			{
@@ -331,7 +316,6 @@
 					"val changesDF = spark.sql(\"select * from changes\")\r\n",
 					"changesDF.head()"
 				],
-				"attachments": null,
 				"execution_count": 63
 			},
 			{
@@ -356,7 +340,6 @@
 					"as(\"latest\")).\r\n",
 					"selectExpr(\"key\", \"latest.*\")"
 				],
-				"attachments": null,
 				"execution_count": 64
 			},
 			{
@@ -376,7 +359,6 @@
 				"source": [
 					"latestChangeForEachKey.show() // shows the latest change for each key"
 				],
-				"attachments": null,
 				"execution_count": 65
 			},
 			{
@@ -396,7 +378,6 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
-				"attachments": null,
 				"execution_count": 66
 			},
 			{
@@ -420,7 +401,6 @@
 					"%%sql\r\n",
 					"select * from lastchanges"
 				],
-				"attachments": null,
 				"execution_count": 67
 			},
 			{
@@ -440,7 +420,6 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"attachments": null,
 				"execution_count": 68
 			},
 			{
@@ -454,8 +433,7 @@
 				},
 				"source": [
 					"### SCALA Merge example (Skipped)"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -484,7 +462,6 @@
 					"//   .insertExpr(Map(\"key\" -> \"s.key\", \"value\" -> \"s.newValue\"))\r\n",
 					"//   .execute()"
 				],
-				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -511,7 +488,6 @@
 					"SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").\r\n",
 					"synapsesql(\"wplussynapsedw.dbo.lastchanges\", Constants.INTERNAL)"
 				],
-				"attachments": null,
 				"execution_count": 70
 			},
 			{
@@ -533,8 +509,7 @@
 					"* https://databricks.com/blog/2019/02/04/introducing-delta-time-travel-for-large-scale-data-lakes.html\r\n",
 					"* https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-develop-ctas\r\n",
 					"* https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example-part-2/"
-				],
-				"attachments": null
+				]
 			}
 		]
 	}

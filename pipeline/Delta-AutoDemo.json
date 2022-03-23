@@ -1,16 +1,16 @@
 {
-	"name": "AutoDemo",
+	"name": "Delta-AutoDemo",
 	"properties": {
 		"activities": [
 			{
-				"name": "Initial",
-				"description": "Reset, make Delta table, and load",
+				"name": "FromScratch",
+				"description": "Reset, make Delta table, and initial load",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "_Delta-FromScratch-Reset",
+						"referenceName": "Delta-FromScratch",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
@@ -22,7 +22,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Initial",
+						"activity": "FromScratch",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -31,7 +31,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "DeltaChanges-Synapse",
+						"referenceName": "Delta-Changes",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true

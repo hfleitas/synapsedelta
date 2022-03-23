@@ -1,5 +1,5 @@
 {
-	"name": "DeltaChanges",
+	"name": "Delta-Changes",
 	"properties": {
 		"folder": {
 			"name": "Delta"
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "791347d8-cdf9-4ad9-8cb5-d40b3500f8c0"
+				"spark.autotune.trackingId": "210b6c26-437c-4061-9199-b4a8b931242a"
 			}
 		},
 		"metadata": {
@@ -73,7 +73,7 @@
 					"assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"execution_count": 1
+				"execution_count": 18
 			},
 			{
 				"cell_type": "markdown",
@@ -112,7 +112,7 @@
 					"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\n",
 					").toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"execution_count": 2
+				"execution_count": 19
 			},
 			{
 				"cell_type": "markdown",
@@ -144,7 +144,7 @@
 				"source": [
 					"val changesDF = spark.sql(\"select * from changes\")"
 				],
-				"execution_count": 14
+				"execution_count": 20
 			},
 			{
 				"cell_type": "markdown",
@@ -177,7 +177,7 @@
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestChangeForEachKey.show()"
 				],
-				"execution_count": 15
+				"execution_count": 21
 			},
 			{
 				"cell_type": "markdown",
@@ -209,7 +209,7 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
-				"execution_count": 16
+				"execution_count": 22
 			},
 			{
 				"cell_type": "markdown",
@@ -241,7 +241,7 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"execution_count": 17
+				"execution_count": 23
 			}
 		]
 	}
