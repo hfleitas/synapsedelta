@@ -19,11 +19,13 @@
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "a0df2822-8dca-4215-9b17-5e95f210c2e4"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_spark",
 				"display_name": "Synapse Spark"
@@ -41,11 +43,12 @@
 					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.1",
-				"nodeCount": 3,
-				"cores": 16,
-				"memory": 112,
-				"extraHeader": null
-			}
+				"nodeCount": 5,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -57,7 +60,6 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -82,7 +84,6 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -103,7 +104,6 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -126,7 +126,6 @@
 					"\r\n",
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -153,20 +152,16 @@
 					"  ChangeData(\"c\", \"200\", deleted = false, time = 5)\n",
 					").toDF().createOrReplaceTempView(\"changes\")\n",
 					"\n",
+					"// read from last checkpoint \n",
+					"\n",
 					"// val changeDataSource = Seq(\n",
-					"//   ChangeData(\"a\", \"10\", deleted = false, time = 0),\n",
-					"//   ChangeData(\"a\", null, deleted = true, time = 1),   // a was updated and then deleted\n",
-					"//   ChangeData(\"b\", null, deleted = true, time = 2),   // b was just deleted once\n",
-					"//   ChangeData(\"c\", null, deleted = true, time = 3),   // c was deleted and then updated twice\n",
-					"//   ChangeData(\"c\", \"20\", deleted = false, time = 4),\n",
-					"//   ChangeData(\"d\", \"82\", deleted = false, time = 5)\n",
-					"//   ChangeData(\"e\", \"19\", deleted = false, time = 6)\n",
-					"//   ChangeData(\"f\", \"12\", deleted = false, time = 7)\n",
-					"//   ChangeData(\"g\", null, deleted = false, time = 8)\n",
-					"//   ChangeData(\"d\", \"21\", deleted = false, time = 9)\n",
+					"//   ChangeData(\"d\", \"82\", deleted = false, time = 6),\n",
+					"//   ChangeData(\"e\", \"19\", deleted = false, time = 7),\n",
+					"//   ChangeData(\"f\", \"12\", deleted = false, time = 8),\n",
+					"//   ChangeData(\"g\", null, deleted = true, time = 9),\n",
+					"//   ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
 					"// ).toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -202,7 +197,6 @@
 					"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 					"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -222,7 +216,6 @@
 				"source": [
 					"val changesDF = spark.sql(\"select * from changes\")"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -242,7 +235,6 @@
 				"source": [
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
 				],
-				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -262,7 +254,6 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -282,7 +273,6 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"attachments": null,
 				"execution_count": 15
 			}
 		]
