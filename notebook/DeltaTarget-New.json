@@ -20,18 +20,15 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b4d27511-1dd3-4ca2-8ebf-c467bdc87db4"
+				"spark.autotune.trackingId": "6e247d6c-2f86-4bde-be30-9d94516091c3"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "Synapse PySpark"
+				"name": "synapse_spark",
+				"display_name": "scala"
 			},
 			"language_info": {
 				"name": "scala"
@@ -49,30 +46,11 @@
 				"nodeCount": 5,
 				"cores": 8,
 				"memory": 56,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# Delta Demo\r\n",
-					"\r\n",
-					"1.\tSpark, scala delta, apis, sql magics - merge (see [this notebook](https://github.com/hfleitas/synapsedelta/blob/main/notebook/DeltaChanges3.json))\r\n",
-					"2.\tServerless, credentials, open query (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaServerless.json))\r\n",
-					"3.\tIntegration pipeline, copy activity with overwrite if exists (see [pipeline](https://github.com/hfleitas/synapsedelta/blob/main/pipeline/Delta-Import.json))\r\n",
-					"4.\tSql pools - merge (see sql [script](https://github.com/hfleitas/synapsedelta/blob/main/sqlscript/DeltaSQLPoolMerge.json))"
-				],
-				"attachments": null
-			},
 			{
 				"cell_type": "code",
 				"metadata": {
@@ -90,7 +68,6 @@
 				"source": [
 					"spark.version"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -102,7 +79,6 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -127,7 +103,6 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -148,7 +123,6 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -168,7 +142,6 @@
 				"source": [
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -192,7 +165,6 @@
 					"%%sql\r\n",
 					"select * from target order by key"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -216,7 +188,6 @@
 					"%%sql\r\n",
 					"describe extended target"
 				],
-				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -240,7 +211,6 @@
 					"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
 					"import org.apache.spark.sql.SqlAnalyticsConnector._"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -254,8 +224,7 @@
 				},
 				"source": [
 					"https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/synapse-spark-sql-pool-import-export"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -275,7 +244,6 @@
 					"val writeOptions:Map[String, String] = Map(Constants.SERVER -> \"wplushiramsynapse.sql.azuresynapse.net\", \r\n",
 					"Constants.TEMP_FOLDER -> \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/temp\")"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -300,7 +268,6 @@
 					"    errorDuringWrite = errorState\r\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -330,7 +297,6 @@
 					"//If write request has failed, raise an error and fail the Cell's execution.\r\n",
 					"if(errorDuringWrite.isDefined) throw errorDuringWrite.get   "
 				],
-				"attachments": null,
 				"execution_count": 13
 			}
 		]
