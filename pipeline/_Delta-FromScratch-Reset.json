@@ -16,7 +16,7 @@
 				},
 				"userProperties": [],
 				"linkedServiceName": {
-					"referenceName": "wplushiramsynapse-WorkspaceDefaultSqlServer",
+					"referenceName": "wplushiramsynapseLoaderXL",
 					"type": "LinkedServiceReference"
 				},
 				"typeProperties": {
