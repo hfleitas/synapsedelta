@@ -1,0 +1,46 @@
+{
+	"name": "Auto-OrchestrateDeltaDemo",
+	"properties": {
+		"activities": [
+			{
+				"name": "Initial",
+				"description": "Reset, make Delta table, and load",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "_Delta-FromScratch-Reset",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Changes",
+				"description": "Make Delta changes, stage and merge",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Initial",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DeltaChanges-Synapse",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Delta"
+		},
+		"annotations": []
+	}
+}
