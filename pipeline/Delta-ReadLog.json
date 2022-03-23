@@ -60,7 +60,7 @@
 				}
 			},
 			{
-				"name": "ReadDeltaLog",
+				"name": "Delta-ReadLog",
 				"description": "Includes CDC",
 				"type": "SynapseNotebook",
 				"dependsOn": [
@@ -124,7 +124,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "ReadDeltaLog",
+						"activity": "Delta-ReadLog",
 						"dependencyConditions": [
 							"Succeeded"
 						]
