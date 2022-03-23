@@ -20,14 +20,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a5ab7432-6ae2-446c-9615-24cfd98b1f8e"
+				"spark.autotune.trackingId": "1b729806-1552-4f92-9b93-64e4ce314874"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_spark",
@@ -49,7 +46,7 @@
 				"nodeCount": 5,
 				"cores": 8,
 				"memory": 56,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -68,8 +65,7 @@
 					"1. spark read delta table from adls, use expression to group by for latestchanges.\r\n",
 					"2. call write api from adb to synapse sql dedicated pool to store latestchanges.\r\n",
 					"3. auth to sql pool using keyvault"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -91,10 +87,8 @@
 					"val accountName = \"wplushiramsynapseadlsv2\"\r\n",
 					"val accountKey = \"\"\r\n",
 					"val containerName = \"wplushiramsynapsefs\"\r\n",
-					"val deltaPath = \"synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\"\r\n",
-					"val jdbcConnectionString = \"\""
+					"val deltaPath = \"synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\""
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -103,7 +97,6 @@
 					"val df_delta = spark.read.format(\"delta\").load(\"abfss://\"+containerName+\"@\"+accountName+\".dfs.core.windows.net/\"+deltaPath)\r\n",
 					"df_delta.show()"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -124,22 +117,7 @@
 					"val latestonly = df_delta.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestonly.show()"
 				],
-				"attachments": null,
 				"execution_count": 8
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"https://stackoverflow.com/questions/26041479/query-sql-database-with-scala"
-				],
-				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -155,23 +133,16 @@
 					}
 				},
 				"source": [
-					"Class.forName(\"com.microsoft.sqlserver.jdbc.SQLServerDriver\")\r\n",
-					"import java.sql.{Connection, DriverManager, ResultSet, Statement}; \r\n",
+					"//Add required imports\r\n",
+					"import org.apache.spark.sql.DataFrame\r\n",
+					"import org.apache.spark.sql.SaveMode\r\n",
+					"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
+					"import org.apache.spark.sql.SqlAnalyticsConnector._\r\n",
 					"\r\n",
-					"def dt = {\r\n",
-					"    val connection_string = jdbcConnectionString\r\n",
-					"    val connection = DriverManager.getConnection(connection_string)\r\n",
-					"    try {\r\n",
-					"        val statement = connection.createStatement()\r\n",
-					"        val results = statement.executeQuery(\" if object_id('latestonly') is not null drop table latestonly; select 1\")\r\n",
-					"    } finally {\r\n",
-					"        connection.close\r\n",
-					"    } \r\n",
-					"}\r\n",
-					"\r\n",
-					"dt"
+					"//new write options\r\n",
+					"val writeOptions:Map[String, String] = Map(Constants.SERVER -> \"wplushiramsynapse.sql.azuresynapse.net\", \r\n",
+					"Constants.TEMP_FOLDER -> \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/temp\")"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -185,14 +156,21 @@
 						"transient": {
 							"deleting": false
 						}
-					},
-					"collapsed": true
+					}
 				},
 				"source": [
-					"latestonly.write.option(Constants.SERVER, \"wplushiramsynapse.sql.azuresynapse.net\").synapsesql(\"wplussynapsedw.dbo.latestonly\", Constants.INTERNAL)"
+					"//write to Synapse Dedicated SQL Pool (note - default SaveMode is set to ErrorIfExists)\r\n",
+					"latestonly.\r\n",
+					"    write.\r\n",
+					"    options(writeOptions).\r\n",
+					"    mode(SaveMode.Overwrite).\r\n",
+					"    synapsesql(tableName = \"wplussynapsedw.dbo.latestonly\", \r\n",
+					"                tableType = Constants.INTERNAL)\r\n",
+					"\r\n",
+					"//If write request has failed, raise an error and fail the Cell's execution.\r\n",
+					"if(errorDuringWrite.isDefined) throw errorDuringWrite.get   "
 				],
-				"attachments": null,
-				"execution_count": 11
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -204,11 +182,10 @@
 					}
 				},
 				"source": [
-					"## But he wants it in ADB.\r\n",
+					"## ref.\r\n",
 					"1. https://docs.databricks.com/data/data-sources/azure/synapse-analytics.html#frequently-asked-questions-faq\r\n",
 					"2. https://github.com/Azure-Samples/azure-sql-db-databricks/blob/main/notebooks/03b-parallel-switch-in-load-into-partitioned-table-single.ipynb"
-				],
-				"attachments": null
+				]
 			}
 		]
 	}
