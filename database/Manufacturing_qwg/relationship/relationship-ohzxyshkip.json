@@ -1,0 +1,26 @@
+{
+	"name": "relationship-ohzxyshkip",
+	"properties": {
+		"Name": "relationship-ohzxyshkip",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "Manufacturing_qwg"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "Item",
+		"ToTableName": "ManufacturingProduct",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "ItemSku",
+				"ToColumnName": "ItemSku"
+			}
+		],
+		"RelationshipType": 0,
+		"Properties": {
+			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"Item.cdm.json/Item\",\"toEntity\":\"ManufacturingProduct.cdm.json/ManufacturingProduct\",\"joinPairs\":[{\"fromAttribute\":\"ItemSku\",\"toAttribute\":\"ItemSku\"}]}}"
+		}
+	},
+	"type": "RELATIONSHIP"
+}

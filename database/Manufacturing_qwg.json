@@ -1,0 +1,24 @@
+{
+	"name": "Manufacturing_qwg",
+	"properties": {
+		"Name": "Manufacturing_qwg",
+		"EntityType": "DATABASE",
+		"Description": "",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"DerivedModelDBInfo": "{\"ModelDirectives\":{\"BaseModel\":{\"Name\":\"Manufacturing\",\"Version\":\"0.1.0\"}}}",
+			"IsSyMSCDMDatabase": true
+		},
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/Manufacturing_qwg",
+			"Properties": {
+				"FormatType": "csv",
+				"LinkedServiceName": "wplushiramsynapse-WorkspaceDefaultStorage"
+			}
+		}
+	},
+	"type": "DATABASE"
+}
