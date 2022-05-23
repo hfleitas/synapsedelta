@@ -1,0 +1,16 @@
+{
+	"name": "04-formula1",
+	"properties": {
+		"content": {
+			"query": ".show tables \n\nCarTelemetry\n| limit 10 \n\nEXPLAIN\nSELECT * FROM [CarTelemetry]\n\nSELECT count(*) FROM CarTelemetry where Timestamp > '5/23/2022';\n\n\nParticipant\n| limit 100 \n\n//make Participant a DW dimension. AdventureWorks racing team\n\n#connect cluster('adxpm10774.eastus').database(IoTAnalytics)\n\n//sqlmi\nevaluate sql_request(\n  'Server=tcp:oceanmi.public.ddc9e22985bb.database.windows.net,3342;'\n    'Authentication=\"Active Directory Integrated\";'\n    'Initial Catalog=OceanMI;',\n  'select * from [dbo].[facttable]')\n| where id > 0\n| project value\n\n// mix kql telemetry with DW/Lakedb or in PBI model. -> stretch. wow. all-up synapse. \n// viz in PBI\n// ai model train/score/ops. 2nd presentation.",
+			"metadata": {
+				"language": "kql"
+			},
+			"currentConnection": {
+				"poolName": "formula1",
+				"databaseName": "f1"
+			}
+		},
+		"type": "KqlQuery"
+	}
+}
