@@ -1,0 +1,36 @@
+{
+	"name": "_Delta-FromScratch-Reset2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Reset-delete",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "wplushiramsynapseLoaderXL",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "delete from target;\ndelete from reporttarget;\ndelete from lastchanges;"
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Delta"
+		},
+		"annotations": []
+	}
+}
