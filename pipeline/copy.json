@@ -64,6 +64,8 @@
 		"folder": {
 			"name": "_adhoc"
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2022-05-10T14:39:56Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

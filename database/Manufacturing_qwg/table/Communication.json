@@ -3,248 +3,284 @@
 	"properties": {
 		"Name": "Communication",
 		"EntityType": "TABLE",
+		"TableType": "EXTERNAL",
 		"Namespace": {
+			"SchemaName": null,
 			"DatabaseName": "Manufacturing_qwg"
 		},
-		"Description": "A communication to/from one or more party(s).",
-		"TableType": "EXTERNAL",
-		"Origin": {
-			"Type": "SPARK"
-		},
 		"StorageDescriptor": {
+			"Distribution": null,
 			"Columns": [
 				{
 					"Name": "CommunicationId",
 					"Description": "The unique identifier of a service request/contact Communication.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationId"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "long",
 						"IsComplexType": false,
 						"IsNullable": false,
+						"Length": 0,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "long"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationId"
 					}
 				},
 				{
 					"Name": "CommunicationStartTimestamp",
 					"Description": "The timestamp when the communication started.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationStartTimestamp"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "timestamp",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 0,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
 							"HIVE_TYPE_STRING": "timestamp"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationStartTimestamp"
 					}
 				},
 				{
 					"Name": "CommunicationEndTimestamp",
 					"Description": "The timestamp when the communication ended.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationEndTimestamp"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "timestamp",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 0,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
 							"HIVE_TYPE_STRING": "timestamp"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationEndTimestamp"
 					}
 				},
 				{
 					"Name": "CommunicationDescription",
 					"Description": "A description regarding the communication.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationDescription"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 512,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationDescription"
 					}
 				},
 				{
 					"Name": "CommunicationNote",
 					"Description": "A note, comment or additional information regarding the communication.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationNote"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 1024,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationNote"
 					}
 				},
 				{
 					"Name": "CommunicationQueueTime",
 					"Description": "The amount of time that the Inbound Communicator waited in a queue.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationQueueTime"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 256,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationQueueTime"
 					}
 				},
 				{
 					"Name": "CommunicationHoldTime",
 					"Description": "Total amount of time a person is placed on hold during a communication after first being connected to a person. Does not include initial queue time which may have occurred before the initial connection to a person.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationHoldTime"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 256,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationHoldTime"
 					}
 				},
 				{
 					"Name": "InboundOutboundCommunicationIndicator",
 					"Description": "Indicates whether the communication is received from the party or sent to the party.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "InboundOutboundCommunicationIndicator"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "boolean",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 0,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "boolean"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "InboundOutboundCommunicationIndicator"
 					}
 				},
 				{
 					"Name": "CommunicationText",
 					"Description": "The text of the communication.   \n\nDepending on the communication type this would be the:\n\n- text of the email or letter\n- recorded text conversation of a call",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationText"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 1024,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationText"
 					}
 				},
 				{
 					"Name": "CommunicationMethodId",
 					"Description": "The unique identifier of a Communication Method",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationMethodId"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 0,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationMethodId"
 					}
 				},
 				{
 					"Name": "CommunicationTypeId",
 					"Description": "The unique identifier of a communication type.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationTypeId"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 0,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationTypeId"
 					}
 				},
 				{
 					"Name": "CommunicationStatusId",
 					"Description": "The unique identifier of a Communication Status.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationStatusId"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 0,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationStatusId"
 					}
 				},
 				{
 					"Name": "CommunicationPriorityId",
 					"Description": "The unique identifier of a Communication Priority.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "CommunicationPriorityId"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 0,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "CommunicationPriorityId"
 					}
 				},
 				{
 					"Name": "IsoLanguageId",
 					"Description": "The unique identifier of an ISO Language.",
-					"BaseAttributeReference": {
-						"Entity": "Communication.cdm.json/Communication",
-						"Name": "IsoLanguageId"
-					},
 					"OriginDataTypeName": {
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 0,
+						"Precision": 0,
+						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
+					},
+					"BaseAttributeReference": {
+						"Entity": "Communication.cdm.json/Communication",
+						"Name": "IsoLanguageId"
 					}
 				}
 			],
+			"ColumnSetEntityName": "8e16778e-2eb2-4c95-83a6-a7fa606b8d82",
 			"Format": {
 				"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
 				"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
@@ -253,8 +289,8 @@
 				"Properties": {
 					"path": "abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/Manufacturing_qwg/Communication",
 					"delimiter": ",",
-					"multiLine": "false",
 					"firstRowAsHeader": "false",
+					"multiLine": "false",
 					"serialization.format": "1",
 					"escape": "\\",
 					"quote": "\"",
@@ -276,19 +312,36 @@
 				"derivedModelAttributeInfo": "{\"attributeReferences\":{\"CommunicationId\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationId\"},\"CommunicationStartTimestamp\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationStartTimestamp\"},\"CommunicationEndTimestamp\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationEndTimestamp\"},\"CommunicationDescription\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationDescription\"},\"CommunicationNote\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationNote\"},\"CommunicationQueueTime\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationQueueTime\"},\"CommunicationHoldTime\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationHoldTime\"},\"InboundOutboundCommunicationIndicator\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"InboundOutboundCommunicationIndicator\"},\"CommunicationText\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationText\"},\"CommunicationMethodId\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationMethodId\"},\"CommunicationTypeId\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationTypeId\"},\"CommunicationStatusId\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationStatusId\"},\"CommunicationPriorityId\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationPriorityId\"},\"IsoLanguageId\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"IsoLanguageId\"}}}"
 			},
 			"Compressed": false,
+			"SerDeInfo": null,
 			"IsStoredAsSubdirectories": false
 		},
+		"Owner": null,
+		"CreateTime": 0,
+		"LastAccessTime": 0,
+		"Retention": 0,
+		"Temporary": false,
+		"IsRewriteEnabled": false,
+		"ViewOriginalText": null,
+		"ViewExpandedText": null,
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"OriginObjectId": null,
+		"IsSharedEntity": false,
+		"PublishStatus": "PUBLISHED",
 		"Properties": {
 			"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"Communication\",\"path\":\"Communication.cdm.json/Communication\"},\"description\":\"A communication to/from one or more party(s).\",\"primaryKey\":[\"CommunicationId\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationId\"},\"dataType\":\"long\",\"description\":\"The unique identifier of a service request/contact Communication.\",\"isNullable\":false,\"name\":\"CommunicationId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationStartTimestamp\"},\"dataType\":\"timestamp\",\"description\":\"The timestamp when the communication started.\",\"isNullable\":true,\"name\":\"CommunicationStartTimestamp\",\"timestampFormat\":\"YYYY-MM-DD HH:MM:SS.fffffffff\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationEndTimestamp\"},\"dataType\":\"timestamp\",\"description\":\"The timestamp when the communication ended.\",\"isNullable\":true,\"name\":\"CommunicationEndTimestamp\",\"timestampFormat\":\"YYYY-MM-DD HH:MM:SS.fffffffff\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationDescription\"},\"dataType\":\"string\",\"dataTypeLength\":512,\"description\":\"A description regarding the communication.\",\"isNullable\":true,\"name\":\"CommunicationDescription\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationNote\"},\"dataType\":\"string\",\"dataTypeLength\":1024,\"description\":\"A note, comment or additional information regarding the communication.\",\"isNullable\":true,\"name\":\"CommunicationNote\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationQueueTime\"},\"dataType\":\"string\",\"dataTypeLength\":256,\"description\":\"The amount of time that the Inbound Communicator waited in a queue.\",\"isNullable\":true,\"name\":\"CommunicationQueueTime\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationHoldTime\"},\"dataType\":\"string\",\"dataTypeLength\":256,\"description\":\"Total amount of time a person is placed on hold during a communication after first being connected to a person. Does not include initial queue time which may have occurred before the initial connection to a person.\",\"isNullable\":true,\"name\":\"CommunicationHoldTime\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"InboundOutboundCommunicationIndicator\"},\"dataType\":\"boolean\",\"description\":\"Indicates whether the communication is received from the party or sent to the party.\",\"isNullable\":true,\"name\":\"InboundOutboundCommunicationIndicator\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationText\"},\"dataType\":\"string\",\"dataTypeLength\":1024,\"description\":\"The text of the communication.   \\n\\nDepending on the communication type this would be the:\\n\\n- text of the email or letter\\n- recorded text conversation of a call\",\"isNullable\":true,\"name\":\"CommunicationText\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationMethodId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Communication Method\",\"isNullable\":true,\"name\":\"CommunicationMethodId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationTypeId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a communication type.\",\"isNullable\":true,\"name\":\"CommunicationTypeId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationStatusId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Communication Status.\",\"isNullable\":true,\"name\":\"CommunicationStatusId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"CommunicationPriorityId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Communication Priority.\",\"isNullable\":true,\"name\":\"CommunicationPriorityId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"Communication.cdm.json/Communication\",\"name\":\"IsoLanguageId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of an ISO Language.\",\"isNullable\":true,\"name\":\"IsoLanguageId\"}]}}}",
 			"Description": "A communication to/from one or more party(s).",
 			"DisplayFolderInfo": "{\"name\":\"Customer Service & Contact Management\",\"colorCode\":\"\"}",
 			"PrimaryKeys": "CommunicationId",
 			"spark.sql.sources.provider": "csv",
-			"sql:IsAppendOnly": false
+			"x-ms-usageinfo": "AzureSynapseDatabaseTemplate",
+			"spark.sql.sources.schema.numParts": "1",
+			"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"CommunicationId\",\"type\":\"long\",\"nullable\":false,\"metadata\":{}},{\"name\":\"CommunicationStartTimestamp\",\"type\":\"timestamp\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationEndTimestamp\",\"type\":\"timestamp\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationDescription\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationNote\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationQueueTime\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationHoldTime\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"InboundOutboundCommunicationIndicator\",\"type\":\"boolean\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationText\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationMethodId\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationTypeId\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationStatusId\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CommunicationPriorityId\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"IsoLanguageId\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}}]}"
 		},
-		"Retention": 0,
-		"Temporary": false,
-		"IsRewriteEnabled": false
+		"ObjectVersion": 1,
+		"ObjectId": "9ab6e7e6-5ed9-4e14-8573-53b9460d3881",
+		"Description": "A communication to/from one or more party(s)."
 	},
 	"type": "TABLE"
 }

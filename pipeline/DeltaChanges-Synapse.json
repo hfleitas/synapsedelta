@@ -1,5 +1,5 @@
 {
-	"name": "Delta-Changes",
+	"name": "DeltaChanges-Synapse",
 	"properties": {
 		"activities": [
 			{
@@ -8,7 +8,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Delta-Changes",
+						"activity": "DeltaChanges",
 						"dependencyConditions": [
 							"Skipped"
 						]
@@ -88,7 +88,7 @@
 				]
 			},
 			{
-				"name": "Delta-Changes",
+				"name": "DeltaChanges",
 				"description": "Includes CDC",
 				"type": "SynapseNotebook",
 				"dependsOn": [],
@@ -101,10 +101,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebook": {
-						"referenceName": "Delta-Changes",
-						"type": "NotebookReference"
-					},
 					"snapshot": true
 				}
 			},
@@ -114,7 +110,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Delta-Changes",
+						"activity": "DeltaChanges",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -284,7 +280,7 @@
 			"name": "Delta"
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-03-23T05:25:17Z"
+		"lastPublishTime": "2022-03-23T04:43:33Z"
 	},
 	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

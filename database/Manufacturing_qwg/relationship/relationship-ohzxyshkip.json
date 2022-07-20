@@ -20,7 +20,10 @@
 		"RelationshipType": 0,
 		"Properties": {
 			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"Item.cdm.json/Item\",\"toEntity\":\"ManufacturingProduct.cdm.json/ManufacturingProduct\",\"joinPairs\":[{\"fromAttribute\":\"ItemSku\",\"toAttribute\":\"ItemSku\"}]}}"
-		}
+		},
+		"PublishStatus": "PUBLISHED",
+		"ObjectVersion": 1,
+		"ObjectId": "a9e5c8da-9760-4696-bb17-6d1d96eee1c9"
 	},
 	"type": "RELATIONSHIP"
 }

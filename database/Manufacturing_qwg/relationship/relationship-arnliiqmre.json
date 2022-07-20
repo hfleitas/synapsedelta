@@ -20,7 +20,10 @@
 		"RelationshipType": 0,
 		"Properties": {
 			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"Transaction.cdm.json/Transaction\",\"toEntity\":\"Order.cdm.json/Order\",\"joinPairs\":[{\"fromAttribute\":\"TransactionId\",\"toAttribute\":\"OrderId\"}]}}"
-		}
+		},
+		"PublishStatus": "PUBLISHED",
+		"ObjectVersion": 1,
+		"ObjectId": "42c6bc8d-34e7-40c2-82e3-60efeeb3cecc"
 	},
 	"type": "RELATIONSHIP"
 }

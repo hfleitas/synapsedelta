@@ -41,6 +41,8 @@
 		"folder": {
 			"name": "Delta"
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2022-03-23T04:49:58Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

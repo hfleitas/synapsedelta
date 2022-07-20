@@ -16,6 +16,7 @@
 			"executorMemory": "56g",
 			"executorCores": 8,
 			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
@@ -40,13 +41,14 @@
 				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net"
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
 				},
 				"sparkVersion": "3.1",
 				"nodeCount": 5,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -65,7 +67,8 @@
 					"1. spark read delta table from adls, use expression to group by for latestchanges.\r\n",
 					"2. call write api from adb to synapse sql dedicated pool to store latestchanges.\r\n",
 					"3. auth to sql pool using keyvault"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -89,6 +92,7 @@
 					"val containerName = \"wplushiramsynapsefs\"\r\n",
 					"val deltaPath = \"synapse/workspaces/wplushiramsynapse/warehouse/lastchanges\""
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -97,6 +101,7 @@
 					"val df_delta = spark.read.format(\"delta\").load(\"abfss://\"+containerName+\"@\"+accountName+\".dfs.core.windows.net/\"+deltaPath)\r\n",
 					"df_delta.show()"
 				],
+				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -117,6 +122,7 @@
 					"val latestonly = df_delta.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")\r\n",
 					"latestonly.show()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -143,6 +149,7 @@
 					"val writeOptions:Map[String, String] = Map(Constants.SERVER -> \"wplushiramsynapse.sql.azuresynapse.net\", \r\n",
 					"Constants.TEMP_FOLDER -> \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/temp\")"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -167,6 +174,7 @@
 					"    synapsesql(tableName = \"wplussynapsedw.dbo.latestonly\", \r\n",
 					"                tableType = Constants.INTERNAL)"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -182,7 +190,8 @@
 					"## ref.\r\n",
 					"1. https://docs.databricks.com/data/data-sources/azure/synapse-analytics.html#frequently-asked-questions-faq\r\n",
 					"2. https://github.com/Azure-Samples/azure-sql-db-databricks/blob/main/notebooks/03b-parallel-switch-in-load-into-partitioned-table-single.ipynb"
-				]
+				],
+				"attachments": null
 			}
 		]
 	}

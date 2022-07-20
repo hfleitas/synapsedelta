@@ -16,6 +16,7 @@
 			"executorMemory": "56g",
 			"executorCores": 8,
 			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
@@ -40,13 +41,14 @@
 				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net"
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
 				},
 				"sparkVersion": "3.1",
 				"nodeCount": 5,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -68,6 +70,7 @@
 				"source": [
 					"spark.version"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -79,6 +82,7 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
+				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -103,6 +107,7 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -123,6 +128,7 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -142,6 +148,7 @@
 				"source": [
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -156,7 +163,8 @@
 				"source": [
 					"## New API docs\r\n",
 					"https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/synapse-spark-sql-pool-import-export"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -179,6 +187,7 @@
 					"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
 					"import org.apache.spark.sql.SqlAnalyticsConnector._"
 				],
+				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -199,6 +208,7 @@
 					"val writeOptions:Map[String, String] = Map(Constants.SERVER -> \"wplushiramsynapse.sql.azuresynapse.net\", \r\n",
 					"Constants.TEMP_FOLDER -> \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/temp\")"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -223,6 +233,7 @@
 					"    errorDuringWrite = errorState\r\n",
 					"}"
 				],
+				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -252,6 +263,7 @@
 					"//If write request has failed, raise an error and fail the Cell's execution.\r\n",
 					"if(errorDuringWrite.isDefined) throw errorDuringWrite.get   "
 				],
+				"attachments": null,
 				"execution_count": 13
 			}
 		]

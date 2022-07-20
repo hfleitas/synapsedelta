@@ -20,7 +20,10 @@
 		"RelationshipType": 0,
 		"Properties": {
 			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"Customer.cdm.json/Customer\",\"toEntity\":\"Warehouse.cdm.json/Warehouse\",\"joinPairs\":[{\"fromAttribute\":\"CustomerId\",\"toAttribute\":\"CustomerId\"}]}}"
-		}
+		},
+		"PublishStatus": "PUBLISHED",
+		"ObjectVersion": 1,
+		"ObjectId": "f5890b90-3716-4ebb-8175-d031872c02b2"
 	},
 	"type": "RELATIONSHIP"
 }

@@ -1,54 +1,7 @@
 {
-	"name": "Delta-ReadLog-ADB",
+	"name": "ReadDeltaLog-Synapse",
 	"properties": {
 		"activities": [
-			{
-				"name": "ReadDeltaLog",
-				"description": "",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "Get Key from AKV",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Get ConnectionString from AKV",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": true
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/Repos/hiramfleitas@microsoft.com/hiramdatabricks/Includes/DeltaChanges",
-					"baseParameters": {
-						"accountName": "wplushiramsynapseadlsv2",
-						"accountKey": {
-							"value": "@string(activity('Get Key from AKV').output.value)",
-							"type": "Expression"
-						},
-						"containerName": "wplushiramsynapsefs",
-						"jdbcConnectionString": {
-							"value": "@string(activity('Get ConnectionString from AKV').output.value)",
-							"type": "Expression"
-						},
-						"deltaPath": "synapse/workspaces/wplushiramsynapse/warehouse/lastchanges"
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "adbhf",
-					"type": "LinkedServiceReference"
-				}
-			},
 			{
 				"name": "Get Key from AKV",
 				"type": "WebActivity",
@@ -63,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/accountkey/?api-version=7.0')",
+						"value": "@concat(variables('kvurl'),'secrets/accountkey/?api-version=7.0')",
 						"type": "Expression"
 					},
 					"connectVia": {
@@ -92,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "@concat(pipeline().parameters.KeyVaultDNSName,'secrets/ConnectionString/?api-version=7.0')",
+						"value": "@concat(variables('kvurl'),'secrets/ConnectionString/?api-version=7.0')",
 						"type": "Expression"
 					},
 					"connectVia": {
@@ -104,6 +57,64 @@
 						"type": "MSI",
 						"resource": "https://vault.azure.net"
 					}
+				}
+			},
+			{
+				"name": "ReadDeltaLog",
+				"description": "Includes CDC",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "Get ConnectionString from AKV",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Get Key from AKV",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": true
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"parameters": {
+						"accountName": {
+							"value": "wplushiramsynapseadlsv2",
+							"type": "string"
+						},
+						"accountKey": {
+							"value": {
+								"value": "@string(activity('Get Key from AKV').output.value)",
+								"type": "Expression"
+							},
+							"type": "string"
+						},
+						"containerName": {
+							"value": "wplushiramsynapsefs",
+							"type": "string"
+						},
+						"jdbcConnectionString": {
+							"value": {
+								"value": "@string(activity('Get ConnectionString from AKV').output.value)",
+								"type": "Expression"
+							},
+							"type": "string"
+						},
+						"deltaPath": {
+							"value": "synapse/workspaces/wplushiramsynapse/warehouse/lastchanges",
+							"type": "string"
+						}
+					},
+					"snapshot": true
 				}
 			},
 			{
@@ -135,14 +146,8 @@
 				}
 			}
 		],
-		"parameters": {
-			"KeyVaultDNSName": {
-				"type": "string",
-				"defaultValue": "https://synapseakv.vault.azure.net/"
-			}
-		},
 		"variables": {
-			"KeyVaultDNSName": {
+			"kvurl": {
 				"type": "String",
 				"defaultValue": "https://synapseakv.vault.azure.net/"
 			}
@@ -151,7 +156,7 @@
 			"name": "Delta"
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-03-23T04:43:03Z"
+		"lastPublishTime": "2022-03-23T04:45:33Z"
 	},
 	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

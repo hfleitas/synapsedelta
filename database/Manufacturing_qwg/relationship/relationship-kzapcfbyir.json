@@ -20,7 +20,10 @@
 		"RelationshipType": 0,
 		"Properties": {
 			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"Employee.cdm.json/Employee\",\"toEntity\":\"Transaction.cdm.json/Transaction\",\"joinPairs\":[{\"fromAttribute\":\"EmployeeId\",\"toAttribute\":\"ApprovedByEmployeeId\"}]}}"
-		}
+		},
+		"PublishStatus": "PUBLISHED",
+		"ObjectVersion": 1,
+		"ObjectId": "c3fc8536-55bd-4bf3-ac5f-3d64e59543e3"
 	},
 	"type": "RELATIONSHIP"
 }

@@ -9,7 +9,8 @@
 		},
 		"Properties": {
 			"DerivedModelDBInfo": "{\"ModelDirectives\":{\"BaseModel\":{\"Name\":\"Manufacturing\",\"Version\":\"0.1.0\"}}}",
-			"IsSyMSCDMDatabase": true
+			"IsSyMSCDMDatabase": true,
+			"x-ms-usageinfo": "AzureSynapseDatabaseTemplate"
 		},
 		"Source": {
 			"Provider": "ADLS",
@@ -18,7 +19,10 @@
 				"FormatType": "csv",
 				"LinkedServiceName": "wplushiramsynapse-WorkspaceDefaultStorage"
 			}
-		}
+		},
+		"PublishStatus": "PUBLISHED",
+		"ObjectVersion": 3,
+		"ObjectId": "b850f74d-0301-446f-9fc9-62422d42f40a"
 	},
 	"type": "DATABASE"
 }

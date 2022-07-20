@@ -1,5 +1,5 @@
 {
-	"name": "Delta-FromScratch",
+	"name": "_Delta-FromScratch-Reset",
 	"properties": {
 		"activities": [
 			{
@@ -48,10 +48,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebook": {
-						"referenceName": "Delta-FromScratch",
-						"type": "NotebookReference"
-					},
 					"snapshot": true
 				}
 			},
@@ -125,7 +121,7 @@
 			"name": "Delta"
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-03-23T04:49:35Z"
+		"lastPublishTime": "2022-03-23T04:44:33Z"
 	},
 	"type": "Microsoft.Synapse/workspaces/pipelines"
 }
