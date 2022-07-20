@@ -1,0 +1,429 @@
+{
+	"name": "TestPerformanceTuning",
+	"properties": {
+		"description": "from Ismael",
+		"folder": {
+			"name": "Spark"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "threedot0",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "18bc57f5-fdc8-47c3-bea4-6a7399a3a336"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
+				"name": "threedot0",
+				"type": "Spark",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 5,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"# Start your Spark session.\r\n",
+					"spark\r\n",
+					"\r\n",
+					"# Disable BroadcastHashJoin, so Spark will use standard SortMergeJoin. Currently, Hyperspace indexes utilize SortMergeJoin to speed up query.\r\n",
+					"spark.conf.set(\"spark.sql.autoBroadcastJoinThreshold\", -1)\r\n",
+					"\r\n",
+					"# Verify that BroadcastHashJoin is set correctly \r\n",
+					"print(spark.conf.get(\"spark.sql.autoBroadcastJoinThreshold\"))"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.types import StructField, StructType, StringType, IntegerType\r\n",
+					"\r\n",
+					"# Sample department records\r\n",
+					"departments = [(10, \"Accounting\", \"New York\"), (20, \"Research\", \"Dallas\"), (30, \"Sales\", \"Chicago\"), (40, \"Operations\", \"Boston\")]\r\n",
+					"\r\n",
+					"# Sample employee records\r\n",
+					"employees = [(7369, \"SMITH\", 20), (7499, \"ALLEN\", 30), (7521, \"WARD\", 30), (7566, \"JONES\", 20), (7698, \"BLAKE\", 30)]\r\n",
+					"\r\n",
+					"# Create a schema for the dataframe\r\n",
+					"dept_schema = StructType([StructField('deptId', IntegerType(), True), StructField('deptName', StringType(), True), StructField('location', StringType(), True)])\r\n",
+					"emp_schema = StructType([StructField('empId', IntegerType(), True), StructField('empName', StringType(), True), StructField('deptId', IntegerType(), True)])\r\n",
+					"\r\n",
+					"departments_df = spark.createDataFrame(departments, dept_schema)\r\n",
+					"employees_df = spark.createDataFrame(employees, emp_schema)\r\n",
+					"\r\n",
+					"#TODO ** customize this location path **\r\n",
+					"emp_Location = \"/perftest/employees.parquet\"\r\n",
+					"dept_Location = \"/perftest/departments.parquet\"\r\n",
+					"\r\n",
+					"employees_df.write.mode(\"overwrite\").parquet(emp_Location)\r\n",
+					"departments_df.write.mode(\"overwrite\").parquet(dept_Location)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# emp_Location and dept_Location are the user-defined locations above to save parquet files\r\n",
+					"emp_DF = spark.read.parquet(emp_Location)\r\n",
+					"dept_DF = spark.read.parquet(dept_Location)\r\n",
+					"\r\n",
+					"# Verify the data is available and correct\r\n",
+					"emp_DF.show()\r\n",
+					"dept_DF.show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.fs.ls(\"/\")\r\n",
+					"##mssparkutils.fs.rm(\"/<yourpath>\", True)\r\n",
+					"##mssparkutils.fs.ls(\"/\")\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from hyperspace import *\r\n",
+					"\r\n",
+					"# Create an instance of Hyperspace\r\n",
+					"hyperspace = Hyperspace(spark)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create index configurations\r\n",
+					"\r\n",
+					"emp_IndexConfig = IndexConfig(\"empIndex1\", [\"deptId\"], [\"empName\"])\r\n",
+					"dept_IndexConfig1 = IndexConfig(\"deptIndex1\", [\"deptId\"], [\"deptName\"])\r\n",
+					"dept_IndexConfig2 = IndexConfig(\"deptIndex2\", [\"location\"], [\"deptName\"])"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"hyperspace.deleteIndex(\"empIndex1\")\r\n",
+					"hyperspace.deleteIndex(\"deptIndex1\")\r\n",
+					"hyperspace.deleteIndex(\"deptIndex2\")\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"hyperspace.vacuumIndex(\"empIndex1\")\r\n",
+					"hyperspace.vacuumIndex(\"deptIndex1\")\r\n",
+					"hyperspace.vacuumIndex(\"deptIndex2\")\r\n",
+					"hyperspace.indexes().show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create indexes from configurations\r\n",
+					"\r\n",
+					"hyperspace.createIndex(emp_DF, emp_IndexConfig)\r\n",
+					"hyperspace.createIndex(dept_DF, dept_IndexConfig1)\r\n",
+					"hyperspace.createIndex(dept_DF, dept_IndexConfig2)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"hyperspace.indexes().show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Enable Hyperspace\r\n",
+					"Hyperspace.enable(spark)\r\n",
+					"\r\n",
+					"emp_DF = spark.read.parquet(emp_Location)\r\n",
+					"dept_DF = spark.read.parquet(dept_Location)\r\n",
+					"\r\n",
+					"emp_DF.show(5)\r\n",
+					"dept_DF.show(5)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Filter with equality predicate\r\n",
+					"\r\n",
+					"eqFilter = dept_DF.filter(\"\"\"deptId = 20\"\"\").select(\"\"\"deptName\"\"\")\r\n",
+					"eqFilter.show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"eqFilter.explain(True)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql import SparkSession\r\n",
+					"\r\n",
+					"emp_DF.createOrReplaceTempView(\"EMP\")\r\n",
+					"dept_DF.createOrReplaceTempView(\"DEPT\")\r\n",
+					"\r\n",
+					"joinQuery = spark.sql(\"SELECT EMP.empName, DEPT.deptName FROM EMP, DEPT WHERE EMP.deptId = DEPT.deptId\")\r\n",
+					"\r\n",
+					"joinQuery.show()\r\n",
+					"##joinQuery.explain(True)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"joinQuery.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"Employees\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"OPTIMIZE Employees"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
