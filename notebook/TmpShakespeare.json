@@ -7,21 +7,21 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "threemid",
+			"referenceName": "threetwo",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "288f2ff5-b427-45aa-b000-948f549c47d7"
+				"spark.autotune.trackingId": "fb202f8d-b9cb-427b-af2d-295fcfe994f1"
 			}
 		},
 		"metadata": {
@@ -31,24 +31,20 @@
 				"name": "synapse_sparkr",
 				"display_name": "Synapse SparkR"
 			},
-			"language_info": {
-				"name": "r"
-			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threemid",
-				"name": "threemid",
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threetwo",
+				"name": "threetwo",
 				"type": "Spark",
-				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threemid",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.1",
-				"nodeCount": 10,
-				"cores": 8,
-				"memory": 56,
-				"extraHeader": null
+				"sparkVersion": "3.2",
+				"nodeCount": 5,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -58,7 +54,6 @@
 				"source": [
 					"library(notebookutils)"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -78,7 +73,6 @@
 					"# Create new directory\r\n",
 					"mssparkutils.fs.mkdirs(\"/tmp/a/b/c\")"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -99,7 +93,6 @@
 					"mssparkutils.fs.cp(\"/shakespeare.txt\", \"/tmp/a/b/c/shakespeare.txt\", TRUE) # Set the third parameter as True to copy all files and directories recursively\r\n",
 					"mssparkutils.fs.cp(\"/tmp/a/b/c/shakespeare.txt\", \"/tmp/a/b/c/shakespeare1.txt\", TRUE)"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -118,7 +111,6 @@
 				"source": [
 					"print(mssparkutils.fs.head(\"/tmp/a/b/c/shakespeare.txt\", 1024))"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -137,7 +129,6 @@
 				"source": [
 					"mssparkutils.fs.mv(\"/tmp/a/b/c/shakespeare1.txt\", \"/tmp/a/b/c/shakespeare2.txt\", TRUE) # Set the last parameter as True to firstly create the parent directory if it does not exist"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -158,7 +149,6 @@
 					"mssparkutils.fs.append(\"/tmp/a/b/c/test.txt\",\" from mssparkutils\", TRUE)\r\n",
 					"#mssparkutils.fs.head(\"/tmp/a/b/c/test.txt\")"
 				],
-				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -177,7 +167,6 @@
 				"source": [
 					"mssparkutils.fs.rm(\"/tmp\", TRUE) # Set the last parameter as True to remove all files and directories recursively"
 				],
-				"attachments": null,
 				"execution_count": 8
 			}
 		]

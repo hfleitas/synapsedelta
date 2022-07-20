@@ -7,21 +7,21 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "threemid",
+			"referenceName": "threetwo",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4207e4d6-5f8b-4b8d-9221-371219be662e"
+				"spark.autotune.trackingId": "e9f76017-a49f-4cce-a95e-d8c8c63ccec5"
 			}
 		},
 		"metadata": {
@@ -35,20 +35,19 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threemid",
-				"name": "threemid",
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threetwo",
+				"name": "threetwo",
 				"type": "Spark",
-				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threemid",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.1",
-				"nodeCount": 10,
-				"cores": 8,
-				"memory": 56,
-				"extraHeader": null
+				"sparkVersion": "3.2",
+				"nodeCount": 5,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -67,8 +66,7 @@
 					"This tutorial shows how to use Predict on a Sklearn model.\r\n",
 					"Duration 00:02:38\r\n",
 					"# Train SKLearn Model"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -92,7 +90,6 @@
 					"with fsspec_handle.open() as f:\r\n",
 					"    train_df = pandas.read_csv(f)"
 				],
-				"attachments": null,
 				"execution_count": 56
 			},
 			{
@@ -111,7 +108,6 @@
 				"source": [
 					"train_df.head()"
 				],
-				"attachments": null,
 				"execution_count": 57
 			},
 			{
@@ -139,7 +135,6 @@
 					"\r\n",
 					"from sklearn.linear_model import LinearRegression"
 				],
-				"attachments": null,
 				"execution_count": 58
 			},
 			{
@@ -211,7 +206,6 @@
 					"      args = self.get_args()\r\n",
 					"      json.dump(args, f)"
 				],
-				"attachments": null,
 				"execution_count": 59
 			},
 			{
@@ -245,7 +239,6 @@
 					"    model_class.save(output_model_path)\r\n",
 					"    print(model_class.predict(datasets))"
 				],
-				"attachments": null,
 				"execution_count": 60
 			},
 			{
@@ -264,7 +257,6 @@
 				"source": [
 					"train(train_df, './artifacts/output')"
 				],
-				"attachments": null,
 				"execution_count": 61
 			},
 			{
@@ -278,8 +270,7 @@
 				},
 				"source": [
 					"# Upload to ADLS"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -310,7 +301,6 @@
 					"    STORAGE_PATH, \r\n",
 					"    recursive=True, overwrite=True)"
 				],
-				"attachments": null,
 				"execution_count": 62
 			},
 			{
@@ -324,8 +314,7 @@
 				},
 				"source": [
 					"# Import SynapseML Predict"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -351,7 +340,6 @@
 					"\r\n",
 					"print(pcontext.__version__)"
 				],
-				"attachments": null,
 				"execution_count": 63
 			},
 			{
@@ -368,8 +356,7 @@
 					"Model and Data are both stored on ADLS. Must use full abfss path, not the mount.\r\n",
 					"\r\n",
 					"Return type is int"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -389,7 +376,6 @@
 					"ADLS_MODEL_URI_SKLEARN = \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/predict/models/mlflow/sklearn/e2e_linear_regression/\"\r\n",
 					"RETURN_TYPES = \"INT\""
 				],
-				"attachments": null,
 				"execution_count": 64
 			},
 			{
@@ -404,8 +390,7 @@
 				"source": [
 					"# Enable SynapseML predict\r\n",
 					"Set the spark conf spark.synapse.ml.predict.enabled as true to enable the library."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -423,7 +408,6 @@
 				"source": [
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"attachments": null,
 				"execution_count": 65
 			},
 			{
@@ -437,8 +421,7 @@
 				},
 				"source": [
 					"# Bind Model"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -456,7 +439,6 @@
 				"source": [
 					"model = pcontext.bind_model(RETURN_TYPES, \"mlflow\", \"sklearn_linear_regression\", ADLS_MODEL_URI_SKLEARN).register()"
 				],
-				"attachments": null,
 				"execution_count": 66
 			},
 			{
@@ -470,8 +452,7 @@
 				},
 				"source": [
 					"# Load Data"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -497,7 +478,6 @@
 					"df.show(10)\r\n",
 					"df"
 				],
-				"attachments": null,
 				"execution_count": 67
 			},
 			{
@@ -521,7 +501,6 @@
 					"%%sql \r\n",
 					"select * from data"
 				],
-				"attachments": null,
 				"execution_count": 68
 			},
 			{
@@ -544,7 +523,6 @@
 					"                  \"\"\"\r\n",
 					"              ).show()"
 				],
-				"attachments": null,
 				"execution_count": 69
 			},
 			{
@@ -561,8 +539,7 @@
 					"* Ajay Agarwal\r\n",
 					"* Tian Wei\r\n",
 					"* Nellie Gustafsson"
-				],
-				"attachments": null
+				]
 			}
 		]
 	}

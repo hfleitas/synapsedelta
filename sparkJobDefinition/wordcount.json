@@ -2,10 +2,10 @@
 	"name": "wordcount",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "XXL",
+			"referenceName": "threetwo",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.2",
 		"language": "python",
 		"jobProperties": {
 			"name": "wordcount",
@@ -14,13 +14,14 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "92d60163-1901-4958-8b85-68639244b63f"
+				"spark.autotune.trackingId": "d8640e8c-77b1-4624-90bd-ee197dbca54f"
 			},
 			"args": [
 				"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/shakespeare.txt",
 				"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/result"
 			],
 			"jars": [],
+			"pyFiles": [],
 			"files": [],
 			"driverMemory": "28g",
 			"driverCores": 4,

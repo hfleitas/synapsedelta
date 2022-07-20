@@ -7,21 +7,21 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "threedot0",
+			"referenceName": "threetwo",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a0df2822-8dca-4215-9b17-5e95f210c2e4"
+				"spark.autotune.trackingId": "9bdc40d6-2e79-4cdf-aa12-d21a73015881"
 			}
 		},
 		"metadata": {
@@ -35,20 +35,19 @@
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
-				"name": "threedot0",
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threetwo",
+				"name": "threetwo",
 				"type": "Spark",
-				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.1",
+				"sparkVersion": "3.2",
 				"nodeCount": 5,
-				"cores": 8,
-				"memory": 56,
-				"extraHeader": null
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -62,7 +61,6 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -87,7 +85,6 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -108,7 +105,6 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -131,7 +127,6 @@
 					"\r\n",
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -168,7 +163,6 @@
 					"//   ChangeData(\"d\", \"21\", deleted = false, time = 10)\n",
 					"// ).toDF().createOrReplaceTempView(\"changes\")"
 				],
-				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -204,7 +198,6 @@
 					"WHEN MATCHED THEN UPDATE SET key = s.key, value = s.newValue\r\n",
 					"WHEN NOT MATCHED AND s.deleted = false THEN INSERT (key, value) VALUES (key, newValue)"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -224,7 +217,6 @@
 				"source": [
 					"val changesDF = spark.sql(\"select * from changes\")"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -244,7 +236,6 @@
 				"source": [
 					"val latestChangeForEachKey = changesDF.selectExpr(\"key\", \"struct(time, newValue, deleted) as otherCols\").groupBy(\"key\").agg(max(\"otherCols\").as(\"latest\")).selectExpr(\"key\", \"latest.*\")"
 				],
-				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -264,7 +255,6 @@
 				"source": [
 					"latestChangeForEachKey.createOrReplaceTempView(\"lastchanges\")"
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -284,7 +274,6 @@
 				"source": [
 					"latestChangeForEachKey.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"lastchanges\") "
 				],
-				"attachments": null,
 				"execution_count": 15
 			}
 		]

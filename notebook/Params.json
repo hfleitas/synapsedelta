@@ -7,21 +7,21 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "XXL",
+			"referenceName": "threetwo",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "400g",
-			"driverCores": 64,
-			"executorMemory": "400g",
-			"executorCores": 64,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fb136941-229a-44ef-8f71-9457d6c12e5b"
+				"spark.autotune.trackingId": "c2304ea0-17fb-4577-86c6-e96ccd4b81c7"
 			}
 		},
 		"metadata": {
@@ -35,20 +35,19 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/XXL",
-				"name": "XXL",
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threetwo",
+				"name": "threetwo",
 				"type": "Spark",
-				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/XXL",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
-				"nodeCount": 10,
-				"cores": 64,
-				"memory": 400,
-				"extraHeader": null
+				"sparkVersion": "3.2",
+				"nodeCount": 5,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -63,7 +62,6 @@
 				"source": [
 					"p1 = 5"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -83,7 +81,6 @@
 					"p=p1\r\n",
 					"print(p)"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -112,7 +109,6 @@
 					"hol = PublicHolidays(start_date=start_date, end_date=end_date)\r\n",
 					"hol_df = hol.to_spark_dataframe()"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -131,7 +127,6 @@
 				"source": [
 					"hol = hol_df.limit(p)"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -151,7 +146,6 @@
 					"csv_path = \"hol.csv\"\r\n",
 					"hol.write.csv(csv_path, mode = 'overwrite', header = 'true')"
 				],
-				"attachments": null,
 				"execution_count": 5
 			}
 		]

@@ -7,21 +7,21 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "threedot0",
+			"referenceName": "threetwo",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "25bb4ae2-fee9-4baa-9697-6cbb4f3387fb"
+				"spark.autotune.trackingId": "1c86c96b-91c0-42b1-83ba-91d03fb222dc"
 			}
 		},
 		"metadata": {
@@ -35,20 +35,19 @@
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
-				"name": "threedot0",
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threetwo",
+				"name": "threetwo",
 				"type": "Spark",
-				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.1",
+				"sparkVersion": "3.2",
 				"nodeCount": 5,
-				"cores": 8,
-				"memory": 56,
-				"extraHeader": null
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -70,7 +69,6 @@
 				"source": [
 					"spark.version"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -82,7 +80,6 @@
 					"  assert(newValue != null ^ deleted)\r\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -107,7 +104,6 @@
 					"  Data(\"d\", \"3\")\r\n",
 					").toDF()"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -128,7 +124,6 @@
 					"sql(\"drop table if exists target\")\r\n",
 					"target.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"target\")"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -148,7 +143,6 @@
 				"source": [
 					"val targetDF = spark.sqlContext.sql(\"select * from target\")"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -163,8 +157,7 @@
 				"source": [
 					"## New API docs\r\n",
 					"https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/synapse-spark-sql-pool-import-export"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -187,7 +180,6 @@
 					"import com.microsoft.spark.sqlanalytics.utils.Constants\r\n",
 					"import org.apache.spark.sql.SqlAnalyticsConnector._"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -208,7 +200,6 @@
 					"val writeOptions:Map[String, String] = Map(Constants.SERVER -> \"wplushiramsynapse.sql.azuresynapse.net\", \r\n",
 					"Constants.TEMP_FOLDER -> \"abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/synapse/workspaces/wplushiramsynapse/temp\")"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -233,7 +224,6 @@
 					"    errorDuringWrite = errorState\r\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -263,7 +253,6 @@
 					"//If write request has failed, raise an error and fail the Cell's execution.\r\n",
 					"if(errorDuringWrite.isDefined) throw errorDuringWrite.get   "
 				],
-				"attachments": null,
 				"execution_count": 13
 			}
 		]

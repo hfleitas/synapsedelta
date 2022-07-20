@@ -7,21 +7,21 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "threedot0",
+			"referenceName": "threetwo",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
-			"numExecutors": 1,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
 			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "1",
-				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "a41f54cf-d7f9-4e8d-bdaa-58ec91b4ff67"
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "d673e1e1-b7ce-45a9-89b3-86162c42c223"
 			}
 		},
 		"metadata": {
@@ -35,20 +35,19 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threedot0",
-				"name": "threedot0",
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threetwo",
+				"name": "threetwo",
 				"type": "Spark",
-				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threedot0",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.1",
+				"sparkVersion": "3.2",
 				"nodeCount": 5,
-				"cores": 8,
-				"memory": 56,
-				"extraHeader": null
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -62,7 +61,6 @@
 					"import azure.synapse.ml.predict as pcontext\r\n",
 					"import azure.synapse.ml.predict.utils._logger as synapse_predict_logger"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -85,7 +83,6 @@
 					"RETURN_TYPES = \"double\" \r\n",
 					"RUNTIME = \"mlflow\""
 				],
-				"attachments": null,
 				"execution_count": 25
 			},
 			{
@@ -106,7 +103,6 @@
 					"ws = azureML.getWorkspace(\"sqldbedgeoulvzyml\")\r\n",
 					"ws"
 				],
-				"attachments": null,
 				"execution_count": 26
 			},
 			{
@@ -125,7 +121,6 @@
 				"source": [
 					"spark.conf.set(\"spark.synapse.ml.predict.enabled\",\"true\")"
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -150,7 +145,6 @@
 					"    aml_workspace=ws \r\n",
 					"    ).register()"
 				],
-				"attachments": null,
 				"execution_count": 24
 			},
 			{
@@ -174,7 +168,6 @@
 					"    model_uri=ADLS_MODEL_URI\r\n",
 					"    ).register()"
 				],
-				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -199,7 +192,6 @@
 					"    inferSchema=True)\r\n",
 					"df.createOrReplaceTempView('datafile')"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -223,7 +215,6 @@
 					"%%sql \r\n",
 					"select * from datafile"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -246,7 +237,6 @@
 					"%%sql\r\n",
 					"SELECT PREDICT(oj_forecast, Quantity) AS predict FROM datafile"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -260,8 +250,7 @@
 				},
 				"source": [
 					"# Round 2 "
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -291,7 +280,6 @@
 					"with fsspec_handle.open() as f:\r\n",
 					"       train_df = pandas.read_csv(f)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -310,7 +298,6 @@
 				"source": [
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]
