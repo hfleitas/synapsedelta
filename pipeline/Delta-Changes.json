@@ -105,7 +105,11 @@
 						"referenceName": "Delta-Changes",
 						"type": "NotebookReference"
 					},
-					"snapshot": true
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "threetwo",
+						"type": "BigDataPoolReference"
+					}
 				}
 			},
 			{

@@ -52,7 +52,11 @@
 						"referenceName": "Delta-FromScratch",
 						"type": "NotebookReference"
 					},
-					"snapshot": true
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "threetwo",
+						"type": "BigDataPoolReference"
+					}
 				}
 			},
 			{
