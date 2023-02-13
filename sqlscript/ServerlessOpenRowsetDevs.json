@@ -2,12 +2,12 @@
 	"name": "ServerlessOpenRowsetDevs",
 	"properties": {
 		"content": {
-			"query": "-- devs.csv\n-- first,last\n-- hiram,fleitas\n-- christina,sosa\n-- brent,carpenetti\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/devs.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\n\ngo \n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/user/trusted-service-user/hol.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\ngo",
+			"query": "-- devs.csv\n-- first,last\n-- hiram,fleitas\n-- christina,sosa\n-- brent,carpenetti\n\ncreate view demoserverless  as \nselect    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/devs.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\n",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
+				"databaseName": "hiram",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
