@@ -25,7 +25,8 @@
 		},
 		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'wplushiramsynapse-WorkspaceDefaultSqlServer'"
+			"metadata": "Secure string for 'connectionString' of 'wplushiramsynapse-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:wplushiramsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
 		"wplushiramsynapseLoaderXL_connectionString": {
 			"type": "secureString",
@@ -787,7 +788,7 @@
 					"name": "Delta"
 				},
 				"annotations": [],
-				"lastPublishTime": "2022-03-23T05:25:17Z"
+				"lastPublishTime": "2022-09-14T18:17:33Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/vDeltaTarget')]",
@@ -943,7 +944,7 @@
 					"name": "Delta"
 				},
 				"annotations": [],
-				"lastPublishTime": "2022-03-23T04:49:35Z"
+				"lastPublishTime": "2022-09-14T18:17:38Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/wplushiramsynapseLoaderXL')]",
@@ -1325,7 +1326,7 @@
 					"name": "Delta"
 				},
 				"annotations": [],
-				"lastPublishTime": "2022-03-23T05:25:20Z"
+				"lastPublishTime": "2022-09-14T18:17:46Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
@@ -3959,6 +3960,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/QPI')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- QPI\n-- https://linkedin.com/pulse/troubleshooting-performance-serverless-synapse-sql-pool-jovan-popovic/\n-- https://raw.githubusercontent.com/JocaPC/qpi/master/build/synapse-sql/qpi.sql\n--------------------------------------------------------------------------------\n--\tSynapse serverless SQL pool - Query Performance Insights\n--\tAuthor: Jovan Popovic\n--------------------------------------------------------------------------------\n\nSET QUOTED_IDENTIFIER OFF; -- Because I use \"\" as a string literal\nGO\n\nIF SCHEMA_ID('qpi') IS NULL\n\tEXEC ('CREATE SCHEMA qpi');\nGO\n\nCREATE OR ALTER  VIEW qpi.queries\nAS\nSELECT\n\t\ttext =   IIF(LEFT(text,1) = '(', TRIM(')' FROM SUBSTRING( text, (PATINDEX( '%)[^),]%', text))+1, LEN(text))), text) ,\n\t\tparams =  IIF(LEFT(text,1) = '(', SUBSTRING( text, 2, (PATINDEX( '%)[^),]%', text+')'))-2), '') ,\n\t\texecution_type_desc = status COLLATE Latin1_General_CS_AS,\n\t\tfirst_execution_time = start_time, last_execution_time = NULL, count_executions = NULL,\n\t\telapsed_time_s = total_elapsed_time /1000.0,\n\t\tcpu_time_s = cpu_time /1000.0,\n\t\tlogical_io_reads = logical_reads,\n\t\tlogical_io_writes = writes,\n\t\tphysical_io_reads = reads,\n\t\tnum_physical_io_reads = NULL,\n\t\tclr_time = NULL,\n\t\tdop,\n\t\trow_count,\n\t\tmemory_mb = granted_query_memory *8 /1000,\n\t\tlog_bytes = NULL,\n\t\ttempdb_space = NULL,\n\t\tquery_text_id = NULL, query_id = NULL, plan_id = NULL,\n\t\tdatabase_id, connection_id, session_id, request_id, command,\n\t\tinterval_mi = null,\n\t\tstart_time,\n\t\tend_time = null,\n\t\tsql_handle\nFROM    sys.dm_exec_requests\n\t\tCROSS APPLY sys.dm_exec_sql_text(sql_handle)\nWHERE session_id <> @@SPID\n\nGO\n\nCREATE OR ALTER  VIEW qpi.query_history\nAS\nSELECT  query_text_id = query_hash,\n        request_id = distributed_statement_id,\n        elapsed_time_s = total_elapsed_time_ms /1000.,\n        query_text = CASE query_text\n         WHEN '*** Internal delta query ***' THEN 'Scanning Delta transaction log...'\n         WHEN '*** Global stats query ***' THEN 'Collecting file statistics...'\n         WHEN '*** External table stats query ***' THEN 'Collecting file statistics...'\n         ELSE query_text END,\n        data_processed_mb = data_processed_mb,\n        start_time, end_time,\n        transaction_id,\n        status,\n        error, error_code\nFROM sys.dm_exec_requests_history\nGO\n\nCREATE OR ALTER\nFUNCTION qpi.cmp_queries (@request_id1 varchar(40), @request_id2 varchar(40))\nreturns table\nreturn (\n\tselect property = a.[key], a.value query_1, b.value query_2\n\tfrom\n\t(select [key], value\n\tfrom openjson(\n\t(select *\n\t\tfrom qpi.query_history\n\t\twhere request_id = @request_id1\n\t\tfor json path, without_array_wrapper)\n\t)) as a ([key], value)\n\tjoin\n\t(select [key], value\n\tfrom openjson(\n\t(select *\n\t\tfrom qpi.query_history\n\t\twhere request_id = @request_id2\n\t\tfor json path, without_array_wrapper)\n\t)) as b ([key], value)\n\ton a.[key] = b.[key]\n\twhere a.value <> b.value\n\n);\ngo\nCREATE OR ALTER VIEW qpi.recommendations\nAS\nwith sql_definition as (\n\t\tselect \n\t\tobject_id,\n\t\tformat_type = CASE\n\t\t\t\tWHEN UPPER(m.definition) LIKE '%''PARQUET''%' THEN 'PARQUET'\n\t\t\t\tWHEN UPPER(m.definition) LIKE '%''DELTA''%' THEN 'DELTA'\n\t\t\t\tWHEN UPPER(m.definition) LIKE '%''CSV''%' THEN 'CSV'\n\t\t\t\tWHEN UPPER(m.definition) LIKE '%''COSMOSDB''%' THEN 'COSMOSDB'\n\t\t\t\tWHEN \t\tUPPER(m.definition) NOT LIKE '%''PARQUET''%'\n\t\t\t\t\t\tAND (UPPER(m.definition) NOT LIKE '%''CSV''%' )\n\t\t\t\t\t\tAND (UPPER(m.definition) NOT LIKE '%''DELTA''%' )\n\t\t\t\t\t\tAND (UPPER(m.definition) NOT LIKE '%''COSMOSDB''%' )\n\t\t\t\t\t\tTHEN 'COMPOSITE'\n\t\t\t\tELSE 'MIXED'\n\t\t\tEND\n\t\tfrom sys.sql_modules m\n),\nbulkpath as (\nselect schema_name = schema_name(v.schema_id), v.name, val =TRIM(SUBSTRING( LOWER(m.definition) , PATINDEX('%bulk%', LOWER(m.definition)), 2048)), m.definition\nfrom sys.views v\njoin sys.sql_modules m on v.object_id = m.object_id\nwhere PATINDEX('%bulk%', LOWER(m.definition)) > 0\nand schema_name(v.schema_id) <> 'qpi'\n),\nview_path as (\nselect  name,\n\t\tschema_name,\n\t\tpath = SUBSTRING(val, \n\t\t\t\t\t\tCHARINDEX('''', val, 0)+1,\n\t\t\t\t\t\t(CHARINDEX('''', val, CHARINDEX('''', val, 0)+1) - CHARINDEX('''', val, 0) - 1)) \nfrom bulkpath\nwhere CHARINDEX('''', val, 0) > 0\nand schema_name <> 'qpi'\n),\nrecommendations as (\n\nselect\tname = 'USE VARCHAR UTF-8 TYPE',\n        score = 1.0,\n\t\tschema_name = schema_name(v.schema_id),\n\t\tobject = v.name,\n\t\tcolumn_name = c.name,\n\t\treason =\tCONCAT('The view ', v.name, ' that is created on ', m.format_type,' dataset has ', count(c.column_id), ' columns with ') +\n\t\t\t\t\tIIF( t.name = 'nchar', 'NVARCHAR/NCHAR type.', 'VARCHAR/CHAR type without UTF-8 collation.') +\n\t\t\t\t\t' You might get conversion error.' +\n\t\t\t\t\t' Change the column types to VARCHAR with some UTF8 collation.'\nfrom sys.views as v join sys.columns as c on v.object_id = c.object_id\njoin sql_definition m on v.object_id = m.object_id\njoin sys.types t on c.user_type_id = t.user_type_id\nwhere (\tm.format_type IN ('PARQUET', 'DELTA', 'COSMOSDB', 'MIXED') )\nAND\t( (t.name iN ('nchar', 'nvarchar')) OR (t.name iN ('nchar', 'nvarchar') AND c.collation_name NOT LIKE '%UTF8') )\ngroup by v.schema_id, v.name, t.name, m.format_type, c.name\nunion all\n-- Tables on UTF-8 files with NVARCHAR/NCHAR columns or CHAR/VARCHAR without UTF8 collation:\nselect\tname = 'USE VARCHAR TYPE',\n        score = IIF( t.name LIKE 'n%', 0.3, 1.0),\n\t\tschema_name = schema_name(e.schema_id),\n\t\tobject = e.name,\n\t\tcolumn_name = IIF(count(c.column_id)=1, max(c.name), CONCAT(count(c.column_id), ' columns')),\n\t\treason =\tCONCAT('The table \"', schema_name(e.schema_id), '.', e.name, '\" that is created on ', f.format_type, ' files ') +\n\t\t\t\t\tCONCAT(IIF( f.encoding = 'UTF8', ' with UTF-8 encoding ', ''), ' has ',\n\t\t\t\t\tIIF(count(c.column_id)=1, '\"' + max(c.name) + '\" column', CONCAT(count(c.column_id), ' columns') ), ' with ') +\n\t\t\t\t\tIIF( t.name LIKE 'n%', 'NVARCHAR/NCHAR', 'VARCHAR/CHAR without UTF-8 collation.') +\n\t\t\t\t\t' type. Change the column types to VARCHAR with some UTF8 collation.'\nfrom sys.external_tables as e join sys.columns as c on e.object_id = c.object_id\njoin sys.external_file_formats f on e.file_format_id = f.file_format_id\njoin sys.types t on c.user_type_id = t.user_type_id\nwhere ( (f.format_type IN ('PARQUET', 'DELTA')) OR f.encoding = 'UTF8' )\nAND\t( (t.name iN ('nchar', 'nvarchar')) OR (t.name iN ('nchar', 'nvarchar') AND c.collation_name NOT LIKE '%UTF8'))\ngroup by e.schema_id, f.format_type, e.name, f.encoding , t.name, c.name\nunion all\n-- Tables on UTF-16 files with VARCHAR/CHAR columns:\nselect\tname = 'USE NVARCHAR TYPE',\n        score = 1.0,\n\t\t\n\t\tschema_name = schema_name(e.schema_id),\n\t\tobject = e.name,\n\t\tcolumn_name = IIF(count(c.column_id)=1, max(c.name), CONCAT(count(c.column_id), ' columns')),\n\t\treason =\tCONCAT('The table \"',  schema_name(e.schema_id), '.', e.name, '\" created on CSV files with UTF16 encoding has ', \n\t\t\t\t\t\tIIF(count(c.column_id)=1, '\"' + max(c.name) + '\" column', CONCAT(count(c.column_id), ' columns') ), ' with ') +\n\t\t\t\t\t'VARCHAR/CHAR type. Change the column type to NVARCHAR.'\nfrom sys.external_tables as e join sys.columns as c on e.object_id = c.object_id\njoin sys.external_file_formats f on e.file_format_id = f.file_format_id\njoin sys.types t on c.user_type_id = t.user_type_id\nwhere (f.encoding = 'UTF16' )\nAND\t(t.name iN ('nchar', 'nvarchar'))\ngroup by e.schema_id, f.format_type, e.name, f.encoding , t.name\nunion all\nselect\tname = 'OPTIMIZE STRING FILTER',\n        score = case\n\t\t\t\t\twhen string_agg(c.name,',') like '%id%' then 0.9\n\t\t\t\t\twhen string_agg(c.name,',') like '%code%' then 0.9\n\t\t\t\t\twhen count(c.column_id) > 1 then 0.81\n\t\t\t\t\telse 0.71\n\t\t\t\t\tend,\n\t\t\n\t\tschema_name = schema_name(v.schema_id),\n\t\tobject = v.name,\n\t\tcolumn_name = IIF(count(c.column_id)=1, max(c.name), CONCAT(count(c.column_id), ' columns')),\n\t\treason =\tCONCAT('The view \"',  schema_name(v.schema_id), '.', v.name, '\" that is created on ', m.format_type, ' dataset has ',\n\t\t\t\t\t\t\tIIF(count(c.column_id)=1, '\"' + max(c.name) + '\" column', CONCAT(count(c.column_id), ' columns') ), ' with ') +\n\t\t\t\t\tIIF( t.name = 'nchar', 'NVARCHAR/NCHAR type.', 'VARCHAR/CHAR type without BIN2 UTF8 collation.') +\n\t\t\t\t\t' Change the column types to VARCHAR with the Latin1_General_100_BIN2_UTF8 collation.'\nfrom sys.views as v join sys.columns as c on v.object_id = c.object_id\njoin sql_definition m on v.object_id = m.object_id\njoin sys.types t on c.user_type_id = t.user_type_id\nwhere (\tm.format_type IN ('PARQUET', 'DELTA', 'COSMOSDB', 'MIXED') )\nAND\t( t.name IN ('char', 'varchar') AND c.collation_name <> 'Latin1_General_100_BIN2_UTF8' )\ngroup by v.schema_id, v.name, t.name, m.format_type\n\nunion all\n\n-- Tables on Parquet/Delta Lake files with the columns without BIN2 UTF-8 collation:\nselect\tname = 'OPTIMIZE STRING FILTER',\n\t\tscore = 0.6,\n        schema_name = schema_name(e.schema_id),\n\t\tobject = e.name,\n\t\tcolumn_name = c.name,\n\t\treason = CONCAT('The string column \"', c.name, '\" in table \"', schema_name(t.schema_id), '.', t.name, '\" doesn''t have \"Latin1_General_100_BIN2_UTF8\". String filter on this column are suboptimal')\nfrom sys.external_tables as e join sys.columns as c on e.object_id = c.object_id\njoin sys.external_file_formats f on e.file_format_id = f.file_format_id\njoin sys.types t on c.user_type_id = t.user_type_id\nwhere ( (f.format_type IN ('PARQUET', 'DELTA'))) AND t.name IN ('char', 'varchar') AND c.collation_name <> 'Latin1_General_100_BIN2_UTF8'\n\nunion all\n-- Oversized string columns:\nselect\tname = 'OPTIMIZE COLUMN TYPE',\n        score = ROUND(0.3 + (IIF(c.max_length=-1, 0.7*12000., c.max_length)/12000.),1),\n\t\tschema_name = schema_name(o.schema_id),\n\t\tobject = o.name,\n\t\tcolumn_name = c.name,\n\t\treason = CONCAT('The string column \"', c.name, '\" has a max size ', \n\t\t\t\tIIF(c.max_length=-1, ' 2 GB', CAST( c.max_length AS VARCHAR(10)) + ' bytes'), '. Check could you use a column with a smaller size.',\n\t\t\t\tIIF(o.type = 'U', ' Table ', ' View '), '\"', schema_name(o.schema_id), '.', o.name, '\"')\nfrom sys.objects as o join sys.columns as c on o.object_id = c.object_id\njoin sys.types t on c.user_type_id = t.user_type_id\nwhere t.name LIKE '%char' AND (c.max_length > 256 OR c.max_length = -1)\nand o.type in ('U', 'V')\nand lower(c.name) not like '%desc%'\nand lower(c.name) not like '%comment%'\nand lower(c.name) not like '%note%'\nand lower(c.name) not like '%exception%'\nand lower(c.name) not like '%reason%'\nand lower(c.name) not like '%explanation%'\nunion all\n\n-- Oversized key columns:\nselect\tname = 'OPTIMIZE KEY COLUMN TYPE',\n        score = 0.4 + ROUND((1-EXP(-IIF(c.max_length=-1, 8000., c.max_length)/8000.)),1),\n\t\tschema_name = schema_name(o.schema_id),\n\t\tobject = o.name,\n\t\tcolumn_name = c.name,\n\t\treason = CONCAT('Are you using the column \"', c.name, '\" in join/filter predicates? ',\n\t\t\t\t\t\t\t'The column type is ', t.name, '(size:',IIF(c.max_length=-1, ' 2 GB', CAST( c.max_length AS VARCHAR(10)) + ' bytes'),'). ',\n\t\t\t\t\t\t\t'Try to use a column with a smaller type or size.')\nfrom sys.objects as o join sys.columns as c on o.object_id = c.object_id\njoin sys.types t on c.user_type_id = t.user_type_id\nwhere (c.name LIKE '%code' OR  c.name LIKE '%id') AND (c.max_length > 8 OR c.max_length = -1)\nand o.type in ('U', 'V')\n\nunion all\n\n-- The tables that are referencing the same location:\nselect\tname = 'REMOVE DUPLICATE REFERENCES',\n        score = 0.9,\n\t\tschema_name = NULL,\n\t\tobject = NULL,\n\t\tcolumn_name = NULL,\n\t\treason = CONCAT('The tables ', string_agg(concat('\"',schema_name(e.schema_id),'.',e.name,'\"'), ','), ' are referencing the same location')\nfrom sys.external_tables e\ngroup by data_source_id, location\nhaving count(*) > 1\n\nunion all\n\n-- Partitioned external table\nselect\tname = 'REPLACE TABLE WITH PARTITIONED VIEW',\n        score = 1.0,\n\t\tschema_name = schema_name(e.schema_id),\n\t\tobject = e.name,\n\t\tcolumn_name = NULL,\n\t\treason = CONCAT('The table ', e.name, ' is created on a partitioned data set, but cannot leverage partition elimination. Replace it with a partitioned view.')\nfrom sys.external_tables e\nwhere REPLACE(location, '*.', '') like '%*%'\n\nunion all\n\nselect\tname = 'USE BETTER COLUMN TYPE',\n        score = IIF(c.max_length=-1, 1.0, 0.2 + ROUND((1-EXP(-c.max_length/50.))/2,1)),\n\t\tschema_name = schema_name(o.schema_id),\n\t\tobject = o.name,\n\t\tcolumn_name = c.name,\n\t\treason = CONCAT('Do you need to use the type \"', t.name, '(size:',IIF(c.max_length=-1, ' 2 GB', CAST( c.max_length AS VARCHAR(10)) + ' bytes'),') in column \"', c.name, '\" in view: \"', schema_name(o.schema_id), '.', o.name, '\"')\nfrom sys.objects as o join sys.columns as c on o.object_id = c.object_id\njoin sys.types t on c.user_type_id = t.user_type_id\nwhere\n\tt.name IN ('nchar', 'nvarchar', 'char', 'varchar', 'binary', 'varbinary')\nAND\n\t(\tLOWER(c.name) like '%date%' OR LOWER(c.name) like '%time%' \n\tOR\tLOWER(c.name) like '%guid%'\n\tOR\tLOWER(c.name) like '%price%' OR LOWER(c.name) like '%amount%' )\nAND\n\to.type in ('U', 'V')\nand lower(c.name) not like '%desc%'\nand lower(c.name) not like '%comment%'\nand lower(c.name) not like '%note%'\nand lower(c.name) not like '%exception%'\nand lower(c.name) not like '%reason%'\nand lower(c.name) not like '%explanation%'\n\nunion all\n\nselect\tname = 'REMOVE DUPLICATE REFERENCES',\n        score = 0.9,\n\t\tschema_name = NULL,\n\t\tobject = NULL,\n\t\tcolumn_name = NULL,\n\t\treason = CONCAT('Views ', string_agg(concat(schema_name,'.',name), ','), ' are referencing the same path: ', path)\nfrom view_path\ngroup by path\nhaving count(*) > 1\n)\nSELECT * FROM recommendations\nWHERE schema_name <> 'qpi'\nGO\n\nCREATE OR ALTER PROCEDURE qpi.generate_cosmosdb_with_schema ( @connection nvarchar(max), @container nvarchar(1000))\nAS BEGIN\nDECLARE @tsql NVARCHAR(MAX) \nSET @tsql = \"SELECT TOP 10 *\nFROM OPENROWSET( \n         'CosmosDB',\n        '\"+@connection+\"',\n        \"+@container + \") as data\"\n\ncreate table #frs (\n    is_hidden bit not null,\n    column_ordinal int not null,\n    name sysname null,\n    is_nullable bit not null,\n    system_type_id int not null,\n    system_type_name nvarchar(256) null,\n    max_length smallint not null,\n    precision tinyint not null,\n    scale tinyint not null,\n    collation_name sysname null,\n    user_type_id int null,\n    user_type_database sysname null,\n    user_type_schema sysname null,\n    user_type_name sysname null,\n    assembly_qualified_type_name nvarchar(4000),\n    xml_collection_id int null,\n    xml_collection_database sysname null,\n    xml_collection_schema sysname null,\n    xml_collection_name sysname null,\n    is_xml_document bit not null,\n    is_case_sensitive bit not null,\n    is_fixed_length_clr_type bit not null,\n    source_server sysname null,\n    source_database sysname null,\n    source_schema sysname null,\n    source_table sysname null,\n    source_column sysname null,\n    is_identity_column bit null,\n    is_part_of_unique_key bit null,\n    is_updateable bit null,\n    is_computed_column bit null,\n    is_sparse_column_set bit null,\n    ordinal_in_order_by_list smallint null,\n    order_by_list_length smallint null,\n    order_by_is_descending smallint null,\n    tds_type_id int not null,\n    tds_length int not null,\n    tds_collation_id int null,\n    tds_collation_sort_id tinyint null\n);\n\ninsert #frs\nexec sys.sp_describe_first_result_set @tsql;\n\ndeclare @with_clause nvarchar(max);\nset @with_clause = (select 'WITH (' + string_agg(QUOTENAME(name) + ' ' + system_type_name, ', ') + ')' from #frs);\n\nselect\n'Note:', 'This is an autogenerated schema for cosmosDB contianer. Try to optimize it and minimize the types like VARCHAR(8000)!'\nunion all\nselect 'Query:', \"SELECT * FROM OPENROWSET( 'CosmosDB',\n        '\"+@connection+\"',\n        \"+@container + ') ' + @with_clause + ' as data'\nunion ALL\nselect 'WITH clause:', @with_clause;\nEND\nGO\n\n-- Prerequisite!\n-- Create [Diagnostics EXTERNAL DATA SOURCE that references the container where the diagnostic logs are stored, for example:\n--CREATE EXTERNAL DATA SOURCE [Diagnostics] WITH ( LOCATION = 'https://wplushiramsynapseadlsv2.blob.core.windows.net/insights-logs-builtinsqlreqsended/' )\n\nCREATE OR ALTER VIEW qpi.diagnostics\nAS SELECT\n    subscriptionId = r.filepath(1),\n    resourceGroup = r.filepath(2),\n    workspace = r.filepath(3),\n    year = CAST(r.filepath(4) AS TINYINT),\n    month = CAST(r.filepath(5) AS TINYINT),\n    day = CAST(r.filepath(6) AS TINYINT),\n    hour = CAST(r.filepath(7) AS TINYINT),\n    minute = CAST(r.filepath(8) AS TINYINT),\n    details.queryType,\n    durationS = CAST(details.durationMs / 1000. AS NUMERIC(8,1)),\n    dataProcessedMB = CAST(details.dataProcessedBytes /1024./1024 AS NUMERIC(16,1)),\n    details.startTime,\n    details.endTime,\n    details.distributedStatementId,\n    details.queryHash,\n    details.resultType,\n    details.operationName,\n    details.queryText,\n    details.endpoint,\n    details.resourceGroup as resourceGroupDetails,\n    details.resourceId,\n    details.error\nFROM\n    OPENROWSET(\n        BULK 'resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.SYNAPSE/WORKSPACES/*/y=*/m=*/d=*/h=*/m=*/*.json',\n        DATA_SOURCE = 'Diagnostics',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n    )\n    WITH (\n        jsonContent varchar(MAX)\n    ) AS r CROSS APPLY OPENJSON(jsonContent)\n                        WITH (  endpoint varchar(128) '$.LogicalServerName',\n                                resourceGroup varchar(128) '$.ResourceGroup',\n                                startTime datetime2 '$.properties.startTime',\n                                endTime datetime2 '$.properties.endTime',\n                                dataProcessedBytes bigint '$.properties.dataProcessedBytes',\n                                durationMs bigint,\n                                loginName varchar(128) '$.identity.loginName',\n                                distributedStatementId varchar(128) '$.properties.distributedStatementId',\n                                resultType varchar(128) ,\n                                error varchar(128) '$.properties.error',\n                                queryType varchar(128) '$.properties.command',\n                                queryText varchar(max) '$.properties.queryText',\n                                queryHash varchar(128) '$.properties.queryHash',\n                                operationName varchar(128),\n                                resourceId varchar(1024) '$.resourceId'\n                                ) as details\n\n\n--The recommendations with a score of 1 are the most critical.\nselect * from qpi.recommendations \n\nSELECT * FROM qpi.queries\nSELECT * FROM qpi.query_history",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "hiram",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/QueryActivity')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -4010,12 +4031,12 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- devs.csv\n-- first,last\n-- hiram,fleitas\n-- christina,sosa\n-- brent,carpenetti\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/devs.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\n\ngo \n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/user/trusted-service-user/hol.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\ngo",
+					"query": "-- devs.csv\n-- first,last\n-- hiram,fleitas\n-- christina,sosa\n-- brent,carpenetti\n\ncreate view demoserverless  as \nselect    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://wplushiramsynapseadlsv2.dfs.core.windows.net/wplushiramsynapsefs/devs.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\n",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "master",
+						"databaseName": "hiram",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -4399,6 +4420,7 @@
 				},
 				"requiredSparkVersion": "3.2",
 				"language": "python",
+				"scanFolder": false,
 				"jobProperties": {
 					"name": "wordcount",
 					"file": "abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/wordcount.py",
@@ -4469,12 +4491,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4726,12 +4750,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4997,12 +5023,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5490,12 +5518,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5981,12 +6011,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -6178,12 +6210,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -6714,12 +6748,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -7007,12 +7043,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -7543,12 +7581,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -8102,12 +8142,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -8193,12 +8235,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -8282,12 +8326,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -8442,12 +8488,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -8585,12 +8633,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -8764,12 +8814,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -8895,6 +8947,7 @@
 					"executorMemory": "28g",
 					"executorCores": 4,
 					"numExecutors": 2,
+					"runAsWorkspaceSystemIdentity": false,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
@@ -8919,12 +8972,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -9326,6 +9381,7 @@
 					"executorMemory": "28g",
 					"executorCores": 4,
 					"numExecutors": 2,
+					"runAsWorkspaceSystemIdentity": false,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
@@ -9350,12 +9406,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -9819,6 +9877,7 @@
 					"executorMemory": "28g",
 					"executorCores": 4,
 					"numExecutors": 2,
+					"runAsWorkspaceSystemIdentity": false,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
@@ -10268,8 +10327,7 @@
 						"source": [
 							""
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					}
 				]
 			},
@@ -10317,12 +10375,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -10501,12 +10561,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -11047,8 +11109,7 @@
 							"# Get token\r\n",
 							"mssparkutils.credentials.getToken(\"Synapse\")"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
@@ -11088,8 +11149,7 @@
 							"# Get connection string or credentials for linked service\r\n",
 							"mssparkutils.credentials.getConnectionStringOrCreds(\"nbutilsmssparkutils\")"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
@@ -11571,12 +11631,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -11727,8 +11789,7 @@
 							"    inferSchema=True)\r\n",
 							"df.createOrReplaceTempView('datafile')"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
@@ -11751,8 +11812,7 @@
 							"%%sql \r\n",
 							"select * from datafile"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
@@ -11774,8 +11834,7 @@
 							"%%sql\r\n",
 							"SELECT PREDICT(oj_forecast, Quantity) AS predict FROM datafile"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "markdown",
@@ -11818,8 +11877,7 @@
 							"with fsspec_handle.open() as f:\r\n",
 							"       train_df = pandas.read_csv(f)"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
@@ -11837,8 +11895,7 @@
 						"source": [
 							""
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					}
 				]
 			},
@@ -11889,12 +11946,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -12049,12 +12108,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -12150,12 +12211,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -12182,8 +12245,7 @@
 							"ws = mssparkutils.azureML.getWorkspace(linkedService_name)\n",
 							"experiment = Experiment(ws, experiment_name)"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
@@ -12193,8 +12255,7 @@
 							"datastore = Datastore.get_default(ws)\n",
 							"dataset = TabularDatasetFactory.register_spark_dataframe(df, datastore, name = experiment_name + \"-dataset\")"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
@@ -12208,24 +12269,21 @@
 							"                             max_concurrent_iterations = 2,\n",
 							"                             enable_onnx_compatible_models = True)"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
 						"source": [
 							"run = experiment.submit(automl_config)"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
 						"source": [
 							"displayHTML(\"<a href={} target='_blank'>Your experiment in Azure Machine Learning portal: {}</a>\".format(run.get_portal_url(), run.id))"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					},
 					{
 						"cell_type": "code",
@@ -12286,8 +12344,7 @@
 							"    # Register the model to AML model registry\n",
 							"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"wplushiramsynapse-dominicks_oj_train-20211118120913-Best\")"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					}
 				]
 			},
@@ -12338,12 +12395,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -12353,8 +12412,7 @@
 						"source": [
 							"print('hello world')"
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					}
 				]
 			},
@@ -12402,12 +12460,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -13472,12 +13532,14 @@
 						"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -13557,24 +13619,11 @@
 						"source": [
 							""
 						],
-						"outputs": [],
-						"execution_count": null
+						"outputs": []
 					}
 				]
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/wplussynapsedw')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"collation": "SQL_Latin1_General_CP1_CI_AS",
-				"maxSizeBytes": 263882790666240,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "eastus"
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/threetwo')]",
@@ -13596,6 +13645,18 @@
 				"sparkVersion": "3.2",
 				"isComputeIsolationEnabled": false,
 				"sessionLevelPackagesEnabled": true,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/wplussynapsedw')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
 				"annotations": []
 			},
 			"dependsOn": [],

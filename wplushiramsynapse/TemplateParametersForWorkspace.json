@@ -18,7 +18,7 @@
 			"value": ""
 		},
 		"wplushiramsynapse-WorkspaceDefaultSqlServer_connectionString": {
-			"value": ""
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:wplushiramsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
 		"wplushiramsynapseLoaderXL_connectionString": {
 			"value": ""
