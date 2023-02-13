@@ -7,6 +7,7 @@
 		},
 		"requiredSparkVersion": "3.2",
 		"language": "python",
+		"scanFolder": false,
 		"jobProperties": {
 			"name": "wordcount",
 			"file": "abfss://wplushiramsynapsefs@wplushiramsynapseadlsv2.dfs.core.windows.net/wordcount.py",

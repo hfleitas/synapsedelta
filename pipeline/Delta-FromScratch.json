@@ -56,7 +56,13 @@
 					"sparkPool": {
 						"referenceName": "threetwo",
 						"type": "BigDataPoolReference"
-					}
+					},
+					"conf": {
+						"spark.dynamicAllocation.enabled": null,
+						"spark.dynamicAllocation.minExecutors": null,
+						"spark.dynamicAllocation.maxExecutors": null
+					},
+					"numExecutors": null
 				}
 			},
 			{
@@ -129,7 +135,7 @@
 			"name": "Delta"
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-03-23T04:49:35Z"
+		"lastPublishTime": "2022-09-14T18:17:38Z"
 	},
 	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

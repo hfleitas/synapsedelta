@@ -41,13 +41,14 @@
 				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net"
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
 				},
 				"sparkVersion": "3.2",
 				"nodeCount": 5,
 				"cores": 4,
 				"memory": 28,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -191,8 +192,7 @@
 					".csv(DATA_FILE,\r\n",
 					"    inferSchema=True)\r\n",
 					"df.createOrReplaceTempView('datafile')"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -214,8 +214,7 @@
 				"source": [
 					"%%sql \r\n",
 					"select * from datafile"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -236,8 +235,7 @@
 				"source": [
 					"%%sql\r\n",
 					"SELECT PREDICT(oj_forecast, Quantity) AS predict FROM datafile"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "markdown",
@@ -279,8 +277,7 @@
 					"\r\n",
 					"with fsspec_handle.open() as f:\r\n",
 					"       train_df = pandas.read_csv(f)"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -297,8 +294,7 @@
 				},
 				"source": [
 					""
-				],
-				"execution_count": null
+				]
 			}
 		]
 	}

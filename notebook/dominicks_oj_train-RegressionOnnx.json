@@ -41,13 +41,14 @@
 				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net"
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
 				},
 				"sparkVersion": "3.2",
 				"nodeCount": 5,
 				"cores": 4,
 				"memory": 28,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -72,8 +73,7 @@
 					"\n",
 					"ws = mssparkutils.azureML.getWorkspace(linkedService_name)\n",
 					"experiment = Experiment(ws, experiment_name)"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -82,8 +82,7 @@
 					"\n",
 					"datastore = Datastore.get_default(ws)\n",
 					"dataset = TabularDatasetFactory.register_spark_dataframe(df, datastore, name = experiment_name + \"-dataset\")"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -96,22 +95,19 @@
 					"                             experiment_timeout_hours = 0.25,\n",
 					"                             max_concurrent_iterations = 2,\n",
 					"                             enable_onnx_compatible_models = True)"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"run = experiment.submit(automl_config)"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"displayHTML(\"<a href={} target='_blank'>Your experiment in Azure Machine Learning portal: {}</a>\".format(run.get_portal_url(), run.id))"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -171,8 +167,7 @@
 					"\n",
 					"    # Register the model to AML model registry\n",
 					"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"wplushiramsynapse-dominicks_oj_train-20211118120913-Best\")"
-				],
-				"execution_count": null
+				]
 			}
 		]
 	}

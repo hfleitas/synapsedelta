@@ -39,13 +39,14 @@
 				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net"
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
 				},
 				"sparkVersion": "3.2",
 				"nodeCount": 5,
 				"cores": 4,
 				"memory": 28,
-				"automaticScaleJobs": false
+				"extraHeader": null
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -564,8 +565,7 @@
 				"source": [
 					"# Get token\r\n",
 					"mssparkutils.credentials.getToken(\"Synapse\")"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -603,8 +603,7 @@
 				"source": [
 					"# Get connection string or credentials for linked service\r\n",
 					"mssparkutils.credentials.getConnectionStringOrCreds(\"nbutilsmssparkutils\")"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
