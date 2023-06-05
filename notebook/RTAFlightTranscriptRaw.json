@@ -1,0 +1,135 @@
+{
+	"name": "RTAFlightTranscriptRaw",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "threetwo",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "2c256928-de93-4202-8657-6e7c4131bd73"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threetwo",
+				"name": "threetwo",
+				"type": "Spark",
+				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.2",
+				"nodeCount": 5,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"pip install azure-eventhub>=5.11.0"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import requests\n",
+					"from azure.eventhub import EventHubProducerClient, EventData"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"eventstream='Endpoint=sb://eventstream-26e38583-7be7-49bd-a732-54a632938cc8.servicebus.windows.net/;SharedAccessKeyName=key_0a2dbec0-3f34-b8e7-b7f3-0f9232273c3d;SharedAccessKey=4qumzFTbJykEAW7pKCJWJf5CNqhrBR58g+AEhBTZssM=;EntityPath=es_26e38583-7be7-49bd-a732-54a632938cc8'\n",
+					"producer = EventHubProducerClient.from_connection_string(conn_str=eventstream)\n",
+					"\n",
+					"i=0\n",
+					"\n",
+					"for i in range(0, 436554):\n",
+					"    df = requests.get('https://loripsum.net/api/6000/short/plaintext')\n",
+					"    b = producer.create_batch() \n",
+					"    j = df.content\n",
+					"    # print(j)\n",
+					"    b.add(EventData(j))\n",
+					"    producer.send_batch(b) # send it!\n",
+					"    # time.sleep(1)\n",
+					"    producer.close()\n",
+					"    i=i+1    "
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
