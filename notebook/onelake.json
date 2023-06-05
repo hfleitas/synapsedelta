@@ -1,8 +1,8 @@
 {
-	"name": "fabric",
+	"name": "onelake",
 	"properties": {
 		"folder": {
-			"name": "fabric"
+			"name": "FabricRTA"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9ff46a3e-8e53-46d9-96af-38f8c16ce5ee"
+				"spark.autotune.trackingId": "4f2cce1f-e509-4e33-a43f-698c62d3d6e3"
 			}
 		},
 		"metadata": {
@@ -44,8 +44,9 @@
 				},
 				"sparkVersion": "3.2",
 				"nodeCount": 5,
-				"cores": 4,
-				"memory": 28
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
