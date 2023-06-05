@@ -1,0 +1,145 @@
+{
+	"name": "RTAFlightTranscript2",
+	"properties": {
+		"activities": [
+			{
+				"name": "make i",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "i",
+					"value": {
+						"value": "@range(0,5)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "make i",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('i')",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 50,
+					"activities": [
+						{
+							"name": "Transcript",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "make_url",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET",
+										"additionalHeaders": {
+											"value": "@{variables('url')}",
+											"type": "Expression"
+										},
+										"requestTimeout": ""
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "AzureDataExplorerSink"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "Transcripts",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "RTAFlightStreamer",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "make_url",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "url",
+								"value": {
+									"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"i": {
+				"type": "Array"
+			},
+			"sites": {
+				"type": "Array",
+				"defaultValue": [
+					"api/6000/decorate/links",
+					"api/6000/short/plaintext",
+					"api/6000/long/plaintext"
+				]
+			},
+			"url": {
+				"type": "String"
+			},
+			"one": {
+				"type": "Array",
+				"defaultValue": [
+					1,
+					2,
+					3
+				]
+			}
+		},
+		"annotations": [],
+		"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
+		"lastPublishTime": "2023-06-05T01:50:37Z"
+	},
+	"objectId": "16d6ee59-1c8e-4fc3-a0cd-bc029bbd73b7"
+}
