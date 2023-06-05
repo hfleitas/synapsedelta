@@ -10,7 +10,7 @@
 				"typeProperties": {
 					"variableName": "i",
 					"value": {
-						"value": "@range(0,99999)",
+						"value": "@range(0,5)",
 						"type": "Expression"
 					}
 				}
@@ -40,7 +40,7 @@
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "make rurl",
+									"activity": "make_url",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -59,7 +59,12 @@
 									"type": "DelimitedTextSource",
 									"storeSettings": {
 										"type": "HttpReadSettings",
-										"requestMethod": "GET"
+										"requestMethod": "GET",
+										"additionalHeaders": {
+											"value": "@{variables('url')}",
+											"type": "Expression"
+										},
+										"requestTimeout": ""
 									},
 									"formatSettings": {
 										"type": "DelimitedTextReadSettings"
@@ -92,7 +97,7 @@
 							]
 						},
 						{
-							"name": "make rurl",
+							"name": "make_url",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"userProperties": [],
