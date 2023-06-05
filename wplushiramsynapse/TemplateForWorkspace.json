@@ -14430,7 +14430,7 @@
 						"typeProperties": {
 							"variableName": "i",
 							"value": {
-								"value": "@range(0,5)",
+								"value": "@range(0,99999)",
 								"type": "Expression"
 							}
 						}
@@ -14458,14 +14458,7 @@
 								{
 									"name": "Transcript",
 									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "make_url",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
+									"dependsOn": [],
 									"policy": {
 										"timeout": "0.12:00:00",
 										"retry": 0,
@@ -14480,10 +14473,6 @@
 											"storeSettings": {
 												"type": "HttpReadSettings",
 												"requestMethod": "GET",
-												"additionalHeaders": {
-													"value": "@{variables('url')}",
-													"type": "Expression"
-												},
 												"requestTimeout": ""
 											},
 											"formatSettings": {
@@ -14521,7 +14510,14 @@
 								{
 									"name": "make_url",
 									"type": "SetVariable",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "Transcript",
+											"dependencyConditions": [
+												"Skipped"
+											]
+										}
+									],
 									"userProperties": [],
 									"typeProperties": {
 										"variableName": "url",
