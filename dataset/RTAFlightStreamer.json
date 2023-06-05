@@ -1,0 +1,20 @@
+{
+	"name": "RTAFlightStreamer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "RTAFlightStream",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureDataExplorerTable",
+		"schema": [
+			{
+				"name": "data",
+				"type": "string"
+			}
+		],
+		"typeProperties": {
+			"table": "FlightTranscriptRaw"
+		}
+	}
+}
