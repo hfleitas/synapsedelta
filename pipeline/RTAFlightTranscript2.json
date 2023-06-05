@@ -8,9 +8,9 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "rurl",
+					"variableName": "t",
 					"value": {
-						"value": "@length(createArray(0, 1, 2, 3))",
+						"value": "@string(length(variables('rurl')))",
 						"type": "Expression"
 					}
 				}
@@ -21,7 +21,15 @@
 				"type": "Array"
 			},
 			"rurl": {
-				"type": "Array"
+				"type": "Array",
+				"defaultValue": [
+					1,
+					2,
+					3
+				]
+			},
+			"t": {
+				"type": "String"
 			}
 		},
 		"annotations": [],
