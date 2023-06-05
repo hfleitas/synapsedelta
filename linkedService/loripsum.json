@@ -1,0 +1,17 @@
+{
+	"name": "loripsum",
+	"properties": {
+		"description": "https://loripsum.net/api",
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://loripsum.net/api",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
