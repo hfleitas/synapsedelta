@@ -36,7 +36,7 @@
 					"batchCount": 50,
 					"activities": [
 						{
-							"name": "Notebook1",
+							"name": "RTAFlightTranscriptRaw",
 							"type": "SynapseNotebook",
 							"dependsOn": [],
 							"policy": {
