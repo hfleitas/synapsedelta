@@ -29,7 +29,9 @@
 			"sites": {
 				"type": "Array",
 				"defaultValue": [
-					"['api/6000/decorate/links','api/6000/short/plaintext','api/6000/plaintext']"
+					"api/6000/decorate/links",
+					"api/6000/short/plaintext",
+					"api/6000/plaintext"
 				]
 			}
 		},
