@@ -38,7 +38,14 @@
 						{
 							"name": "Transcript",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "make rurl",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -83,6 +90,19 @@
 									"type": "DatasetReference"
 								}
 							]
+						},
+						{
+							"name": "make rurl",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "url",
+								"value": {
+									"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -91,6 +111,25 @@
 		"variables": {
 			"i": {
 				"type": "Array"
+			},
+			"sites": {
+				"type": "Array",
+				"defaultValue": [
+					"api/6000/decorate/links",
+					"api/6000/short/plaintext",
+					"api/6000/long/plaintext"
+				]
+			},
+			"url": {
+				"type": "String"
+			},
+			"one": {
+				"type": "Array",
+				"defaultValue": [
+					1,
+					2,
+					3
+				]
 			}
 		},
 		"annotations": [],
