@@ -8,9 +8,9 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "t",
+					"variableName": "u",
 					"value": {
-						"value": "@string(length(variables('rurl')))",
+						"value": "@string(\n    variables('urllist')[rand(0,length(variables('url')))]\n)",
 						"type": "Expression"
 					}
 				}
@@ -20,15 +20,19 @@
 			"i": {
 				"type": "Array"
 			},
-			"rurl": {
+			"url": {
 				"type": "Array",
 				"defaultValue": [
-					1,
-					2,
-					3
+					1
 				]
 			},
-			"t": {
+			"urllist": {
+				"type": "Array",
+				"defaultValue": [
+					"['api/6000/decorate/links','api/6000/short/plaintext','api/6000/plaintext']"
+				]
+			},
+			"u": {
 				"type": "String"
 			}
 		},
