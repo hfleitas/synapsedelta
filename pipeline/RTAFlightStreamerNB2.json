@@ -1,5 +1,5 @@
 {
-	"name": "RTAFlightStreamerNB",
+	"name": "RTAFlightStreamerNB2",
 	"properties": {
 		"activities": [
 			{
@@ -53,6 +53,10 @@
 									"type": "NotebookReference"
 								},
 								"snapshot": true,
+								"sparkPool": {
+									"referenceName": "pool2",
+									"type": "BigDataPoolReference"
+								},
 								"conf": {
 									"spark.dynamicAllocation.enabled": null,
 									"spark.dynamicAllocation.minExecutors": null,
