@@ -10,7 +10,7 @@
 				"typeProperties": {
 					"variableName": "rurl",
 					"value": {
-						"value": "@rand(length(['aaaa','bbb','ccccc']),1)",
+						"value": "@length(createArray(0, 1, 2, 3))",
 						"type": "Expression"
 					}
 				}
@@ -21,7 +21,7 @@
 				"type": "Array"
 			},
 			"rurl": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"annotations": [],
