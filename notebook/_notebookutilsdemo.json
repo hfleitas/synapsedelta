@@ -22,15 +22,18 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "336cdbc8-4231-4d12-9033-0c5a25ed6ac1"
+				"spark.autotune.trackingId": "17b3d906-f5b8-4b51-ac0c-502629aaf1cd"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
 			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_sparkr",
-				"display_name": "Synapse SparkR"
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
 			},
 			"a365ComputeOptions": {
 				"id": "/subscriptions/e4e06275-58d1-4081-8f1b-be12462eb701/resourceGroups/wplushiramsynapse/providers/Microsoft.Synapse/workspaces/wplushiramsynapse/bigDataPools/threetwo",
@@ -39,14 +42,12 @@
 				"endpoint": "https://wplushiramsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/threetwo",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.2",
 				"nodeCount": 5,
 				"cores": 4,
-				"memory": 28,
-				"extraHeader": null
+				"memory": 28
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -565,7 +566,8 @@
 				"source": [
 					"# Get token\r\n",
 					"mssparkutils.credentials.getToken(\"Synapse\")"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -603,7 +605,8 @@
 				"source": [
 					"# Get connection string or credentials for linked service\r\n",
 					"mssparkutils.credentials.getConnectionStringOrCreds(\"nbutilsmssparkutils\")"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -1011,6 +1014,9 @@
 						"transient": {
 							"deleting": false
 						}
+					},
+					"microsoft": {
+						"language": "r"
 					},
 					"collapsed": false
 				},
