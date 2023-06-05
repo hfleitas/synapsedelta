@@ -23,7 +23,9 @@
 			"one": {
 				"type": "Array",
 				"defaultValue": [
-					1
+					1,
+					2,
+					3
 				]
 			},
 			"sites": {
