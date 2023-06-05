@@ -94,6 +94,15 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/pool2')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/13456789123456789123456789123456789123456789')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -1440,6 +1449,683 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/FlightStreamNB')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "make i",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "i",
+							"value": {
+								"value": "@range(0,99999)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "make i",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('i')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 50,
+							"activities": [
+								{
+									"name": "RTAFlightTranscriptRaw",
+									"type": "SynapseNotebook",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebook": {
+											"referenceName": "RTAFlightTranscriptRaw",
+											"type": "NotebookReference"
+										},
+										"snapshot": true,
+										"conf": {
+											"spark.dynamicAllocation.enabled": null,
+											"spark.dynamicAllocation.minExecutors": null,
+											"spark.dynamicAllocation.maxExecutors": null
+										},
+										"numExecutors": null
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"i": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "FabricRTA"
+				},
+				"annotations": [],
+				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
+				"lastPublishTime": "2023-06-05T01:50:37Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/notebooks/RTAFlightTranscriptRaw')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/FlightStreamNB1')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "make i",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "i",
+							"value": {
+								"value": "@range(0,99999)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "make i",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('i')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 50,
+							"activities": [
+								{
+									"name": "RTAFlightTranscriptRaw",
+									"type": "SynapseNotebook",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebook": {
+											"referenceName": "RTAFlightTranscriptRaw",
+											"type": "NotebookReference"
+										},
+										"snapshot": true,
+										"conf": {
+											"spark.dynamicAllocation.enabled": null,
+											"spark.dynamicAllocation.minExecutors": null,
+											"spark.dynamicAllocation.maxExecutors": null
+										},
+										"numExecutors": null
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"i": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "FabricRTA"
+				},
+				"annotations": [],
+				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
+				"lastPublishTime": "2023-06-05T01:50:37Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/notebooks/RTAFlightTranscriptRaw')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/FlightStreamNB2')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "make i",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "i",
+							"value": {
+								"value": "@range(0,99999)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "make i",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('i')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 50,
+							"activities": [
+								{
+									"name": "RTAFlightTranscriptRaw",
+									"type": "SynapseNotebook",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebook": {
+											"referenceName": "RTAFlightTranscriptRaw",
+											"type": "NotebookReference"
+										},
+										"snapshot": true,
+										"sparkPool": {
+											"referenceName": "pool2",
+											"type": "BigDataPoolReference"
+										},
+										"conf": {
+											"spark.dynamicAllocation.enabled": null,
+											"spark.dynamicAllocation.minExecutors": null,
+											"spark.dynamicAllocation.maxExecutors": null
+										},
+										"numExecutors": null
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"i": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "FabricRTA"
+				},
+				"annotations": [],
+				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
+				"lastPublishTime": "2023-06-05T01:50:37Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/notebooks/RTAFlightTranscriptRaw')]",
+				"[concat(variables('workspaceId'), '/bigDataPools/pool2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/FlightStreamNB3')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "make i",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "i",
+							"value": {
+								"value": "@range(0,99999)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "make i",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('i')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 50,
+							"activities": [
+								{
+									"name": "RTAFlightTranscriptRaw",
+									"type": "SynapseNotebook",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebook": {
+											"referenceName": "RTAFlightTranscriptRaw",
+											"type": "NotebookReference"
+										},
+										"snapshot": true,
+										"sparkPool": {
+											"referenceName": "pool2",
+											"type": "BigDataPoolReference"
+										},
+										"conf": {
+											"spark.dynamicAllocation.enabled": null,
+											"spark.dynamicAllocation.minExecutors": null,
+											"spark.dynamicAllocation.maxExecutors": null
+										},
+										"numExecutors": null
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"i": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "FabricRTA"
+				},
+				"annotations": [],
+				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
+				"lastPublishTime": "2023-06-05T01:50:37Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/notebooks/RTAFlightTranscriptRaw')]",
+				"[concat(variables('workspaceId'), '/bigDataPools/pool2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/FlightTranscript')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "make i",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "i",
+							"value": {
+								"value": "@range(0,99999)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "make i",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('i')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 50,
+							"activities": [
+								{
+									"name": "Transcript",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "GET",
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureDataExplorerSink"
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Transcripts",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "RTAFlightStreamer",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								},
+								{
+									"name": "make_url",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Transcript",
+											"dependencyConditions": [
+												"Skipped"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "url",
+										"value": {
+											"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"i": {
+						"type": "Array"
+					},
+					"sites": {
+						"type": "Array",
+						"defaultValue": [
+							"api/6000/decorate/links",
+							"api/6000/short/plaintext",
+							"api/6000/long/plaintext"
+						]
+					},
+					"url": {
+						"type": "String"
+					},
+					"one": {
+						"type": "Array",
+						"defaultValue": [
+							1,
+							2,
+							3
+						]
+					}
+				},
+				"folder": {
+					"name": "FabricRTA"
+				},
+				"annotations": [],
+				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
+				"lastPublishTime": "2023-06-05T01:50:37Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Transcripts')]",
+				"[concat(variables('workspaceId'), '/datasets/RTAFlightStreamer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/FlightTranscript2')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "make i",
+						"description": "99999",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "i",
+							"value": {
+								"value": "@range(0,99999)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "make i",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('i')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 50,
+							"activities": [
+								{
+									"name": "Transcript",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "GET",
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureDataExplorerSink"
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Transcripts",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "RTAFlightStreamer",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								},
+								{
+									"name": "make_url",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Transcript",
+											"dependencyConditions": [
+												"Skipped"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "url",
+										"value": {
+											"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"i": {
+						"type": "Array"
+					},
+					"sites": {
+						"type": "Array",
+						"defaultValue": [
+							"api/6000/decorate/links",
+							"api/6000/short/plaintext",
+							"api/6000/long/plaintext"
+						]
+					},
+					"url": {
+						"type": "String"
+					},
+					"one": {
+						"type": "Array",
+						"defaultValue": [
+							1,
+							2,
+							3
+						]
+					}
+				},
+				"folder": {
+					"name": "FabricRTA"
+				},
+				"annotations": [],
+				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
+				"lastPublishTime": "2023-06-05T01:50:37Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Transcripts')]",
+				"[concat(variables('workspaceId'), '/datasets/RTAFlightStreamer')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/GetLabFilesFromHTTP')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -2005,244 +2691,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/RTAFlightStreamerNB')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "make i",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "i",
-							"value": {
-								"value": "@range(0,99999)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "make i",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('i')",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"batchCount": 50,
-							"activities": [
-								{
-									"name": "RTAFlightTranscriptRaw",
-									"type": "SynapseNotebook",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"notebook": {
-											"referenceName": "RTAFlightTranscriptRaw",
-											"type": "NotebookReference"
-										},
-										"snapshot": true,
-										"conf": {
-											"spark.dynamicAllocation.enabled": null,
-											"spark.dynamicAllocation.minExecutors": null,
-											"spark.dynamicAllocation.maxExecutors": null
-										},
-										"numExecutors": null
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"i": {
-						"type": "Array"
-					}
-				},
-				"annotations": [],
-				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
-				"lastPublishTime": "2023-06-05T01:50:37Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/RTAFlightTranscriptRaw')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/RTAFlightTranscript')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "make i",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "i",
-							"value": {
-								"value": "@range(0,99999)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "make i",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('i')",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"batchCount": 50,
-							"activities": [
-								{
-									"name": "Transcript",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "HttpReadSettings",
-												"requestMethod": "GET",
-												"requestTimeout": ""
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "AzureDataExplorerSink"
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "Transcripts",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "RTAFlightStreamer",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								},
-								{
-									"name": "make_url",
-									"type": "SetVariable",
-									"dependsOn": [
-										{
-											"activity": "Transcript",
-											"dependencyConditions": [
-												"Skipped"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "url",
-										"value": {
-											"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"i": {
-						"type": "Array"
-					},
-					"sites": {
-						"type": "Array",
-						"defaultValue": [
-							"api/6000/decorate/links",
-							"api/6000/short/plaintext",
-							"api/6000/long/plaintext"
-						]
-					},
-					"url": {
-						"type": "String"
-					},
-					"one": {
-						"type": "Array",
-						"defaultValue": [
-							1,
-							2,
-							3
-						]
-					}
-				},
-				"annotations": [],
-				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
-				"lastPublishTime": "2023-06-05T01:50:37Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/Transcripts')]",
-				"[concat(variables('workspaceId'), '/datasets/RTAFlightStreamer')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/UnzipLabFiles')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -2444,6 +2892,61 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/notebooks/dominicks_oj_train-RegressionOnnx')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/for random')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "count of items, list of items,\nif 3 in list then count 1-3, get one random of 3. #shhhh ",
+				"activities": [
+					{
+						"name": "make rurl",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "url",
+							"value": {
+								"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"url": {
+						"type": "String"
+					},
+					"one": {
+						"type": "Array",
+						"defaultValue": [
+							1,
+							2,
+							3
+						]
+					},
+					"sites": {
+						"type": "Array",
+						"defaultValue": [
+							"api/6000/decorate/links",
+							"api/6000/short/plaintext",
+							"api/6000/plaintext"
+						]
+					}
+				},
+				"folder": {
+					"name": "FabricRTA"
+				},
+				"annotations": [],
+				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
+				"lastPublishTime": "2023-06-05T01:50:37Z"
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/sparkjob')]",
@@ -8788,6 +9291,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "FabricRTA"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -8804,7 +9310,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "3a6d353d-a980-4dd8-bbe8-c1da0e8b8b94"
+						"spark.autotune.trackingId": "2c256928-de93-4202-8657-6e7c4131bd73"
 					}
 				},
 				"metadata": {
@@ -8828,9 +9334,8 @@
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
-						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"cores": 4,
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -12838,12 +13343,12 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/fabric')]",
+			"name": "[concat(parameters('workspaceName'), '/onelake')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"folder": {
-					"name": "fabric"
+					"name": "FabricRTA"
 				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
@@ -12861,7 +13366,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "9ff46a3e-8e53-46d9-96af-38f8c16ce5ee"
+						"spark.autotune.trackingId": "1a6d231e-d2ef-48af-88b3-d5ada6823fb2"
 					}
 				},
 				"metadata": {
@@ -12885,8 +13390,9 @@
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 5,
-						"cores": 4,
-						"memory": 28
+						"cores": 8,
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -14268,482 +14774,25 @@
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 50,
+					"minNodeCount": 3
+				},
+				"nodeCount": 10,
+				"nodeSize": "Medium",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.3",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
 				"annotations": []
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/RTAFlightStreamerNB2')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "make i",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "i",
-							"value": {
-								"value": "@range(0,99999)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "make i",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('i')",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"batchCount": 50,
-							"activities": [
-								{
-									"name": "RTAFlightTranscriptRaw",
-									"type": "SynapseNotebook",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"notebook": {
-											"referenceName": "RTAFlightTranscriptRaw",
-											"type": "NotebookReference"
-										},
-										"snapshot": true,
-										"sparkPool": {
-											"referenceName": "pool2",
-											"type": "BigDataPoolReference"
-										},
-										"conf": {
-											"spark.dynamicAllocation.enabled": null,
-											"spark.dynamicAllocation.minExecutors": null,
-											"spark.dynamicAllocation.maxExecutors": null
-										},
-										"numExecutors": null
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"i": {
-						"type": "Array"
-					}
-				},
-				"annotations": [],
-				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
-				"lastPublishTime": "2023-06-05T01:50:37Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/RTAFlightTranscriptRaw')]",
-				"[concat(variables('workspaceId'), '/bigDataPools/pool2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/for random')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"description": "count of items, list of items,\nif 3 in list then count 1-3, get one random of 3. #shhhh ",
-				"activities": [
-					{
-						"name": "make rurl",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "url",
-							"value": {
-								"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"url": {
-						"type": "String"
-					},
-					"one": {
-						"type": "Array",
-						"defaultValue": [
-							1,
-							2,
-							3
-						]
-					},
-					"sites": {
-						"type": "Array",
-						"defaultValue": [
-							"api/6000/decorate/links",
-							"api/6000/short/plaintext",
-							"api/6000/plaintext"
-						]
-					}
-				},
-				"annotations": [],
-				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
-				"lastPublishTime": "2023-06-05T01:50:37Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/RTAFlightTranscript2')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "make i",
-						"description": "99999",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "i",
-							"value": {
-								"value": "@range(0,99999)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "make i",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('i')",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"batchCount": 50,
-							"activities": [
-								{
-									"name": "Transcript",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "HttpReadSettings",
-												"requestMethod": "GET",
-												"requestTimeout": ""
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "AzureDataExplorerSink"
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "Transcripts",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "RTAFlightStreamer",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								},
-								{
-									"name": "make_url",
-									"type": "SetVariable",
-									"dependsOn": [
-										{
-											"activity": "Transcript",
-											"dependencyConditions": [
-												"Skipped"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "url",
-										"value": {
-											"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"i": {
-						"type": "Array"
-					},
-					"sites": {
-						"type": "Array",
-						"defaultValue": [
-							"api/6000/decorate/links",
-							"api/6000/short/plaintext",
-							"api/6000/long/plaintext"
-						]
-					},
-					"url": {
-						"type": "String"
-					},
-					"one": {
-						"type": "Array",
-						"defaultValue": [
-							1,
-							2,
-							3
-						]
-					}
-				},
-				"annotations": [],
-				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
-				"lastPublishTime": "2023-06-05T01:50:37Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/Transcripts')]",
-				"[concat(variables('workspaceId'), '/datasets/RTAFlightStreamer')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/RTAFlightStreamerNB3')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "make i",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "i",
-							"value": {
-								"value": "@range(0,99999)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "make i",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('i')",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"batchCount": 50,
-							"activities": [
-								{
-									"name": "RTAFlightTranscriptRaw",
-									"type": "SynapseNotebook",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"notebook": {
-											"referenceName": "RTAFlightTranscriptRaw",
-											"type": "NotebookReference"
-										},
-										"snapshot": true,
-										"sparkPool": {
-											"referenceName": "pool2",
-											"type": "BigDataPoolReference"
-										},
-										"conf": {
-											"spark.dynamicAllocation.enabled": null,
-											"spark.dynamicAllocation.minExecutors": null,
-											"spark.dynamicAllocation.maxExecutors": null
-										},
-										"numExecutors": null
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"i": {
-						"type": "Array"
-					}
-				},
-				"annotations": [],
-				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
-				"lastPublishTime": "2023-06-05T01:50:37Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/RTAFlightTranscriptRaw')]",
-				"[concat(variables('workspaceId'), '/bigDataPools/pool2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/RTAFlightStreamerNB1')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "make i",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "i",
-							"value": {
-								"value": "@range(0,99999)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "make i",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('i')",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"batchCount": 50,
-							"activities": [
-								{
-									"name": "RTAFlightTranscriptRaw",
-									"type": "SynapseNotebook",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"notebook": {
-											"referenceName": "RTAFlightTranscriptRaw",
-											"type": "NotebookReference"
-										},
-										"snapshot": true,
-										"conf": {
-											"spark.dynamicAllocation.enabled": null,
-											"spark.dynamicAllocation.minExecutors": null,
-											"spark.dynamicAllocation.maxExecutors": null
-										},
-										"numExecutors": null
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"i": {
-						"type": "Array"
-					}
-				},
-				"annotations": [],
-				"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
-				"lastPublishTime": "2023-06-05T01:50:37Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/RTAFlightTranscriptRaw')]"
-			]
+			"dependsOn": [],
+			"location": "eastus"
 		}
 	]
 }
