@@ -1,0 +1,46 @@
+{
+	"name": "for random",
+	"properties": {
+		"description": "count of items, list of items,\nif 3 in list then count 1-3, get one random of 3. #shhhh ",
+		"activities": [
+			{
+				"name": "make rurl",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "url",
+					"value": {
+						"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"url": {
+				"type": "String"
+			},
+			"one": {
+				"type": "Array",
+				"defaultValue": [
+					1,
+					2,
+					3
+				]
+			},
+			"sites": {
+				"type": "Array",
+				"defaultValue": [
+					"api/6000/decorate/links",
+					"api/6000/short/plaintext",
+					"api/6000/plaintext"
+				]
+			}
+		},
+		"annotations": [],
+		"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
+		"lastPublishTime": "2023-06-05T01:50:37Z"
+	},
+	"objectId": "16d6ee59-1c8e-4fc3-a0cd-bc029bbd73b7"
+}
