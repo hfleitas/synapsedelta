@@ -33,7 +33,7 @@
 						"type": "Expression"
 					},
 					"isSequential": false,
-					"batchCount": 5,
+					"batchCount": 50,
 					"activities": [
 						{
 							"name": "Notebook1",
