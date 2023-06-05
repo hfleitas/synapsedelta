@@ -4,6 +4,7 @@
 		"activities": [
 			{
 				"name": "make i",
+				"description": "99999",
 				"type": "SetVariable",
 				"dependsOn": [],
 				"userProperties": [],
