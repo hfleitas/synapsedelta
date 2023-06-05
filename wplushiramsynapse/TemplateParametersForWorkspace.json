@@ -38,8 +38,14 @@
 		"PublicDataset_sasUri": {
 			"value": ""
 		},
+		"RTAFlightStream_properties_typeProperties_database": {
+			"value": "7fdf61e2-06d8-4474-a7d5-bcbb585700cc"
+		},
 		"freeadx_properties_typeProperties_database": {
 			"value": "MyDatabase"
+		},
+		"loripsum_properties_typeProperties_url": {
+			"value": "https://loripsum.net/api"
 		},
 		"nyctaxistaging_properties_typeProperties_url": {
 			"value": "https://wplushiramsynapseadlsv2.dfs.core.windows.net/"
