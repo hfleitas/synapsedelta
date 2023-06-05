@@ -10,7 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "HttpServerLocation",
-				"relativeUrl": "api/6000/plaintext"
+				"relativeUrl": {
+					"value": "activity.output.value",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": "|",
 			"rowDelimiter": "\n",
