@@ -8,32 +8,29 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "u",
+					"variableName": "url",
 					"value": {
-						"value": "@string(\n    variables('urllist')[rand(0,length(variables('url')))]\n)",
+						"value": "@string(\n    variables('sites')[rand(0,length(variables('one')))]\n)",
 						"type": "Expression"
 					}
 				}
 			}
 		],
 		"variables": {
-			"i": {
-				"type": "Array"
-			},
 			"url": {
+				"type": "String"
+			},
+			"one": {
 				"type": "Array",
 				"defaultValue": [
 					1
 				]
 			},
-			"urllist": {
+			"sites": {
 				"type": "Array",
 				"defaultValue": [
 					"['api/6000/decorate/links','api/6000/short/plaintext','api/6000/plaintext']"
 				]
-			},
-			"u": {
-				"type": "String"
 			}
 		},
 		"annotations": [],
