@@ -133,6 +133,9 @@
 				]
 			}
 		},
+		"folder": {
+			"name": "FabricRTA"
+		},
 		"annotations": [],
 		"lastModifiedByObjectId": "e10fcc43-9abd-4aad-af2d-b6bb7d9e18eb",
 		"lastPublishTime": "2023-06-05T01:50:37Z"
