@@ -1,0 +1,15 @@
+{
+	"name": "RTAFlightStream",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataExplorer",
+		"typeProperties": {
+			"endpoint": "https://trd-rjwm9jc98jph5mdjqy.z6.kusto.data.microsoft.com",
+			"database": "7fdf61e2-06d8-4474-a7d5-bcbb585700cc"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
