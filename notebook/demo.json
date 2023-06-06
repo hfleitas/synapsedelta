@@ -15,7 +15,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "undefined",
 				"spark.dynamicAllocation.maxExecutors": "undefined",
-				"spark.autotune.trackingId": "fb34b515-f04f-4904-b203-fd3bd3470627"
+				"spark.autotune.trackingId": "493c2e15-4ab5-486e-9312-ba52ca8c8fd5"
 			}
 		},
 		"metadata": {
@@ -102,7 +102,7 @@
 					"    devices.append(str(uuid.uuid4()))\n",
 					"\n",
 					"# Create a producer client to produce and publish events to the event hub.\n",
-					"producer = EventHubProducerClient.from_connection_string(conn_str=\"Endpoint=sb://eventstream-d5a2af9b-4e26-422a-af54-73124df43a2c.servicebus.windows.net/;SharedAccessKeyName=key_59fdddd9-1c46-b104-f91a-ad72a5c93d8a;SharedAccessKey=AIBa4HgoSAnZiO6902HP5AQrYoSFTyX1S+AEhJGkXSI=;EntityPath=es_d5a2af9b-4e26-422a-af54-73124df43a2c\")\n",
+					"producer = EventHubProducerClient.from_connection_string(conn_str=\"\")\n",
 					"\n",
 					"for y in range(0,20):    # For each device, produce 20 events. \n",
 					"    event_data_batch = producer.create_batch() # Create a batch. You will add events to the batch later. \n",
