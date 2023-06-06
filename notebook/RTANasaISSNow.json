@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6a1e603e-8aff-4c07-aece-725416e5c383"
+				"spark.autotune.trackingId": "fb8881ef-f15c-4d1f-8fa4-01c53545b6ca"
 			}
 		},
 		"metadata": {
@@ -112,7 +112,7 @@
 					"import requests\r\n",
 					"from azure.eventhub import EventHubProducerClient, EventData"
 				],
-				"execution_count": 2
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
