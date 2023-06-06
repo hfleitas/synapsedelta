@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "96c5c1d0-6d5e-469c-b2d4-81e6d29e35f8"
+				"spark.autotune.trackingId": "6a1e603e-8aff-4c07-aece-725416e5c383"
 			}
 		},
 		"metadata": {
@@ -144,13 +144,13 @@
 					}
 				},
 				"source": [
-					"eventstream=''\r\n",
-					"# producer = EventHubProducerClient.from_connection_string(conn_str=eventstream)\r\n",
+					"eventstream='Endpoint=sb://eventstream-4523749a-0547-4220-b20c-08ff6f4cbd25.servicebus.windows.net/;SharedAccessKeyName=key_ec76641f-c2f3-92b9-1eab-b4b3644ee13d;SharedAccessKey=ZpK0jTfxdaAHQqGAhBmyoCn6CWR0BmhpT+AEhMpJMo8=;EntityPath=es_4523749a-0547-4220-b20c-08ff6f4cbd25'\r\n",
+					"producer = EventHubProducerClient.from_connection_string(conn_str=eventstream)\r\n",
 					"\r\n",
 					"i=0\r\n",
 					"\r\n",
 					"for i in range(0, 436554):\r\n",
-					"    df = requests.get(\"http://api.open-notify.org/iss-now.json\")\r\n",
+					"    s = requests.get(\"http://api.open-notify.org/iss-now.json\")\r\n",
 					"    b = producer.create_batch() \r\n",
 					"    j = df.content\r\n",
 					"    # print(j)\r\n",
