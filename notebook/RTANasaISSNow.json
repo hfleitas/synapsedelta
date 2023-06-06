@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "163ba5cc-8550-43c3-8e6a-1d2de68ace16"
+				"spark.autotune.trackingId": "96c5c1d0-6d5e-469c-b2d4-81e6d29e35f8"
 			}
 		},
 		"metadata": {
@@ -61,6 +61,37 @@
 					}
 				},
 				"source": [
+					"![ISS_emblem](https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/ISS_emblem.png/250px-ISS_emblem.png)"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"pip install azure-eventhub>=5.11.0"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"http://open-notify.org/Open-Notify-API/ISS-Location-Now/"
 				]
 			},
@@ -78,10 +109,10 @@
 					}
 				},
 				"source": [
-					"import urllib2\r\n",
-					"import json"
+					"import requests\r\n",
+					"from azure.eventhub import EventHubProducerClient, EventData"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -101,18 +132,33 @@
 			},
 			{
 				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
 				"source": [
-					"req = urllib2.Request(\"http://api.open-notify.org/iss-now.json\")\n",
-					"response = urllib2.urlopen(req)\n",
-					"\n",
-					"obj = json.loads(response.read())\n",
-					"\n",
-					"print obj['timestamp']\n",
-					"print obj['iss_position']['latitude'], obj['data']['iss_position']['latitude']\n",
-					"\n",
-					"# Example prints:\n",
-					"#   1364795862\n",
-					"#   -47.36999493 151.738540034"
+					"eventstream=''\r\n",
+					"# producer = EventHubProducerClient.from_connection_string(conn_str=eventstream)\r\n",
+					"\r\n",
+					"i=0\r\n",
+					"\r\n",
+					"for i in range(0, 436554):\r\n",
+					"    df = requests.get(\"http://api.open-notify.org/iss-now.json\")\r\n",
+					"    b = producer.create_batch() \r\n",
+					"    j = df.content\r\n",
+					"    # print(j)\r\n",
+					"    b.add(EventData(j))\r\n",
+					"    producer.send_batch(b) # send it!\r\n",
+					"    time.sleep(1)\r\n",
+					"    producer.close()\r\n",
+					"    i=i+1    "
 				],
 				"execution_count": null
 			}
