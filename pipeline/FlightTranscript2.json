@@ -39,7 +39,14 @@
 						{
 							"name": "Transcript",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "random_url",
+									"dependencyConditions": [
+										"Skipped"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -75,7 +82,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Transcripts",
+									"referenceName": "TranscriptsRandom",
 									"type": "DatasetReference"
 								}
 							],
@@ -87,16 +94,9 @@
 							]
 						},
 						{
-							"name": "make_url",
+							"name": "random_url",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Transcript",
-									"dependencyConditions": [
-										"Skipped"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "url",
