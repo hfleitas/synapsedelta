@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fb8881ef-f15c-4d1f-8fa4-01c53545b6ca"
+				"spark.autotune.trackingId": "f63410f8-622a-4d63-92a9-b8f06a1d9436"
 			}
 		},
 		"metadata": {
@@ -80,7 +80,7 @@
 				"source": [
 					"pip install azure-eventhub>=5.11.0"
 				],
-				"execution_count": null
+				"execution_count": 13
 			},
 			{
 				"cell_type": "markdown",
@@ -109,10 +109,11 @@
 					}
 				},
 				"source": [
+					"import time\r\n",
 					"import requests\r\n",
 					"from azure.eventhub import EventHubProducerClient, EventData"
 				],
-				"execution_count": null
+				"execution_count": 17
 			},
 			{
 				"cell_type": "markdown",
@@ -150,7 +151,7 @@
 					"i=0\r\n",
 					"\r\n",
 					"for i in range(0, 436554):\r\n",
-					"    s = requests.get(\"http://api.open-notify.org/iss-now.json\")\r\n",
+					"    df = requests.get(\"http://api.open-notify.org/iss-now.json\")\r\n",
 					"    b = producer.create_batch() \r\n",
 					"    j = df.content\r\n",
 					"    # print(j)\r\n",
@@ -160,7 +161,7 @@
 					"    producer.close()\r\n",
 					"    i=i+1    "
 				],
-				"execution_count": null
+				"execution_count": 18
 			}
 		]
 	}
