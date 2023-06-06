@@ -1,0 +1,25 @@
+{
+	"name": "TranscriptsRandom",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "loripsum",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@activity.output.value",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": "|",
+			"rowDelimiter": "\n",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
