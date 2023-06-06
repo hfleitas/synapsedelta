@@ -1,0 +1,148 @@
+{
+	"name": "demo",
+	"properties": {
+		"folder": {
+			"name": "FabricRTA"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "default",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "undefined",
+				"spark.dynamicAllocation.maxExecutors": "undefined",
+				"spark.autotune.trackingId": "fb34b515-f04f-4904-b203-fd3bd3470627"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/trident/default",
+				"name": "default",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				}
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"![logo](https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31)\n",
+					"\n",
+					"# **Fabric**\n",
+					"### Data Engineering - Realtime Analytics ⚡\n",
+					"### Notebook for Event Stream (Python - Demo) "
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"cellStatus": "{\"Hiram Fleitas\":{\"queued_time\":\"2023-05-25T22:48:34.5222469Z\",\"session_start_time\":null,\"execution_start_time\":\"2023-05-25T22:48:34.7889004Z\",\"execution_finish_time\":\"2023-05-25T22:48:41.4822237Z\",\"state\":\"finished\",\"livy_statement_state\":\"available\"}}",
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"pip install azure-eventhub>=5.11.0"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-capture-python#create-a-python-script-to-send-events-to-your-event-hub"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"cellStatus": "{\"Hiram Fleitas\":{\"queued_time\":\"2023-05-25T23:06:50.2237806Z\",\"session_start_time\":null,\"execution_start_time\":\"2023-05-25T23:06:50.5758582Z\",\"execution_finish_time\":null,\"state\":\"submitted\",\"livy_statement_state\":\"cancelled\"}}"
+				},
+				"source": [
+					"import time\n",
+					"import os\n",
+					"import uuid\n",
+					"import datetime\n",
+					"import random\n",
+					"import json\n",
+					"\n",
+					"from azure.eventhub import EventHubProducerClient, EventData\n",
+					"\n",
+					"# This script simulates the production of events for 10 devices.\n",
+					"devices = []\n",
+					"for x in range(0, 10):\n",
+					"    devices.append(str(uuid.uuid4()))\n",
+					"\n",
+					"# Create a producer client to produce and publish events to the event hub.\n",
+					"producer = EventHubProducerClient.from_connection_string(conn_str=\"Endpoint=sb://eventstream-d5a2af9b-4e26-422a-af54-73124df43a2c.servicebus.windows.net/;SharedAccessKeyName=key_59fdddd9-1c46-b104-f91a-ad72a5c93d8a;SharedAccessKey=AIBa4HgoSAnZiO6902HP5AQrYoSFTyX1S+AEhJGkXSI=;EntityPath=es_d5a2af9b-4e26-422a-af54-73124df43a2c\")\n",
+					"\n",
+					"for y in range(0,20):    # For each device, produce 20 events. \n",
+					"    event_data_batch = producer.create_batch() # Create a batch. You will add events to the batch later. \n",
+					"    for dev in devices:\n",
+					"        # Create a dummy reading.\n",
+					"        reading = {\n",
+					"            'id': dev, \n",
+					"            'timestamp': str(datetime.datetime.utcnow()), \n",
+					"            'uv': random.random(), \n",
+					"            'temperature': random.randint(70, 100), \n",
+					"            'humidity': random.randint(70, 100)\n",
+					"            }\n",
+					"        s = json.dumps(reading) # Convert the reading into a JSON string.\n",
+					"        event_data_batch.add(EventData(s)) # Add event data to the batch.\n",
+					"    producer.send_batch(event_data_batch) # Send the batch of events to the event hub.\n",
+					"\n",
+					"# Close the producer.    \n",
+					"producer.close()"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"cellStatus": "{}",
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
